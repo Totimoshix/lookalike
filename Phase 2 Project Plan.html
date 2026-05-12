@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Phase 2 Project Plan</title>
+    <style>
+      body {
+        font-family: "Aptos", "Segoe UI", Arial, sans-serif;
+        color: #1f2937;
+        margin: 48px;
+        line-height: 1.5;
+      }
+
+      h1 {
+        font-size: 26pt;
+        margin-bottom: 8px;
+        color: #111827;
+      }
+
+      h2 {
+        font-size: 16pt;
+        margin-top: 26px;
+        margin-bottom: 8px;
+        color: #1d4ed8;
+        border-bottom: 1px solid #dbeafe;
+        padding-bottom: 4px;
+      }
+
+      h3 {
+        font-size: 12.5pt;
+        margin-top: 18px;
+        margin-bottom: 6px;
+        color: #1f2937;
+      }
+
+      p {
+        margin: 8px 0;
+      }
+
+      ul, ol {
+        margin-top: 6px;
+        margin-bottom: 10px;
+      }
+
+      li {
+        margin-bottom: 5px;
+      }
+
+      .subtitle {
+        font-size: 11pt;
+        color: #4b5563;
+        margin-bottom: 18px;
+      }
+
+      .summary-box {
+        background: #f8fafc;
+        border: 1px solid #dbeafe;
+        border-radius: 8px;
+        padding: 14px 16px;
+        margin: 18px 0 20px;
+      }
+
+      .section-note {
+        color: #374151;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 14px 0 18px;
+      }
+
+      th, td {
+        border: 1px solid #d1d5db;
+        padding: 10px 12px;
+        vertical-align: top;
+        text-align: left;
+      }
+
+      th {
+        background: #eff6ff;
+        color: #1e3a8a;
+      }
+
+      .small {
+        font-size: 10pt;
+        color: #6b7280;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Capstone Domain Guardian</h1>
+    <p class="subtitle">Phase 2 Project Plan</p>
+
+    <div class="summary-box">
+      <p><strong>Purpose</strong></p>
+      <p>
+        Phase 2 will move the current add-on from a working proof of concept into a more complete analyst tool.
+        The focus is to close the main gaps in detection quality, infrastructure maturity, design clarity, and
+        reporting output without changing the core manual-analysis workflow.
+      </p>
+    </div>
+
+    <h2>1. Current State</h2>
+    <p>
+      The current version already supports manual URL/domain analysis, brand override, deterministic scoring,
+      analyst-facing evidence display, JSON export, DNSTwister-based lookalike generation, and an AWS-oriented
+      backend structure.
+    </p>
+    <p class="section-note">
+      The main issue is not that the application is non-functional. The issue is that several important services
+      are still partial, heuristic, or operationally immature.
+    </p>
+
+    <h2>2. Main Gaps Identified</h2>
+
+    <h3>Technical</h3>
+    <ul>
+      <li>Some external intelligence providers are implemented but still depend on local configuration and can return degraded results.</li>
+      <li>Infrastructure signals still contain partial or null fields such as DNS history change count, IP reputation score, and redirect count.</li>
+      <li>Content analysis is still mostly heuristic and does not yet provide strong phishing-template or visual-similarity evidence.</li>
+      <li>Scoring weights are hand-tuned and not yet calibrated against a formal labeled sample set.</li>
+      <li>The test suite covers important units, but not the full analyst workflow end to end.</li>
+    </ul>
+
+    <h3>Infrastructure</h3>
+    <ul>
+      <li>The AWS stack is synth-ready, but there is no complete deployment and release workflow for dev, test, and prod.</li>
+      <li>Secrets handling, provider readiness, dashboards, and alerts need to be hardened for actual use.</li>
+      <li>CDK deprecations remain in the infrastructure code and should be cleaned up before a stable release.</li>
+    </ul>
+
+    <h3>Design</h3>
+    <ul>
+      <li>The UI displays the data, but not always with the best hierarchy for analyst triage.</li>
+      <li>The difference between domain risk and tooling degradation is still not as clear as it should be.</li>
+      <li>Lookalike-generation results are usable, but not yet optimized for batch analyst review.</li>
+    </ul>
+
+    <h3>Reporting</h3>
+    <ul>
+      <li>Reporting contacts are present, but coverage is still limited.</li>
+      <li>There is no structured analyst report output beyond raw JSON export.</li>
+      <li>There is no audience-specific reporting workflow for registrars, brands, CERT/CSIRT, or internal security teams.</li>
+    </ul>
+
+    <h2>3. Phase 2 Objectives</h2>
+    <ol>
+      <li>Improve detection depth and evidence quality.</li>
+      <li>Harden the backend and deployment model for stable use.</li>
+      <li>Improve the extension workflow for analyst triage and review.</li>
+      <li>Produce reporting outputs that are actionable outside the application.</li>
+    </ol>
+
+    <h2>4. Workstream Plan</h2>
+
+    <h3>4.1 Technical Workstream</h3>
+    <p><strong>Goal:</strong> Improve the quality, completeness, and reliability of the detection pipeline.</p>
+    <ul>
+      <li>Harden VirusTotal, AbuseIPDB, Google Safe Browsing, PhishTank, and OpenPhish integrations.</li>
+      <li>Improve timeout, rate-limit, and upstream-failure handling for external providers.</li>
+      <li>Implement redirect-chain counting and final-destination classification.</li>
+      <li>Replace placeholder infrastructure values such as IP reputation score with real signal logic.</li>
+      <li>Expand passive history and ownership-history intelligence.</li>
+      <li>Strengthen content analysis with better visible-text similarity, asset reuse checks, and form-action classification.</li>
+      <li>Evaluate stronger phishing-template and visual-similarity detection.</li>
+      <li>Expand brand-catalog coverage and improve typo and confusable-character matching.</li>
+      <li>Calibrate scoring using a labeled set of benign and malicious samples.</li>
+    </ul>
+
+    <h3>4.2 Infrastructure Workstream</h3>
+    <p><strong>Goal:</strong> Make the backend operationally stable and deployable as a real service.</p>
+    <ul>
+      <li>Formalize AWS environments for dev, test, and prod in <code>ca-central-1</code>.</li>
+      <li>Finalize provider-key management using Secrets Manager or SSM.</li>
+      <li>Clean up CDK deprecations in the current stack.</li>
+      <li>Validate DynamoDB cache lifecycle and retention behavior.</li>
+      <li>Expand CloudWatch alarms, dashboards, and log retention policies.</li>
+      <li>Define a repeatable release process for backend deployment and extension packaging.</li>
+      <li>Package the extension against the deployed API instead of a local-only address.</li>
+      <li>Add smoke-test procedures for post-deployment verification.</li>
+    </ul>
+
+    <h3>4.3 Design and Analyst Experience Workstream</h3>
+    <p><strong>Goal:</strong> Make the extension easier to use as a triage tool without changing the core functionality.</p>
+    <ul>
+      <li>Separate high-confidence findings from degraded-provider warnings more clearly.</li>
+      <li>Improve prioritization and grouping of evidence.</li>
+      <li>Improve empty, error, timeout, and degraded-result states.</li>
+      <li>Tighten popup layout and repeated-use ergonomics.</li>
+      <li>Improve the DNSTwister candidate-review workflow for batch analysis.</li>
+      <li>Align status hierarchy, spacing, and typography across all analyst views.</li>
+    </ul>
+
+    <h3>4.4 Reporting Workstream</h3>
+    <p><strong>Goal:</strong> Turn the analysis output into something usable for external reporting and documentation.</p>
+    <ul>
+      <li>Expand registrar abuse contacts and reporting portals.</li>
+      <li>Expand brand-contact coverage where public security contacts exist.</li>
+      <li>Improve authority routing for Canadian and general reporting use cases.</li>
+      <li>Reduce dependency on LLM-generated notes for core reporting details.</li>
+      <li>Create a human-readable analyst report format in addition to JSON export.</li>
+      <li>Support reporting views for registrars, brand owners, CERT/CSIRT contacts, and internal teams.</li>
+    </ul>
+
+    <h2>5. Milestone Breakdown</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Milestone</th>
+          <th>Focus</th>
+          <th>Primary Output</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Milestone 1</td>
+          <td>Provider hardening, infrastructure intelligence completion, passive-history expansion, provider diagnostics cleanup</td>
+          <td>Reliable backend evidence model</td>
+        </tr>
+        <tr>
+          <td>Milestone 2</td>
+          <td>Content-analysis improvements, stronger phishing-template detection, brand-matching expansion, score calibration</td>
+          <td>Higher-quality detection and defensible scoring</td>
+        </tr>
+        <tr>
+          <td>Milestone 3</td>
+          <td>Analyst UX cleanup, lookalike-review improvements, structured report output, expanded reporting coverage</td>
+          <td>Usable analyst workflow and reporting package</td>
+        </tr>
+        <tr>
+          <td>Milestone 4</td>
+          <td>AWS environment maturity, dashboards, release packaging, expanded tests, deployment validation</td>
+          <td>Stable Phase 2 release candidate</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>6. Glaringly Obvious Features Still Missing</h2>
+    <ul>
+      <li>True redirect-count and destination-risk analysis</li>
+      <li>A real IP reputation score in the infrastructure model</li>
+      <li>Deeper passive DNS and ownership-history intelligence</li>
+      <li>Stronger visual similarity or phishing-template detection</li>
+      <li>A human-readable exported analyst report</li>
+      <li>Broader registrar and brand reporting coverage</li>
+      <li>End-to-end UI automation for the extension</li>
+      <li>A fully documented production deployment and release workflow</li>
+      <li>Calibrated scoring based on a maintained sample corpus</li>
+    </ul>
+
+    <h2>7. Recommended Delivery Order</h2>
+    <ol>
+      <li>Complete provider hardening and infrastructure intelligence.</li>
+      <li>Upgrade content analysis and calibrate scoring.</li>
+      <li>Improve reporting outputs and contact coverage.</li>
+      <li>Polish the analyst UI and lookalike review workflow.</li>
+      <li>Finalize deployment, release workflow, and expanded testing.</li>
+    </ol>
+
+    <h2>8. Definition of Done</h2>
+    <ul>
+      <li>All surfaced signals are backed by real logic or an explicit supported failure state.</li>
+      <li>Degraded provider conditions are clearly distinguishable from actual domain risk.</li>
+      <li>Infrastructure and content evidence are strong enough to support analyst conclusions.</li>
+      <li>The extension supports clear triage and reporting workflows.</li>
+      <li>Exported reporting is useful to someone outside the application.</li>
+      <li>The backend can be deployed and validated without relying on a local-only setup.</li>
+      <li>The project has test coverage for both normal and degraded operating conditions.</li>
+    </ul>
+
+    <p class="small">Prepared from the current Capstone Domain Guardian codebase for Phase 2 planning.</p>
+  </body>
+</html>

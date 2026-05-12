@@ -1,0 +1,28 @@
+{
+  "name": "capstone-lookalike-domain-poc",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "shared",
+    "api",
+    "extension"
+  ],
+  "scripts": {
+    "start": "npm run start:api",
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run build:shared && npm run typecheck --workspaces --if-present",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "build:shared": "npm --workspace @capstone/shared run build",
+    "build:api": "npm --workspace @capstone/api run build",
+    "build:extension": "npm --workspace @capstone/extension run build",
+    "start:api": "npm --workspace @capstone/api run start",
+    "dev:extension": "npm --workspace @capstone/extension run dev",
+    "synth": "npm --workspace @capstone/api run synth"
+  },
+  "devDependencies": {
+    "@types/node": "^24.5.2",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "app": "npx tsx src/infra/app.ts"
+}
+
