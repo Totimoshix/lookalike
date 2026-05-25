@@ -6,6 +6,12 @@ type ReportingContactsCardProps = {
 
 export function ReportingContactsCard({ result }: ReportingContactsCardProps) {
   const contacts = result.reporting_contacts;
+  const auth = contacts.local_authorities;
+
+  const csirtLabel = auth.csirt_name ?? "CERT/CSIRT";
+  const csirtCountry = auth.csirt_country && auth.csirt_country !== "GLOBAL"
+    ? ` (${auth.csirt_country})`
+    : "";
 
   return (
     <section className="panel">
@@ -26,9 +32,21 @@ export function ReportingContactsCard({ result }: ReportingContactsCardProps) {
           <p>{contacts.brand_protection.apwg_contact ?? "No APWG contact available"}</p>
         </article>
         <article>
-          <p className="eyebrow">Authorities</p>
-          <p>{contacts.local_authorities.anti_fraud ?? "No anti-fraud contact available"}</p>
-          <p>{contacts.local_authorities.csirt ?? "No CSIRT contact available"}</p>
+          <p className="eyebrow">
+            {csirtLabel}{csirtCountry}
+          </p>
+          <p>{auth.csirt ?? "No CSIRT contact available"}</p>
+          {auth.csirt_portal && (
+            <a
+              className="contact-link"
+              href={auth.csirt_portal}
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              Report via portal ↗
+            </a>
+          )}
+          <p className="contact-secondary">{auth.anti_fraud ?? "No anti-fraud contact available"}</p>
         </article>
       </div>
       <div className="highlight-list">
@@ -41,4 +59,3 @@ export function ReportingContactsCard({ result }: ReportingContactsCardProps) {
     </section>
   );
 }
-
