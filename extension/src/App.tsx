@@ -1,51 +1,39 @@
 import { useState } from "react";
+import { AppHeader } from "./components/AppHeader";
 import { AnalyzeView } from "./components/AnalyzeView";
 import { LookalikeView } from "./components/LookalikeView";
+import { useExpertMode } from "./lib/storage";
 
 type TabKey = "analyze" | "lookalikes";
 
 export default function App() {
+  const [expertMode, setExpertMode] = useExpertMode();
   const [activeTab, setActiveTab] = useState<TabKey>("analyze");
 
   return (
     <main className="app-shell">
-      <header className="masthead">
-        <div className="masthead-brand">
-          <div aria-hidden="true" className="brand-mark">
-            <span />
-            <span />
-            <span />
-            <span />
-          </div>
-          <div>
-            <p className="eyebrow eyebrow-on-dark">Capstone Domain Guardian</p>
-            <h1>Domain Guardian</h1>
-            <p className="masthead-subtitle">Lookalike Risk Workbench</p>
-          </div>
-        </div>
-        <p className="masthead-copy">
-          Manual-entry phishing triage with weighted scoring, evidence panels, reporting guidance, and lookalike generation.
-        </p>
-      </header>
+      <AppHeader expertMode={expertMode} onExpertModeChange={setExpertMode} />
 
-      <nav className="tab-strip" aria-label="Views">
-        <button
-          className={activeTab === "analyze" ? "tab-button active" : "tab-button"}
-          onClick={() => setActiveTab("analyze")}
-          type="button"
-        >
-          Analyze
-        </button>
-        <button
-          className={activeTab === "lookalikes" ? "tab-button active" : "tab-button"}
-          onClick={() => setActiveTab("lookalikes")}
-          type="button"
-        >
-          Generate Lookalikes
-        </button>
-      </nav>
+      {expertMode ? (
+        <nav className="tab-strip" aria-label="Views">
+          <button
+            className={activeTab === "analyze" ? "tab-button active" : "tab-button"}
+            onClick={() => setActiveTab("analyze")}
+            type="button"
+          >
+            Analyze
+          </button>
+          <button
+            className={activeTab === "lookalikes" ? "tab-button active" : "tab-button"}
+            onClick={() => setActiveTab("lookalikes")}
+            type="button"
+          >
+            Generate Lookalikes
+          </button>
+        </nav>
+      ) : null}
 
-      {activeTab === "analyze" ? <AnalyzeView /> : <LookalikeView />}
+      {expertMode && activeTab === "lookalikes" ? <LookalikeView /> : <AnalyzeView expertMode={expertMode} />}
     </main>
   );
 }

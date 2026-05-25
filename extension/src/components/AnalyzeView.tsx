@@ -1,32 +1,39 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState } from "react";
 import type { AnalysisResult } from "@capstone/shared";
 import { analyzeDomain } from "../lib/api";
-import { CategoryCard } from "./CategoryCard";
-import { EvidencePanel } from "./EvidencePanel";
-import { JsonExportButton } from "./JsonExportButton";
-import { ReportingContactsCard } from "./ReportingContactsCard";
-import { ScoreCard } from "./ScoreCard";
+import { addTrustedDomain, useTrustedDomains } from "../lib/storage";
+import { ExpertDetails } from "./ExpertDetails";
+import { UrlInputCard } from "./UrlInputCard";
+import { VerdictHero } from "./VerdictHero";
 
-export function AnalyzeView() {
-  const [url, setUrl] = useState("");
-  const [brandOverride, setBrandOverride] = useState("");
+type AnalyzeViewProps = {
+  expertMode: boolean;
+};
+
+export function AnalyzeView({ expertMode }: AnalyzeViewProps) {
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const degradedSignalCount = result
-    ? result.evidence_summary.signal_diagnostics.filter((diagnostic) => diagnostic.status !== "ok").length
-    : 0;
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [trustedDomains] = useTrustedDomains();
 
-  const handleAnalyze = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  useEffect(() => {
+    // Reset per-result expansion when expert mode toggles.
+    if (expertMode) setDetailsOpen(true);
+    else setDetailsOpen(false);
+  }, [expertMode]);
+
+  const handleAnalyze = async (url: string, brandOverride: string | undefined) => {
     setIsLoading(true);
     setError(null);
+    setResult(null);
+    setDetailsOpen(expertMode);
 
     try {
       const response = await analyzeDomain({
         url,
         mode: "manual_entry",
-        brand_override: brandOverride.trim() || undefined
+        brand_override: brandOverride
       });
       setResult(response);
     } catch (caughtError) {
@@ -36,77 +43,29 @@ export function AnalyzeView() {
     }
   };
 
+  const handleTrust = async () => {
+    if (!result) return;
+    await addTrustedDomain(result.normalized_domain);
+  };
+
+  const trusted = result ? trustedDomains.has(result.normalized_domain.toLowerCase()) : false;
+
   return (
     <div className="view-shell">
-      <form className="hero-form" onSubmit={handleAnalyze}>
-        <div>
-          <p className="eyebrow">Manual URL Analysis</p>
-          <h1>Analyst-grade lookalike domain triage</h1>
-          <p className="lede">
-            Paste a URL or bare domain, optionally force the target brand, and get structured evidence you can export.
-          </p>
-        </div>
-        <label className="input-block">
-          <span>Suspicious URL or domain</span>
-          <input
-            autoComplete="off"
-            onChange={(event) => setUrl(event.target.value)}
-            placeholder="https://amaz0on-login-support.com"
-            value={url}
-          />
-        </label>
-        <label className="input-block">
-          <span>Brand override (optional)</span>
-          <input
-            autoComplete="off"
-            onChange={(event) => setBrandOverride(event.target.value)}
-            placeholder="Amazon or amazon.com"
-            value={brandOverride}
-          />
-        </label>
-        <div className="action-row">
-          <button className="primary-button" disabled={isLoading || url.trim().length === 0} type="submit">
-            {isLoading ? "Analyzing..." : "Analyze Domain"}
-          </button>
-          {result ? (
-            <JsonExportButton filename={`${result.normalized_domain}-analysis.json`} payload={result} />
-          ) : null}
-        </div>
-        {error ? <p className="error-banner">{error}</p> : null}
-      </form>
+      <UrlInputCard expertMode={expertMode} isLoading={isLoading} onSubmit={handleAnalyze} />
+
+      {error ? <p className="error-banner">{error}</p> : null}
 
       {result ? (
         <>
-          <ScoreCard result={result} />
-          <section className="brand-strip">
-            <article className="summary-card summary-target">
-              <p className="eyebrow">Matched Brand</p>
-              <strong>{result.brand_match.brand_name}</strong>
-              <span>{result.brand_match.canonical_domain}</span>
-            </article>
-            <article className="summary-card summary-confidence">
-              <p className="eyebrow">Confidence</p>
-              <strong>{Math.round(result.brand_match.confidence * 100)}%</strong>
-              <span>{result.brand_match.method}</span>
-            </article>
-            <article className="summary-card summary-evidence">
-              <p className="eyebrow">Evidence Hits</p>
-              <strong>{result.evidence_summary.evidence_items.length}</strong>
-              <span>{degradedSignalCount} provider gaps</span>
-            </article>
-          </section>
-          <EvidencePanel result={result} />
-          <div className="panel-grid">
-            <CategoryCard title="Lexical" fields={result.risk_factors.lexical} />
-            <CategoryCard title="Infrastructure" fields={result.risk_factors.infrastructure} />
-            <CategoryCard title="Content" fields={result.risk_factors.content} />
-            <CategoryCard title="Reputational" fields={result.risk_factors.reputational} />
-            <CategoryCard title="Behavioral" fields={result.risk_factors.behavioral} />
-            <CategoryCard title="Email Auth" fields={result.risk_factors.email_auth} />
-            <CategoryCard title="Passive History" fields={result.risk_factors.passive_history} />
-            <CategoryCard title="Machine Learning" fields={result.risk_factors.machine_learning} />
-          </div>
-          <ReportingContactsCard result={result} />
+          <VerdictHero
+            result={result}
+            detailsOpen={detailsOpen}
+            onToggleDetails={() => setDetailsOpen((open) => !open)}
+            onTrustSite={handleTrust}
+            trusted={trusted}
+          />
+          {detailsOpen ? <ExpertDetails result={result} /> : null}
         </>
       ) : null}
     </div>

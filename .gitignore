@@ -9,3 +9,4 @@ cdk.out
 *.tsbuildinfo
 keys.txt
 .tmp-figma-thumbnail.png
+.claude/

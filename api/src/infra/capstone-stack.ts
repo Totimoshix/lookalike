@@ -86,6 +86,19 @@ export class CapstoneDomainGuardianStack extends Stack {
       logRetention: retentionForStage(props.stageName)
     });
 
+    const analyzeFastFunction = new NodejsFunction(this, "AnalyzeFastFunction", {
+      runtime: Runtime.NODEJS_22_X,
+      entry: path.join(here, "..", "handlers", "analyzeFast.ts"),
+      bundling: {
+        target: "node22",
+        format: OutputFormat.ESM
+      },
+      environment: commonEnvironment,
+      memorySize: 512,
+      timeout: Duration.seconds(5),
+      logRetention: retentionForStage(props.stageName)
+    });
+
     const generateFunction = new NodejsFunction(this, "GenerateLookalikesFunction", {
       runtime: Runtime.NODEJS_22_X,
       entry: path.join(here, "..", "handlers", "generateLookalikes.ts"),
@@ -113,8 +126,10 @@ export class CapstoneDomainGuardianStack extends Stack {
     });
 
     cacheTable.grantReadWriteData(analyzeFunction);
+    cacheTable.grantReadWriteData(analyzeFastFunction);
     cacheTable.grantReadWriteData(generateFunction);
     providerConfigSecret.grantRead(analyzeFunction);
+    providerConfigSecret.grantRead(analyzeFastFunction);
     providerConfigSecret.grantRead(generateFunction);
     providerConfigSecret.grantRead(healthFunction);
 
@@ -152,7 +167,9 @@ export class CapstoneDomainGuardianStack extends Stack {
     });
 
     api.root.addResource("health").addMethod("GET", new LambdaIntegration(healthFunction));
-    api.root.addResource("analyze").addMethod("POST", new LambdaIntegration(analyzeFunction));
+    const analyzeResource = api.root.addResource("analyze");
+    analyzeResource.addMethod("POST", new LambdaIntegration(analyzeFunction));
+    analyzeResource.addResource("fast").addMethod("POST", new LambdaIntegration(analyzeFastFunction));
     api.root.addResource("generate-lookalikes").addMethod("POST", new LambdaIntegration(generateFunction));
 
     new Alarm(this, "Api5xxAlarm", {
