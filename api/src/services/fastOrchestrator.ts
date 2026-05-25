@@ -222,7 +222,10 @@ export async function analyzeUrlFast(request: AnalyzeRequest): Promise<AnalysisR
       },
       local_authorities: {
         anti_fraud: null,
-        csirt: null
+        csirt: null,
+        csirt_name: null,
+        csirt_country: null,
+        csirt_portal: null
       },
       notes: []
     },

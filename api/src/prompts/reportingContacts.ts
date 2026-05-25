@@ -4,11 +4,14 @@ export function buildReportingContactsPrompt(input: {
   abuse_portal: string | null;
   brand_contact: string | null;
   cert_contact: string | null;
+  cert_name: string | null;
+  cert_country: string | null;
   anti_fraud: string | null;
+  
 }) {
   return `
 You are formatting reporting guidance for a phishing analyst.
-Use only the provided contacts.
+Use only the provided contacts. Reference the CERT/CSIRT by name when giving advice.
 Return valid JSON only.
 
 Contacts:
