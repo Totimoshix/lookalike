@@ -239,7 +239,9 @@ export async function analyzeUrl(request: AnalyzeRequest): Promise<AnalysisResul
 
   const reportingContacts = await buildReportingContacts({
     brandMatch,
-    registrarName: infrastructure.registrar
+    registrarName: infrastructure.registrar,
+    registrantCountry: infrastructure.registrant_country,
+    tld: normalized.tld
   });
 
   const llmStartedAt = Date.now();
