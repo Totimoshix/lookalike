@@ -4,8 +4,19 @@ import type {
   GenerateLookalikesRequest,
   LookalikeCandidateSet
 } from "@capstone/shared";
+import { getApiBaseUrl } from "./storage";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://127.0.0.1:3000";
+const DEFAULT_API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://127.0.0.1:3000";
+
+async function resolveApiBaseUrl(): Promise<string> {
+  try {
+    const override = await getApiBaseUrl();
+    if (override) return override;
+  } catch {
+    // fall through
+  }
+  return DEFAULT_API_BASE_URL;
+}
 
 function buildNonJsonApiError(apiBaseUrl: string, bodyPreview: string): Error {
   if (/burp suite professional/i.test(bodyPreview) || /<title>burp suite/i.test(bodyPreview)) {
@@ -17,20 +28,22 @@ function buildNonJsonApiError(apiBaseUrl: string, bodyPreview: string): Error {
   return new Error(`API at ${apiBaseUrl} returned non-JSON content: ${bodyPreview}`);
 }
 
-async function postJson<TResponse, TRequest>(path: string, payload: TRequest): Promise<TResponse> {
+async function postJson<TResponse, TRequest>(path: string, payload: TRequest, options?: { signal?: AbortSignal }): Promise<TResponse> {
+  const apiBaseUrl = await resolveApiBaseUrl();
   let response: Response;
 
   try {
-    response = await fetch(`${API_BASE_URL}${path}`, {
+    response = await fetch(`${apiBaseUrl}${path}`, {
       method: "POST",
       headers: {
         "content-type": "application/json"
       },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
+      signal: options?.signal
     });
   } catch (error) {
     if (error instanceof TypeError) {
-      throw new Error(`API unreachable at ${API_BASE_URL}. Start 'npm run start:api' and reload the extension.`);
+      throw new Error(`API unreachable at ${apiBaseUrl}. Start 'npm run start:api' and reload the extension.`);
     }
     throw error;
   }
@@ -43,18 +56,22 @@ async function postJson<TResponse, TRequest>(path: string, payload: TRequest): P
   const contentType = response.headers.get("content-type") ?? "";
   if (!contentType.includes("application/json")) {
     const bodyPreview = (await response.text()).slice(0, 120);
-    throw buildNonJsonApiError(API_BASE_URL, bodyPreview);
+    throw buildNonJsonApiError(apiBaseUrl, bodyPreview);
   }
 
   try {
     return (await response.json()) as TResponse;
   } catch {
-    throw new Error(`API at ${API_BASE_URL} returned invalid JSON. Reload the extension after rebuilding and confirm the local API is running.`);
+    throw new Error(`API at ${apiBaseUrl} returned invalid JSON. Reload the extension after rebuilding and confirm the local API is running.`);
   }
 }
 
 export function analyzeDomain(request: AnalyzeRequest) {
   return postJson<AnalysisResult, AnalyzeRequest>("/analyze", request);
+}
+
+export function analyzeDomainFast(request: AnalyzeRequest, signal?: AbortSignal) {
+  return postJson<AnalysisResult, AnalyzeRequest>("/analyze/fast", request, { signal });
 }
 
 export function generateLookalikes(request: GenerateLookalikesRequest) {

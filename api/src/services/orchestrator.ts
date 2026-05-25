@@ -326,7 +326,8 @@ export async function analyzeUrl(request: AnalyzeRequest): Promise<AnalysisResul
       generated_by: "Capstone Domain Guardian",
       schema_version: "analysis-result.v2",
       sources: mergeSignalSources(finalDiagnostics)
-    }
+    },
+    partial: false
   });
 
   await cache.set(cacheKey, result);

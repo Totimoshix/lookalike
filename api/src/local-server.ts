@@ -4,6 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { analyzeRequestSchema, generateLookalikesRequestSchema } from "@capstone/shared";
 import { analyzeUrl, generateLookalikeSet } from "./services/orchestrator.js";
+import { analyzeUrlFast } from "./services/fastOrchestrator.js";
 import { buildHealthResponse } from "./services/healthStatus.js";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -76,6 +77,13 @@ const server = http.createServer(async (request, response) => {
     if (method === "POST" && url.pathname === "/analyze") {
       const parsed = analyzeRequestSchema.parse(await readJsonBody(request));
       const result = await analyzeUrl(parsed);
+      writeJson(response, 200, result);
+      return;
+    }
+
+    if (method === "POST" && url.pathname === "/analyze/fast") {
+      const parsed = analyzeRequestSchema.parse(await readJsonBody(request));
+      const result = await analyzeUrlFast(parsed);
       writeJson(response, 200, result);
       return;
     }

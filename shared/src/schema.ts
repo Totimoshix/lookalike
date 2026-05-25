@@ -223,7 +223,8 @@ export const analysisResultSchema = z.object({
   reporting_contacts: reportingContactsSchema,
   signal_sources: z.array(signalSourceSchema).default([]),
   timings: timingsSchema,
-  export_metadata: exportMetadataSchema
+  export_metadata: exportMetadataSchema,
+  partial: z.boolean()
 });
 
 export const healthResponseSchema = z.object({

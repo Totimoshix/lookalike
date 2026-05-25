@@ -248,6 +248,7 @@ export async function inferBrandMatch(input: {
   pageTitle: string | null;
   bodyText: string;
   brandOverride?: string;
+  skipLlm?: boolean;
 }): Promise<BrandMatch> {
   if (input.brandOverride) {
     return fromOverride(input.brandOverride);
@@ -292,6 +293,16 @@ export async function inferBrandMatch(input: {
             : "heuristic",
         matched_keywords: bestCandidate.matched_keywords
       };
+  }
+
+  if (input.skipLlm) {
+    return {
+      brand_name: "Unknown",
+      canonical_domain: input.normalizedDomain,
+      confidence: 0,
+      method: "unknown",
+      matched_keywords: []
+    };
   }
 
   const llmResult = await callBedrockJson<BrandMatch>({
