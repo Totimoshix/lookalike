@@ -189,7 +189,10 @@ export const reportingContactsSchema = z.object({
   }),
   local_authorities: z.object({
     anti_fraud: z.string().nullable(),
-    csirt: z.string().nullable()
+    csirt: z.string().nullable(),
+    csirt_name: z.string().nullable(),
+    csirt_country: z.string().nullable(),
+    csirt_portal: z.string().nullable()
   }),
   notes: z.array(z.string()).default([])
 });
