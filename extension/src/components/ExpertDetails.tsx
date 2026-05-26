@@ -4,6 +4,7 @@ import { EvidencePanel } from "./EvidencePanel";
 import { JsonExportButton } from "./JsonExportButton";
 import { ReportingContactsCard } from "./ReportingContactsCard";
 import { ScoreCard } from "./ScoreCard";
+import { PdfExportButton } from "./PdfExportButton";
 
 type ExpertDetailsProps = {
   result: AnalysisResult;
@@ -51,6 +52,7 @@ export function ExpertDetails({ result }: ExpertDetailsProps) {
           filename={`${result.normalized_domain}-analysis.json`}
           payload={result}
         />
+        <PdfExportButton result={result} />
       </div>
     </div>
   );
