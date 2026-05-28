@@ -255,11 +255,72 @@ export const csirtContacts: Record<string, CsirtEntry> = {
 };
 
 
+/**
+ * Brand-to-country map for secondary CSIRT routing.
+ *
+ * Used when registrant country is unknown or resolves to the global fallback.
+ * Maps the brand's home jurisdiction — i.e. the country whose CERT/CSIRT is
+ * most relevant to a phishing attack targeting that brand's customers.
+ *
+ * Keys must exactly match brandName values in brandCatalog.ts.
+ */
+export const brandCountryMap: Record<string, string> = {
+  "Royal Bank of Canada":  "ca",
+  "TD Bank":               "ca",
+  "Scotiabank":            "ca",
+  "BMO":                   "ca",
+  "CIBC":                  "ca",
+  "Interac":               "ca",
+  "Canada Revenue Agency": "ca",
+  "Service Canada":        "ca",
+  "Rogers":                "ca",
+  "Bell":                  "ca",
+  "Telus":                 "ca",
+  "Manulife":              "ca",
+  "Sun Life":              "ca",
+  "Canada Post":           "ca",
+  "Sheridan College":      "ca",
+  "University of Toronto": "ca",
+  "Google":                "us",
+  "Microsoft":             "us",
+  "Apple":                 "us",
+  "Meta":                  "us",
+  "Amazon":                "us",
+  "PayPal":                "us",
+  "Stripe":                "us",
+  "Square":                "us",
+  "Bank of America":       "us",
+  "Chase":                 "us",
+  "Wells Fargo":           "us",
+  "Citibank":              "us",
+  "American Express":      "us",
+  "Coinbase":              "us",
+  "eBay":                  "us",
+  "Walmart":               "us",
+  "Shopify":               "us",
+  "FedEx":                 "us",
+  "UPS":                   "us",
+  "Netflix":               "us",
+  "Spotify":               "us",
+  "LinkedIn":              "us",
+  "Dropbox":               "us",
+  "Adobe":                 "us",
+  "Zoom":                  "us",
+  "Docusign":              "us",
+  "Slack":                 "us",
+  "Cloudflare":            "us",
+  "AT&T":                  "us",
+  "Verizon":               "us",
+  "IRS":                   "us",
+  "Disney+":               "us",
+};
+
+
 export function resolveCsirt(
   registrantCountry: string | null,
-  tld: string | null
+  tld: string | null,
+  brandName?: string | null
 ): CsirtEntry {
-  
   if (registrantCountry) {
     const key = registrantCountry.toLowerCase();
     if (csirtContacts[key]) {
@@ -267,14 +328,18 @@ export function resolveCsirt(
     }
   }
 
-
   if (tld) {
     const ccKey = tld.replace(/^\./, "").toLowerCase();
-  
     if (ccKey.length === 2 && csirtContacts[ccKey]) {
       return csirtContacts[ccKey];
     }
   }
 
+  if (brandName && brandCountryMap[brandName]) {
+    const brandKey = brandCountryMap[brandName];
+    if (csirtContacts[brandKey]) {
+      return csirtContacts[brandKey];
+    }
+  }
   return csirtContacts.default;
 }
