@@ -13,7 +13,7 @@ export async function buildReportingContacts(input: {
 }): Promise<ReportingContacts> {
   const brandEntry = brandCatalog.find((entry) => entry.brandName === input.brandMatch.brand_name);
   const registrar = input.registrarName ? registrarContacts[input.registrarName.toLowerCase()] : undefined;
-  const csirt = resolveCsirt(input.registrantCountry, input.tld);
+  const csirt = resolveCsirt(input.registrantCountry, input.tld, input.brandMatch.brand_name);
 
   const base: ReportingContacts = {
     registrar_information: {
