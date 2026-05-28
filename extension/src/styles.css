@@ -895,3 +895,606 @@ input:focus-visible {
 .contact-grid article p:last-child {
   margin-bottom: 0;
 }
+
+/* ═══════════════════════════════════════════════════
+   EXPERT MODE — dark analyst theme
+   Scoped to .app-shell.expert so basic mode is untouched
+   ═══════════════════════════════════════════════════ */
+
+.app-shell.expert {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface-muted: #1c2330;
+  --surface-alt: #1c2330;
+  --ink: #e6edf3;
+  --ink-soft: #8b949e;
+  --ink-faint: #484f58;
+  --line: rgba(255,255,255,0.08);
+  --line-strong: rgba(255,255,255,0.14);
+  --accent: #4d8eff;
+  --accent-strong: #6ba3ff;
+  --accent-soft: rgba(77,142,255,0.12);
+
+  background: var(--bg);
+  color: var(--ink);
+}
+
+/* Body background when expert */
+.app-shell.expert ~ body,
+body:has(.app-shell.expert) {
+  background: #0d1117;
+}
+
+/* Header gets a subtle bottom glow line */
+.app-shell.expert .app-header {
+  border-bottom-color: rgba(77,142,255,0.2);
+}
+
+.app-shell.expert .app-header-title {
+  color: #e6edf3;
+}
+
+/* Expert label glows slightly */
+.app-shell.expert .expert-toggle-label {
+  color: var(--accent);
+}
+
+.app-shell.expert .expert-toggle-track {
+  background: var(--accent);
+  box-shadow: 0 0 8px rgba(77,142,255,0.4);
+}
+
+/* Icon button */
+.app-shell.expert .icon-button {
+  background: var(--surface);
+  border-color: var(--line-strong);
+  color: var(--ink-soft);
+}
+
+.app-shell.expert .icon-button:hover {
+  background: var(--surface-muted);
+  color: var(--ink);
+}
+
+/* Tab strip */
+.app-shell.expert .tab-strip {
+  background: #0d1117;
+  border-color: rgba(255,255,255,0.08);
+}
+
+.app-shell.expert .tab-button {
+  color: var(--ink-soft);
+}
+
+.app-shell.expert .tab-button.active {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.08);
+}
+
+/* All cards */
+.app-shell.expert .hero-form,
+.app-shell.expert .panel,
+.app-shell.expert .score-card,
+.app-shell.expert .brand-strip,
+.app-shell.expert .input-card,
+.app-shell.expert .verdict-hero {
+  background: var(--surface);
+  border-color: var(--line);
+}
+
+.app-shell.expert .hero-form h1 {
+  color: var(--ink);
+}
+
+/* Inputs */
+.app-shell.expert .input-block input {
+  background: #0d1117;
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+
+.app-shell.expert .input-block input:focus {
+  border-color: var(--accent);
+  background: #0d1117;
+  box-shadow: 0 0 0 3px rgba(77,142,255,0.15);
+}
+
+.app-shell.expert .input-block input::placeholder {
+  color: var(--ink-faint);
+}
+
+/* Buttons */
+.app-shell.expert .primary-button {
+  background: var(--accent);
+  box-shadow: 0 0 12px rgba(77,142,255,0.25);
+}
+
+.app-shell.expert .primary-button:hover {
+  background: var(--accent-strong);
+  box-shadow: 0 0 18px rgba(77,142,255,0.35);
+}
+
+.app-shell.expert .ghost-button {
+  background: var(--surface-muted);
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+
+.app-shell.expert .ghost-button:hover {
+  background: #252d3a;
+  border-color: rgba(255,255,255,0.2);
+}
+
+.app-shell.expert .link-button {
+  color: var(--accent);
+}
+
+/* Score pill — bright accent in dark mode */
+.app-shell.expert .score-pill {
+  background: var(--accent);
+  box-shadow: 0 0 20px rgba(77,142,255,0.3);
+}
+
+/* Score meter track */
+.app-shell.expert .score-meter {
+  background: rgba(255,255,255,0.08);
+}
+
+/* Brand strip summary cards */
+.app-shell.expert .summary-card {
+  background: var(--surface-muted);
+  border-color: var(--line);
+}
+
+.app-shell.expert .summary-target   { background: rgba(77,142,255,0.08); border-color: rgba(77,142,255,0.2); }
+.app-shell.expert .summary-confidence { background: rgba(234,179,8,0.08); border-color: rgba(234,179,8,0.2); }
+.app-shell.expert .summary-evidence { background: rgba(34,197,94,0.08); border-color: rgba(34,197,94,0.2); }
+
+/* Evidence items */
+.app-shell.expert .evidence-item,
+.app-shell.expert .candidate-item,
+.app-shell.expert .diagnostic-item {
+  background: #0d1117;
+  border-color: var(--line);
+}
+
+.app-shell.expert .evidence-item span,
+.app-shell.expert .candidate-item span,
+.app-shell.expert .diagnostic-item span {
+  background: var(--surface);
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+
+/* Highlight chips */
+.app-shell.expert .highlight-chip {
+  background: rgba(225,29,72,0.1);
+  border-color: rgba(225,29,72,0.25);
+  color: #fb7185;
+}
+
+/* Missing block */
+.app-shell.expert .missing-block {
+  background: var(--surface-muted);
+  border-color: var(--line-strong);
+}
+
+/* Contact grid */
+.app-shell.expert .contact-grid article {
+  background: #0d1117;
+  border-color: var(--line);
+}
+
+/* Error banner */
+.app-shell.expert .error-banner {
+  background: rgba(225,29,72,0.1);
+  border-color: rgba(225,29,72,0.25);
+  color: #fb7185;
+}
+
+/* PDF export button in expert mode */
+.app-shell.expert .expert-details-actions .ghost-button:last-child {
+  background: rgba(77,142,255,0.12);
+  border-color: rgba(77,142,255,0.3);
+  color: var(--accent);
+}
+
+.app-shell.expert .expert-details-actions .ghost-button:last-child:hover {
+  background: rgba(77,142,255,0.2);
+  border-color: var(--accent);
+  box-shadow: 0 0 10px rgba(77,142,255,0.2);
+}
+
+/* Verdict hero tones adjusted for dark bg */
+.app-shell.expert .verdict-hero.tone-safe {
+  background: rgba(22,163,74,0.08);
+  border-color: rgba(22,163,74,0.25);
+}
+
+.app-shell.expert .verdict-hero.tone-caution {
+  background: rgba(202,138,4,0.08);
+  border-color: rgba(202,138,4,0.25);
+}
+
+.app-shell.expert .verdict-hero.tone-warning {
+  background: rgba(234,88,12,0.08);
+  border-color: rgba(234,88,12,0.25);
+}
+
+.app-shell.expert .verdict-hero.tone-danger {
+  background: rgba(225,29,72,0.08);
+  border-color: rgba(225,29,72,0.25);
+}
+
+.app-shell.expert .verdict-hero.tone-unknown {
+  background: var(--surface-muted);
+  border-color: var(--line);
+}
+
+/* ── Fade-in animation ────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.tab-strip {
+  animation: fadeIn 180ms ease both;
+}
+
+.expert-details {
+  animation: fadeIn 220ms ease both;
+}
+
+.expert-details > * {
+  animation: fadeIn 200ms ease both;
+}
+
+/* Stagger the expert detail cards slightly */
+.expert-details > *:nth-child(2) { animation-delay: 30ms; }
+.expert-details > *:nth-child(3) { animation-delay: 60ms; }
+.expert-details > *:nth-child(4) { animation-delay: 90ms; }
+.expert-details > *:nth-child(5) { animation-delay: 120ms; }
+
+/* Smooth background transition when mode switches */
+.app-shell {
+  transition: background-color 300ms ease;
+}
+
+/* ── Score Ring ───────────────────────────────────── */
+.score-ring {
+  position: relative;
+  width: 88px;
+  height: 88px;
+  flex-shrink: 0;
+}
+
+.score-ring svg {
+  width: 100%;
+  height: 100%;
+}
+
+.score-ring-track {
+  stroke: var(--line);
+}
+
+.score-ring-progress {
+  stroke: var(--score-accent);
+}
+
+.score-ring-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.score-ring-number {
+  font-size: 1.55rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+.score-ring-denom {
+  margin-top: 2px;
+  font-size: 0.65rem;
+  color: var(--ink-faint);
+  letter-spacing: 0.03em;
+}
+
+/* ── Copy Button ──────────────────────────────────── */
+.contact-row-copyable {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 5px;
+}
+
+.contact-row-value {
+  color: var(--ink-soft);
+  font-size: 0.84rem;
+  overflow-wrap: anywhere;
+  flex: 1;
+}
+
+.contact-missing {
+  color: var(--ink-faint);
+  font-size: 0.8rem;
+  font-style: italic;
+  margin: 0 0 4px;
+}
+
+.copy-button {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--surface);
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+  cursor: pointer;
+  padding: 0;
+  transition: background 120ms, color 120ms, border-color 120ms;
+}
+
+.copy-button:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: rgba(37, 84, 255, 0.3);
+}
+
+.copy-button.copied {
+  background: var(--success-soft);
+  color: #16a34a;
+  border-color: #bbf7d0;
+}
+
+.contact-link {
+  color: var(--accent);
+  font-size: 0.84rem;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.contact-link:hover {
+  text-decoration: underline;
+}
+
+.contact-secondary {
+  color: var(--ink-faint);
+  font-size: 0.78rem;
+  margin: 0 0 4px;
+  line-height: 1.5;
+}
+
+/* ═══════════════════════════════════════════════════
+   EXPERT MODE — dark analyst theme
+   ═══════════════════════════════════════════════════ */
+
+.app-shell.expert {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface-muted: #1c2330;
+  --surface-alt: #1c2330;
+  --ink: #e6edf3;
+  --ink-soft: #8b949e;
+  --ink-faint: #484f58;
+  --line: rgba(255,255,255,0.08);
+  --line-strong: rgba(255,255,255,0.14);
+  --accent: #4d8eff;
+  --accent-strong: #6ba3ff;
+  --accent-soft: rgba(77,142,255,0.12);
+
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.app-shell.expert .app-header {
+  border-bottom-color: rgba(77, 142, 255, 0.2);
+}
+
+.app-shell.expert .app-header-title {
+  color: #e6edf3;
+}
+
+.app-shell.expert .expert-toggle-label {
+  color: var(--accent);
+}
+
+.app-shell.expert .expert-toggle-track {
+  background: var(--accent);
+  box-shadow: 0 0 8px rgba(77, 142, 255, 0.4);
+}
+
+.app-shell.expert .icon-button {
+  background: var(--surface);
+  border-color: var(--line-strong);
+  color: var(--ink-soft);
+}
+
+.app-shell.expert .icon-button:hover {
+  background: var(--surface-muted);
+  color: var(--ink);
+}
+
+.app-shell.expert .tab-strip {
+  background: #0d1117;
+  border-color: rgba(255,255,255,0.08);
+}
+
+.app-shell.expert .tab-button {
+  color: var(--ink-soft);
+}
+
+.app-shell.expert .tab-button.active {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.08);
+}
+
+.app-shell.expert .hero-form,
+.app-shell.expert .panel,
+.app-shell.expert .score-card,
+.app-shell.expert .brand-strip,
+.app-shell.expert .input-card,
+.app-shell.expert .verdict-hero {
+  background: var(--surface);
+  border-color: var(--line);
+}
+
+.app-shell.expert .input-block input {
+  background: #0d1117;
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+
+.app-shell.expert .input-block input:focus {
+  border-color: var(--accent);
+  background: #0d1117;
+  box-shadow: 0 0 0 3px rgba(77, 142, 255, 0.15);
+}
+
+.app-shell.expert .input-block input::placeholder {
+  color: var(--ink-faint);
+}
+
+.app-shell.expert .primary-button {
+  background: var(--accent);
+  box-shadow: 0 0 12px rgba(77, 142, 255, 0.25);
+}
+
+.app-shell.expert .primary-button:hover {
+  background: var(--accent-strong);
+  box-shadow: 0 0 18px rgba(77, 142, 255, 0.35);
+}
+
+.app-shell.expert .ghost-button {
+  background: var(--surface-muted);
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+
+.app-shell.expert .ghost-button:hover {
+  background: #252d3a;
+  border-color: rgba(255,255,255,0.2);
+}
+
+.app-shell.expert .link-button {
+  color: var(--accent);
+}
+
+/* Score ring in expert mode */
+.app-shell.expert .score-ring-track {
+  stroke: rgba(255,255,255,0.08);
+}
+
+.app-shell.expert .score-ring-progress {
+  stroke: var(--accent);
+  filter: drop-shadow(0 0 5px rgba(77,142,255,0.6));
+}
+
+.app-shell.expert .score-ring-number {
+  color: var(--ink);
+}
+
+.app-shell.expert .score-ring-denom {
+  color: var(--ink-faint);
+}
+
+.app-shell.expert .score-meter {
+  background: rgba(255,255,255,0.08);
+}
+
+.app-shell.expert .summary-card {
+  background: var(--surface-muted);
+  border-color: var(--line);
+}
+
+.app-shell.expert .summary-target    { background: rgba(77,142,255,0.08);  border-color: rgba(77,142,255,0.2); }
+.app-shell.expert .summary-confidence{ background: rgba(234,179,8,0.08);   border-color: rgba(234,179,8,0.2); }
+.app-shell.expert .summary-evidence  { background: rgba(34,197,94,0.08);   border-color: rgba(34,197,94,0.2); }
+
+.app-shell.expert .evidence-item,
+.app-shell.expert .candidate-item,
+.app-shell.expert .diagnostic-item {
+  background: #0d1117;
+  border-color: var(--line);
+}
+
+.app-shell.expert .evidence-item span,
+.app-shell.expert .candidate-item span,
+.app-shell.expert .diagnostic-item span {
+  background: var(--surface);
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+
+.app-shell.expert .highlight-chip {
+  background: rgba(225,29,72,0.1);
+  border-color: rgba(225,29,72,0.25);
+  color: #fb7185;
+}
+
+.app-shell.expert .missing-block {
+  background: var(--surface-muted);
+  border-color: var(--line-strong);
+}
+
+.app-shell.expert .contact-grid article {
+  background: #0d1117;
+  border-color: var(--line);
+}
+
+.app-shell.expert .copy-button {
+  background: var(--surface-muted);
+  border-color: var(--line-strong);
+  color: var(--ink-soft);
+}
+
+.app-shell.expert .copy-button:hover {
+  background: rgba(77,142,255,0.12);
+  color: var(--accent);
+  border-color: rgba(77,142,255,0.3);
+}
+
+.app-shell.expert .copy-button.copied {
+  background: rgba(34,197,94,0.1);
+  color: #4ade80;
+  border-color: rgba(34,197,94,0.25);
+}
+
+.app-shell.expert .contact-link {
+  color: var(--accent);
+}
+
+.app-shell.expert .error-banner {
+  background: rgba(225,29,72,0.1);
+  border-color: rgba(225,29,72,0.25);
+  color: #fb7185;
+}
+
+.app-shell.expert .expert-details-actions .ghost-button:last-child {
+  background: rgba(77,142,255,0.12);
+  border-color: rgba(77,142,255,0.3);
+  color: var(--accent);
+}
+
+.app-shell.expert .expert-details-actions .ghost-button:last-child:hover {
+  background: rgba(77,142,255,0.2);
+  border-color: var(--accent);
+  box-shadow: 0 0 10px rgba(77,142,255,0.2);
+}
+
+.app-shell.expert .verdict-hero.tone-safe    { background: rgba(22,163,74,0.08);  border-color: rgba(22,163,74,0.25); }
+.app-shell.expert .verdict-hero.tone-caution { background: rgba(202,138,4,0.08);  border-color: rgba(202,138,4,0.25); }
+.app-shell.expert .verdict-hero.tone-warning { background: rgba(234,88,12,0.08);  border-color: rgba(234,88,12,0.25); }
+.app-shell.expert .verdict-hero.tone-danger  { background: rgba(225,29,72,0.08);  border-color: rgba(225,29,72,0.25); }
+.app-shell.expert .verdict-hero.tone-unknown { background: var(--surface-muted);  border-color: var(--line); }
