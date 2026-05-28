@@ -242,7 +242,7 @@ export async function analyzeUrl(request: AnalyzeRequest): Promise<AnalysisResul
     registrarName: infrastructure.registrar,
     registrantCountry: infrastructure.registrant_country,
     tld: normalized.tld
-  });
+});
 
   const llmStartedAt = Date.now();
   const llmReasoning = await callBedrockJson<{ reasoning: string; verdict: AnalysisResult["verdict"] }>({
