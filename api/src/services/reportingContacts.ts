@@ -3,7 +3,7 @@ import { brandCatalog } from "../data/brandCatalog.js";
 import { registrarContacts } from "../data/registrarContacts.js";
 import { buildReportingContactsPrompt } from "../prompts/reportingContacts.js";
 import { callBedrockJson } from "./bedrock.js";
-import { resolveCsirt } from "../data/csirtContacts.js";
+import { resolveCsirt, brandCountryMap } from "../data/csirtContacts.js";
 
 export async function buildReportingContacts(input: {
   brandMatch: BrandMatch;
@@ -30,7 +30,7 @@ export async function buildReportingContacts(input: {
       microsoft_submission: "https://www.microsoft.com/en-us/wdsi/filesubmission"
     },
     local_authorities: {
-      anti_fraud: resolveAntiFraud(input.registrantCountry, input.tld),
+      anti_fraud: resolveAntiFraud(input.registrantCountry, input.tld, input.brandMatch.brand_name),
       csirt: csirt.contact,
       csirt_name: csirt.name,
       csirt_country: csirt.country,
@@ -76,21 +76,67 @@ export async function buildReportingContacts(input: {
 }
 function resolveAntiFraud(
   registrantCountry: string | null,
-  tld: string | null
+  tld: string | null,
+  brandName?: string | null
 ): string | null {
-  const key = (registrantCountry ?? "").toLowerCase() ||
-    (tld ?? "").replace(/^\./, "").toLowerCase();
-
   const antiFraudMap: Record<string, string> = {
     ca: "report@antifraudcentre-centreantifraude.gc.ca",
     us: "ic3.gov/complaint (FBI IC3)",
+    mx: "condusef.gob.mx (CONDUSEF)",
     gb: "report@actionfraud.police.uk",
-    au: "ReportCyber via cyber.gov.au",
-    nz: "complaints@nzta.govt.nz",
+    de: "bka.de/cybercrime (BKA)",
+    fr: "cybermalveillance.gouv.fr",
+    nl: "politie.nl/aangifte (Dutch Police)",
+    se: "polisen.se/anmal-brott",
+    no: "politiet.no/tjenester/anmeldelse",
+    fi: "poliisi.fi/rikosilmoitus",
+    dk: "politi.dk/anmeld-en-forbrydelse",
+    ch: "cybercrime.ch (fedpol)",
+    at: "bmi.gv.at/cybercrime",
+    be: "police.be/cybercrime",
+    es: "incibe.es/linea-de-ayuda-en-ciberseguridad (017)",
+    it: "commissariatodips.it",
+    pl: "cert.pl/zglos",
+    pt: "cncs.gov.pt/denunciar",
     ie: "garda.ie/en/crime/cyber-crime/",
+    ro: "politiaromana.ro/cybercrime",
+    cz: "policie.cz/cybercrime",
+    ru: "mvd.ru (Russian Ministry of Internal Affairs)",
+    au: "cyber.gov.au/report-and-recover/report (ReportCyber)",
+    nz: "cert.nz/report",
+    jp: "cybercrime.go.jp (National Police Agency)",
+    kr: "ecrm.police.go.kr (Korean Cyber Bureau)",
+    cn: "12321.cn (CNCERT Hotline)",
     in: "cybercrime.gov.in",
-    sg: "iwitness.spf.gov.sg"
+    sg: "iwitness.spf.gov.sg",
+    hk: "cybercrime.gov.hk (Hong Kong Police)",
+    tw: "165.gov.tw (Anti-Fraud Hotline)",
+    my: "ccid.rmp.gov.my (Royal Malaysia Police)",
+    id: "patrolisiber.id (Indonesian National Police)",
+    il: "gov.il/cybercrime",
+    ae: "ecrime.ae (Dubai Police)",
+    za: "saps.gov.za/cybercrime",
+    br: "safernet.org.br/denuncie",
+    ar: "argentina.gob.ar/justicia/derechofacil/cybercrimen",
+    cl: "ciberseguridad.gob.cl/reporte",
   };
 
-  return antiFraudMap[key] ?? "report@antifraudcentre-centreantifraude.gc.ca";
+  const countryKey = (registrantCountry ?? "").toLowerCase();
+  if (countryKey && antiFraudMap[countryKey]) {
+    return antiFraudMap[countryKey];
+  }
+
+  const tldKey = (tld ?? "").replace(/^\./, "").toLowerCase();
+  if (tldKey.length === 2 && antiFraudMap[tldKey]) {
+    return antiFraudMap[tldKey];
+  }
+
+  if (brandName && brandCountryMap[brandName]) {
+    const brandKey = brandCountryMap[brandName];
+    if (antiFraudMap[brandKey]) {
+      return antiFraudMap[brandKey];
+    }
+  }
+
+  return "report@antifraudcentre-centreantifraude.gc.ca";
 }
