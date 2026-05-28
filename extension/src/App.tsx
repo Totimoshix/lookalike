@@ -11,7 +11,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<TabKey>("analyze");
 
   return (
-    <main className="app-shell">
+    <main className={expertMode ? "app-shell expert" : "app-shell"}>
       <AppHeader expertMode={expertMode} onExpertModeChange={setExpertMode} />
 
       {expertMode ? (
