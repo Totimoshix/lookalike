@@ -69,7 +69,12 @@ export class CapstoneDomainGuardianStack extends Stack {
       APP_VERSION: props.appVersion,
       CACHE_TABLE_NAME: cacheTable.tableName,
       PROVIDER_CONFIG_SECRET_NAME: providerConfigSecret.secretName,
-      BEDROCK_REGION: "ca-central-1",
+      // Bedrock region is decoupled from the stack region: Amazon Nova Lite is
+      // not offered in ca-central-1, so the LLM step defaults to us-east-1 with
+      // the cross-region inference profile (us.amazon.nova-lite-v1:0). Override
+      // via the BEDROCK_REGION env var at deploy time. The bedrock:InvokeModel
+      // grant uses a wildcard region, so it already covers this.
+      BEDROCK_REGION: process.env.BEDROCK_REGION ?? "us-east-1",
       DNSTWISTER_API_BASE_URL: process.env.DNSTWISTER_API_BASE_URL ?? "https://dnstwister.report/api",
       DNSTWISTER_TIMEOUT_MS: process.env.DNSTWISTER_TIMEOUT_MS ?? "10000"
     };
