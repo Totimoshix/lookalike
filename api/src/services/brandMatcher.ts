@@ -1,6 +1,7 @@
 import {
   baseDomainLabel,
   damerauLevenshtein,
+  isLegitDomain,
   isSharedHost,
   jaroWinkler,
   levenshtein,
@@ -130,6 +131,42 @@ function resolveClaimedBrand(input: { normalizedDomain: string }):
           brand_name: capitalizeLabel(token),
           canonical_domain: chosen,
           confidence: 0.8,
+          method: "heuristic",
+          matched_keywords: stuffingTokens
+        }
+      };
+    }
+  }
+
+  // 3. Fuzzy catalog probe — catch near-miss typosquats of a catalogued brand
+  // that aren't exact matches (e.g. "sherdiancollege" ↔ "sheridancollege", a
+  // single transposition). Damerau-Levenshtein handles transpositions. Tight
+  // thresholds keep false positives low: token ≥5 chars, length within 2 of
+  // the brand label, distance 1 (or 2 only for long labels ≥8). Skipped when
+  // the source is itself a legitimate popular domain.
+  if (!isLegitDomain(input.normalizedDomain)) {
+    let best: { entry: (typeof brandCatalog)[number]; dist: number } | null = null;
+    for (const token of ordered) {
+      if (token.length < 5) continue;
+      for (const entry of brandCatalog) {
+        const entryLabel = baseDomainLabel(entry.canonicalDomain);
+        if (entryLabel.length < 5) continue;
+        if (Math.abs(entryLabel.length - token.length) > 2) continue;
+        if (entryLabel === token) continue; // exact handled above
+        const dist = damerauLevenshtein(token, entryLabel);
+        const acceptable = dist === 1 || (dist === 2 && token.length >= 8 && entryLabel.length >= 8);
+        if (acceptable && (best === null || dist < best.dist)) {
+          best = { entry, dist };
+        }
+      }
+    }
+    if (best) {
+      return {
+        stuffingDetected,
+        match: {
+          brand_name: best.entry.brandName,
+          canonical_domain: best.entry.canonicalDomain,
+          confidence: best.dist === 1 ? 0.9 : 0.87,
           method: "heuristic",
           matched_keywords: stuffingTokens
         }
