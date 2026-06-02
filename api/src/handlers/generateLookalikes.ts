@@ -4,7 +4,14 @@ import { jsonResponse } from "../services/http.js";
 import { generateLookalikeSet } from "../services/orchestrator.js";
 
 export const handler: APIGatewayProxyHandlerV2 = async (event) => {
-  if (event.requestContext.http.method === "OPTIONS") {
+  // Tolerate both API Gateway payload formats: REST API (v1) exposes
+  // event.httpMethod; HTTP API (v2) exposes event.requestContext.http.method.
+  const evt = event as unknown as {
+    httpMethod?: string;
+    requestContext?: { http?: { method?: string } };
+  };
+  const method = evt.httpMethod ?? evt.requestContext?.http?.method;
+  if (method === "OPTIONS") {
     return jsonResponse(204, {});
   }
 
