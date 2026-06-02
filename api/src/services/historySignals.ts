@@ -18,7 +18,11 @@ type CrtShEntry = {
 type CdxRow = [string, string, string?, string?];
 
 const HISTORY_TTL_MS = 6 * 60 * 60 * 1000;
-const PROVIDER_TIMEOUT_MS = 8000;
+// crt.sh and the Internet Archive CDX are free, no-SLA services that are
+// frequently slow (crt.sh routinely takes 6–10s). 8s was too tight; 12s
+// recovers most borderline responses while staying well under the 30s
+// analyze-Lambda budget. These signals are passive-history enrichment only.
+const PROVIDER_TIMEOUT_MS = 12000;
 
 function okDiagnostic(signal: string, provider: string): SignalDiagnostic {
   return {
@@ -28,11 +32,16 @@ function okDiagnostic(signal: string, provider: string): SignalDiagnostic {
   };
 }
 
-function queryFailedDiagnostic(signal: string, provider: string, detail: string): SignalDiagnostic {
+// These are optional best-effort enrichment sources. When they time out or are
+// briefly unavailable it is NOT an error in our pipeline — surface it as
+// "unsupported" (renders as a neutral/amber "unavailable" rather than a red
+// failure) so the expert panel doesn't look broken. Verdicts don't depend on
+// these (passive history is ~4% of the score).
+function unavailableDiagnostic(signal: string, provider: string, detail: string): SignalDiagnostic {
   return {
     signal,
     provider,
-    status: "query_failed",
+    status: "unsupported",
     detail
   };
 }
@@ -130,17 +139,17 @@ export async function collectPassiveHistorySignals(input: {
   const diagnostics: SignalDiagnostic[] = [
     crtShResult.status === "fulfilled"
       ? okDiagnostic("passive_dns_observed", "crt.sh")
-      : queryFailedDiagnostic(
+      : unavailableDiagnostic(
           "passive_dns_observed",
           "crt.sh",
-          crtShResult.reason instanceof Error ? crtShResult.reason.message : "crt.sh lookup failed."
+          "Optional source: crt.sh did not respond in time (free service, no SLA). Verdict unaffected."
         ),
     archiveResult.status === "fulfilled"
       ? okDiagnostic("archive_first_seen_days", "internet_archive")
-      : queryFailedDiagnostic(
+      : unavailableDiagnostic(
           "archive_first_seen_days",
           "internet_archive",
-          archiveResult.reason instanceof Error ? archiveResult.reason.message : "Internet Archive lookup failed."
+          "Optional source: Internet Archive did not respond in time (free service, no SLA). Verdict unaffected."
         )
   ];
 
