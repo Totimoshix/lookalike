@@ -1,4 +1,5 @@
 import { getDomain, parse } from "tldts";
+import { CONFUSABLES_MAP } from "./data/confusables.generated.js";
 import type { LookalikeCandidate } from "./schema.js";
 
 const suspiciousTlds = new Set([
@@ -21,6 +22,70 @@ const suspiciousTlds = new Set([
 ]);
 
 const brandKeywords = ["account", "billing", "confirm", "login", "portal", "secure", "signin", "unlock", "update", "verify"];
+
+// High-confidence phishing-prefix/suffix tokens used by the universal brand
+// resolver. When a domain label like "payment-sheridancollege" tokenizes to
+// ["payment", "sheridancollege"], "payment" is stripped as stuffing and
+// "sheridancollege" is treated as the candidate brand label.
+//
+// Keep this list tight. Entries like "app", "api", "cdn" are intentionally
+// excluded because they're real parts of product names (e.g., chase-app.com
+// could be a legitimate Chase property).
+export const STUFFING_WORDS: ReadonlySet<string> = new Set([
+  "payment", "pay", "billing", "invoice",
+  "secure", "security", "ssl",
+  "login", "signin", "signon", "auth",
+  "account", "accounts",
+  "verify", "verification", "validate", "validation",
+  "support", "help", "service", "services", "customer", "contact",
+  "update", "upgrade",
+  "portal", "dashboard", "my", "online", "official",
+  "www", "mail", "email", "webmail",
+  "recovery", "recover", "reset", "restore",
+  "claim", "prize", "reward", "bonus",
+  "alert", "notify", "notification", "message",
+  "track", "tracking", "status", "delivery",
+  "center", "centre", "gateway", "vault", "hub", "panel"
+]);
+
+/**
+ * Split a registrable-domain label into tokens. Splits on hyphens, underscores,
+ * and digit/letter transitions. Lowercases the input. Drops empty tokens.
+ *
+ * Example: tokenizeDomainLabel("Payment-Sheridancollege") → ["payment", "sheridancollege"]
+ *          tokenizeDomainLabel("secure2bank") → ["secure", "2", "bank"]
+ */
+export function tokenizeDomainLabel(label: string): string[] {
+  const normalized = label.toLowerCase();
+  // Replace separators with a single delimiter, then insert delimiters at
+  // digit/letter transitions, then split.
+  const withSeparators = normalized
+    .replace(/[-_.]+/g, "|")
+    .replace(/([a-z])([0-9])/g, "$1|$2")
+    .replace(/([0-9])([a-z])/g, "$1|$2");
+  return withSeparators.split("|").filter((tok) => tok.length > 0);
+}
+
+/**
+ * Partition tokenized domain-label parts by membership in STUFFING_WORDS.
+ * Numeric-only tokens are treated as stuffing. The remaining "brandCandidates"
+ * are the tokens most likely to be the impersonated brand label.
+ */
+export function stripStuffingTokens(tokens: readonly string[]): {
+  brandCandidates: string[];
+  stuffingTokens: string[];
+} {
+  const brandCandidates: string[] = [];
+  const stuffingTokens: string[] = [];
+  for (const tok of tokens) {
+    if (STUFFING_WORDS.has(tok) || /^[0-9]+$/.test(tok)) {
+      stuffingTokens.push(tok);
+    } else {
+      brandCandidates.push(tok);
+    }
+  }
+  return { brandCandidates, stuffingTokens };
+}
 
 const keyboardAdjacency: Record<string, string[]> = {
   a: ["q", "s", "w", "z"],
@@ -46,17 +111,53 @@ const keyboardAdjacency: Record<string, string[]> = {
   z: ["a", "s", "x"]
 };
 
-const homoglyphMap: Record<string, string[]> = {
-  a: ["@", "à", "á", "а"],
+// Hand-curated ASCII-to-ASCII visual swaps (e.g. 0↔o, 1↔l/i, 5↔s, $↔s). The
+// auto-generated CONFUSABLES_MAP covers only non-ASCII confusables, so we
+// merge these in for detection. Keep this list short — every entry adds
+// noise to generateLookalikeCandidates.
+const ASCII_CONFUSABLES_MAP: Record<string, readonly string[]> = {
+  a: ["@", "4"],
+  b: ["8"],
+  e: ["3"],
+  g: ["9"],
+  i: ["1", "l", "|", "!"],
+  l: ["1", "i", "|"],
+  o: ["0"],
+  s: ["5", "$"],
+  t: ["7"],
+  z: ["2"]
+};
+
+// Merged map used by the detection helpers below. Non-ASCII variants come
+// from the auto-generated Unicode confusables list; ASCII variants come
+// from the curated table above.
+const homoglyphMap: Record<string, readonly string[]> = (() => {
+  const merged: Record<string, string[]> = {};
+  for (const letter of "abcdefghijklmnopqrstuvwxyz") {
+    const unicode = CONFUSABLES_MAP[letter] ?? [];
+    const ascii = ASCII_CONFUSABLES_MAP[letter] ?? [];
+    merged[letter] = [...ascii, ...unicode];
+  }
+  return merged;
+})();
+
+// Smaller subset used by generateLookalikeCandidates so we don't emit
+// thousands of typosquat candidates per base label. Top ~3 most likely
+// visual swaps per letter — biased toward what attackers actually use.
+const HOMOGLYPH_GENERATION_MAP: Record<string, readonly string[]> = {
+  a: ["@", "4", "а", "α"],
+  b: ["8"],
   c: ["ç", "с"],
   e: ["3", "é", "е"],
   g: ["9"],
   i: ["1", "l", "í", "і"],
   l: ["1", "i", "|"],
   o: ["0", "ó", "о"],
-  s: ["5", "$"],
-  u: ["ü"],
-  y: ["ý"]
+  s: ["5", "$", "ѕ"],
+  t: ["7"],
+  u: ["ü", "υ"],
+  y: ["ý", "у"],
+  z: ["2"]
 };
 
 export type NormalizedInput = {
@@ -399,7 +500,7 @@ export function generateLookalikeCandidates(canonicalDomain: string, limit = 50)
     }
   }
 
-  for (const [char, variants] of Object.entries(homoglyphMap)) {
+  for (const [char, variants] of Object.entries(HOMOGLYPH_GENERATION_MAP)) {
     if (!baseLabel.includes(char)) {
       continue;
     }

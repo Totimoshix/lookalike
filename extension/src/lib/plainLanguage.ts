@@ -17,6 +17,10 @@ const TRANSLATIONS: Record<string, Translator> = {
     brand && brand !== "Unknown"
       ? `Spelled with lookalike characters (e.g. '0' for 'o') to copy ${brand}`
       : "Spelled with lookalike characters meant to mimic a real brand",
+  keyword_stuffing: (_, brand) =>
+    brand && brand !== "Unknown"
+      ? `Combines a phishing word (like 'payment-' or 'login-') with the real ${brand} name`
+      : "Combines a phishing word (like 'payment-' or 'login-') with a real brand name",
   domain_age: (item) => {
     const days = typeof item.value === "number" ? item.value : null;
     if (days === null) return "Registered very recently";

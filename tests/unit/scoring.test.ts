@@ -172,4 +172,25 @@ describe("scoring pipeline", () => {
     expect(result.score).toBeGreaterThanOrEqual(75);
     expect(["Critical", "Malicious"]).toContain(result.verdict);
   });
+
+  it("sets typosquatting_type to 'keyword_stuffing' when the brand match flagged a stuffing token", () => {
+    const sheridanBrand: BrandMatch = {
+      brand_name: "Sheridan College",
+      canonical_domain: "sheridancollege.ca",
+      confidence: 0.9,
+      method: "catalog",
+      matched_keywords: ["payment"]
+    };
+    const normalized = normalizeInputUrl("payment-sheridancollege.ca");
+    const lexical = buildLexicalSignals({
+      normalizedDomain: normalized.registrableDomain,
+      punycodeHostname: normalized.punycodeHostname,
+      isIdn: normalized.isIdn,
+      tld: normalized.tld,
+      isIpLiteral: normalized.isIpLiteral,
+      brandMatch: sheridanBrand
+    });
+
+    expect(lexical.typosquatting_type).toBe("keyword_stuffing");
+  });
 });

@@ -177,7 +177,13 @@ function cachedToResult(cached: CachedAnalysis, fallbackUrl: string): AnalysisRe
         google_safe_browsing_report: null,
         microsoft_submission: null
       },
-      local_authorities: { anti_fraud: null, csirt: null },
+      local_authorities: {
+        anti_fraud: null,
+        csirt: null,
+        csirt_name: null,
+        csirt_country: null,
+        csirt_portal: null
+      },
       notes: []
     },
     signal_sources: [],
