@@ -15,7 +15,13 @@ export class AnalysisCache {
 
   constructor(private readonly tableName = process.env.CACHE_TABLE_NAME) {
     this.documentClient = this.tableName
-      ? DynamoDBDocumentClient.from(new DynamoDBClient({}))
+      ? DynamoDBDocumentClient.from(new DynamoDBClient({}), {
+          // AnalysisResult is full of nullable fields that serialize to
+          // `undefined`; the DynamoDB marshaller rejects those unless told to
+          // drop them. Without this, every cache write throws and the whole
+          // /analyze request 500s.
+          marshallOptions: { removeUndefinedValues: true }
+        })
       : null;
   }
 

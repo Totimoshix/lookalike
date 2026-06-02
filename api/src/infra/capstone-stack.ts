@@ -79,13 +79,21 @@ export class CapstoneDomainGuardianStack extends Stack {
       DNSTWISTER_TIMEOUT_MS: process.env.DNSTWISTER_TIMEOUT_MS ?? "10000"
     };
 
+    // ESM output (format: ESM) trips on transitive CommonJS deps that call
+    // require() at load time (e.g. safer-buffer via iconv-lite, pulled in by
+    // the HTML/encoding parsers) — esbuild emits "Dynamic require of X is not
+    // supported". Re-create a real require() from import.meta.url so those
+    // CJS modules resolve. Standard fix for CDK NodejsFunction + ESM.
+    const esmBundling = {
+      target: "node22",
+      format: OutputFormat.ESM,
+      banner: "import { createRequire as topLevelCreateRequire } from 'module'; const require = topLevelCreateRequire(import.meta.url);"
+    };
+
     const analyzeFunction = new NodejsFunction(this, "AnalyzeFunction", {
       runtime: Runtime.NODEJS_22_X,
       entry: path.join(here, "..", "handlers", "analyze.ts"),
-      bundling: {
-        target: "node22",
-        format: OutputFormat.ESM
-      },
+      bundling: esmBundling,
       environment: commonEnvironment,
       memorySize: 1024,
       timeout: Duration.seconds(30),
@@ -95,10 +103,7 @@ export class CapstoneDomainGuardianStack extends Stack {
     const analyzeFastFunction = new NodejsFunction(this, "AnalyzeFastFunction", {
       runtime: Runtime.NODEJS_22_X,
       entry: path.join(here, "..", "handlers", "analyzeFast.ts"),
-      bundling: {
-        target: "node22",
-        format: OutputFormat.ESM
-      },
+      bundling: esmBundling,
       environment: commonEnvironment,
       memorySize: 512,
       timeout: Duration.seconds(5),
@@ -108,10 +113,7 @@ export class CapstoneDomainGuardianStack extends Stack {
     const generateFunction = new NodejsFunction(this, "GenerateLookalikesFunction", {
       runtime: Runtime.NODEJS_22_X,
       entry: path.join(here, "..", "handlers", "generateLookalikes.ts"),
-      bundling: {
-        target: "node22",
-        format: OutputFormat.ESM
-      },
+      bundling: esmBundling,
       environment: commonEnvironment,
       memorySize: 512,
       timeout: Duration.seconds(15),
@@ -121,10 +123,7 @@ export class CapstoneDomainGuardianStack extends Stack {
     const healthFunction = new NodejsFunction(this, "HealthFunction", {
       runtime: Runtime.NODEJS_22_X,
       entry: path.join(here, "..", "handlers", "health.ts"),
-      bundling: {
-        target: "node22",
-        format: OutputFormat.ESM
-      },
+      bundling: esmBundling,
       environment: commonEnvironment,
       memorySize: 256,
       timeout: Duration.seconds(10),
