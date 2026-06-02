@@ -1,6 +1,10 @@
 import { defineManifest } from "@crxjs/vite-plugin";
 
-const apiBaseUrl = process.env.VITE_API_BASE_URL ?? "http://localhost:3000";
+// Defaults to the deployed prod API so the built extension is granted access
+// to the AWS origin without needing VITE_API_BASE_URL at build time. Localhost
+// origins stay in the list so local dev still works after a runtime override.
+const apiBaseUrl =
+  process.env.VITE_API_BASE_URL ?? "https://x7g9yk2qm5.execute-api.ca-central-1.amazonaws.com/prod";
 const apiOrigin = new URL(apiBaseUrl).origin;
 const apiHostPermissions = Array.from(
   new Set([`${apiOrigin}/*`, "http://localhost:3000/*", "http://127.0.0.1:3000/*"])

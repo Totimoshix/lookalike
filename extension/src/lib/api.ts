@@ -6,7 +6,12 @@ import type {
 } from "@capstone/shared";
 import { getApiBaseUrl } from "./storage";
 
-const DEFAULT_API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://127.0.0.1:3000";
+// Defaults to the deployed prod API so a plain `npm run build:extension` (no
+// env var) produces an extension that talks to AWS out of the box. Local devs
+// can point back at a local server via VITE_API_BASE_URL at build time, or at
+// runtime via the options page (getApiBaseUrl override, checked first below).
+const DEFAULT_API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ?? "https://x7g9yk2qm5.execute-api.ca-central-1.amazonaws.com/prod";
 
 async function resolveApiBaseUrl(): Promise<string> {
   try {
