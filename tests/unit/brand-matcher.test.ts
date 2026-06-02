@@ -127,4 +127,18 @@ describe("inferBrandMatch — universal resolver (keyword stuffing + Tranco)", (
     });
     expect(result.method).toBe("unknown");
   });
+
+  it("does not claim a shared host's label as the impersonated brand", async () => {
+    // blogspot.com is a shared host; phishing lives on the subdomain. The
+    // resolver must NOT report brand_name "Blogspot".
+    const result = await inferBrandMatch({
+      analyzedUrl: "https://galeripemenangshopee012.blogspot.com",
+      normalizedDomain: "blogspot.com",
+      pageTitle: null,
+      bodyText: "",
+      skipLlm: true
+    });
+    expect(result.brand_name).not.toBe("Blogspot");
+    expect(result.method).toBe("unknown");
+  });
 });

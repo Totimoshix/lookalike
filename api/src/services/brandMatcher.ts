@@ -1,6 +1,7 @@
 import {
   baseDomainLabel,
   damerauLevenshtein,
+  isSharedHost,
   jaroWinkler,
   levenshtein,
   normalizeInputUrl,
@@ -14,9 +15,40 @@ import { brandCatalog } from "../data/brandCatalog.js";
 import { buildBrandInferencePrompt } from "../prompts/brandInference.js";
 import { callBedrockJson } from "./bedrock.js";
 
+// Display-name overrides for Tranco-only matches whose label doesn't title-case
+// nicely (the label is all we have for non-catalogued brands).
+const BRAND_DISPLAY_NAMES: Record<string, string> = {
+  nytimes: "NY Times",
+  latimes: "LA Times",
+  wsj: "WSJ",
+  bbc: "BBC",
+  cnn: "CNN",
+  espn: "ESPN",
+  hsbc: "HSBC",
+  ups: "UPS",
+  usps: "USPS",
+  irs: "IRS",
+  paypal: "PayPal",
+  github: "GitHub",
+  gitlab: "GitLab",
+  youtube: "YouTube",
+  linkedin: "LinkedIn",
+  tiktok: "TikTok",
+  whatsapp: "WhatsApp",
+  icloud: "iCloud",
+  iphone: "iPhone"
+};
+
 function capitalizeLabel(token: string): string {
   if (token.length === 0) return token;
-  return token.charAt(0).toUpperCase() + token.slice(1);
+  const override = BRAND_DISPLAY_NAMES[token.toLowerCase()];
+  if (override) return override;
+  // Title-case across hyphen/space/underscore segments.
+  return token
+    .split(/[-_\s]+/)
+    .filter(Boolean)
+    .map((seg) => seg.charAt(0).toUpperCase() + seg.slice(1))
+    .join(" ");
 }
 
 /**
@@ -42,6 +74,11 @@ function capitalizeLabel(token: string): string {
 function resolveClaimedBrand(input: { normalizedDomain: string }):
   | { match: BrandMatch; stuffingDetected: boolean }
   | null {
+  // On a shared host (blogspot.com, github.io, …) the registrable label is the
+  // host itself, not an impersonated brand — don't claim "Blogspot" as the
+  // victim. Let the verdict come from reputation/content floors instead.
+  if (isSharedHost(input.normalizedDomain)) return null;
+
   const label = baseDomainLabel(input.normalizedDomain);
   if (!label) return null;
   const tokens = tokenizeDomainLabel(label);

@@ -194,3 +194,89 @@ describe("scoring pipeline", () => {
     expect(lexical.typosquatting_type).toBe("keyword_stuffing");
   });
 });
+
+function blankRiskFactors(): RiskFactors {
+  return {
+    lexical: {
+      is_homoglyph: null, is_idn: false, punycode_domain: null, edit_distance_to_target: null,
+      levenshtein_distance: null, damerau_levenshtein_distance: null, jaro_winkler_similarity: null,
+      ngram_similarity: null, typosquatting_type: null, character_substitution_pattern: null,
+      keyboard_proximity_score: null, dictionary_similarity_score: null, length_difference: null,
+      tld_manipulation: null, suspicious_tld: false, tld_risk_score: 0.15, subdomain_structure_risk: 0.18,
+      brand_keyword_detected: false, suspicious_keywords: [], hyphenation_pattern: null,
+      tokenization_pattern: null, mixed_character_sets: false, url_shortener_detected: false, ip_literal_host: false
+    },
+    infrastructure: {
+      domain_age_days: null, registrar: null, registrant_org: null, registration_length_years: null,
+      whois_privacy: null, hidden_ownership: null, registrant_country: null, ssl_valid: null, ssl_error: null,
+      certificate_issuer: null, certificate_reputation: null, certificate_age_days: null,
+      certificate_domain_mismatch: null, creation_date_anomaly: null, mx_records_present: null,
+      dns_records: { a: [], mx: [], txt: [], ns: [] }, dns_history_changes: null, fast_flux_detected: null,
+      ip_reputation_score: null, hosting_asn: null, hosting_asn_reputation: null, shared_hosting_risk: null,
+      redirect_count: null, final_url: null
+    },
+    content: {
+      page_title: null, html_similarity_score: null, logo_reuse_detected: null, text_reuse_score: null,
+      credential_harvesting_detected: null, forms_detected: null, password_fields_detected: null,
+      form_submits_to_real_brand: null, hidden_iframes: null, obfuscated_javascript: null,
+      suspicious_script_patterns: [], missing_security_headers: [], server_header_exposure: null,
+      redirect_chain: [], body_keywords: []
+    },
+    reputational: {
+      blacklisted_in_phishTank: null, blacklisted_in_openPhish: null, google_safe_browsing: null,
+      virus_total_detections: null, abuse_ipdb_reports: null, phishing_feed_hits: null
+    },
+    behavioral: { keyboard_event_listeners: null, http_to_https_mismatch: null, external_form_action: null },
+    email_auth: { spf_present: null, dkim_present: null, dmarc_present: null, spf_dkim_dmarc_missing: null },
+    passive_history: { passive_dns_observed: null, passive_dns_notes: [], archive_first_seen_days: null, ownership_changes_detected: null },
+    machine_learning: { brand_similarity_score: null, visual_similarity_score: null, url_entropy: null, time_based_risk: null }
+  };
+}
+
+describe("computeThreatScore verdict floors", () => {
+  it("floors a Google Safe Browsing hit to Malicious", () => {
+    const rf = blankRiskFactors();
+    rf.reputational.google_safe_browsing = true;
+    const { score, verdict } = computeThreatScore(rf);
+    expect(score).toBeGreaterThanOrEqual(90);
+    expect(verdict).toBe("Malicious");
+  });
+
+  it("floors a phishing-feed hit to Critical even with no other signals", () => {
+    const rf = blankRiskFactors();
+    rf.reputational.blacklisted_in_openPhish = true;
+    rf.reputational.phishing_feed_hits = 1;
+    const { score, verdict } = computeThreatScore(rf);
+    expect(score).toBeGreaterThanOrEqual(80);
+    expect(verdict).toBe("Critical");
+  });
+
+  it("floors a confident keyword-stuffing lookalike to High", () => {
+    const rf = blankRiskFactors();
+    rf.lexical.typosquatting_type = "keyword_stuffing";
+    const { score, verdict } = computeThreatScore(rf, { brandConfidence: 0.9 });
+    expect(score).toBeGreaterThanOrEqual(65);
+    expect(verdict).toBe("High");
+  });
+
+  it("floors credential harvesting on a shared host to High", () => {
+    const rf = blankRiskFactors();
+    rf.content.credential_harvesting_detected = true;
+    const { score, verdict } = computeThreatScore(rf, { registrableDomain: "blogspot.com" });
+    expect(score).toBeGreaterThanOrEqual(65);
+    expect(verdict).toBe("High");
+  });
+
+  it("does NOT floor a benign domain (guards against false positives)", () => {
+    const rf = blankRiskFactors();
+    const { verdict } = computeThreatScore(rf, { brandConfidence: 0 });
+    expect(["Safe", "Low"]).toContain(verdict);
+  });
+
+  it("does not let a low brand confidence trigger the lookalike floor", () => {
+    const rf = blankRiskFactors();
+    rf.lexical.typosquatting_type = "keyword_stuffing";
+    const { verdict } = computeThreatScore(rf, { brandConfidence: 0.4 });
+    expect(["Safe", "Low"]).toContain(verdict);
+  });
+});

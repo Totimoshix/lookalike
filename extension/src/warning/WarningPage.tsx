@@ -125,7 +125,9 @@ export function WarningPage() {
         <p className="warning-summary">{summary}</p>
 
         {loading ? (
-          <p className="warning-hint">Loading detailed evidence…</p>
+          <p className="warning-hint">
+            <span aria-hidden="true" className="spinner" /> Loading detailed evidence…
+          </p>
         ) : reasons.length > 0 ? (
           <div className="warning-reasons">
             <p className="eyebrow">Why we flagged it</p>

@@ -16,6 +16,8 @@ import {
   RestApi
 } from "aws-cdk-lib/aws-apigateway";
 import { Alarm, ComparisonOperator, TreatMissingData } from "aws-cdk-lib/aws-cloudwatch";
+import { Rule, RuleTargetInput, Schedule } from "aws-cdk-lib/aws-events";
+import { LambdaFunction as LambdaFunctionTarget } from "aws-cdk-lib/aws-events-targets";
 import { AttributeType, BillingMode, Table } from "aws-cdk-lib/aws-dynamodb";
 import { Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { Runtime } from "aws-cdk-lib/aws-lambda";
@@ -193,6 +195,16 @@ export class CapstoneDomainGuardianStack extends Stack {
     analyzeResource.addMethod("POST", new LambdaIntegration(analyzeFunction));
     analyzeResource.addResource("fast").addMethod("POST", new LambdaIntegration(analyzeFastFunction));
     api.root.addResource("generate-lookalikes").addMethod("POST", new LambdaIntegration(generateFunction));
+
+    // Keep the two analysis Lambdas warm so demo/first-hit latency stays low.
+    // Invokes them every 5 minutes with a { warmup: true } event that the
+    // handlers short-circuit before doing any work.
+    const warmer = new Rule(this, "LambdaWarmer", {
+      schedule: Schedule.rate(Duration.minutes(5))
+    });
+    const warmupEvent = RuleTargetInput.fromObject({ warmup: true });
+    warmer.addTarget(new LambdaFunctionTarget(analyzeFunction, { event: warmupEvent }));
+    warmer.addTarget(new LambdaFunctionTarget(analyzeFastFunction, { event: warmupEvent }));
 
     new Alarm(this, "Api5xxAlarm", {
       metric: api.metricServerError({

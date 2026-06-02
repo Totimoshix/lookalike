@@ -65,7 +65,13 @@ export function UrlInputCard({ expertMode, isLoading, onSubmit }: UrlInputCardPr
       ) : null}
       <div className="action-row">
         <button className="primary-button" disabled={isLoading || url.trim().length === 0} type="submit">
-          {isLoading ? "Checking..." : "Check"}
+          {isLoading ? (
+            <>
+              <span aria-hidden="true" className="spinner" /> Checking…
+            </>
+          ) : (
+            "Check"
+          )}
         </button>
         {currentTabUrl ? (
           <button className="link-button" onClick={useCurrentTab} type="button">

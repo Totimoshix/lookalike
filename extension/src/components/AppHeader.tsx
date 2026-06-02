@@ -1,3 +1,5 @@
+import { useRealtimeProtection } from "../lib/storage";
+
 type AppHeaderProps = {
   expertMode: boolean;
   onExpertModeChange: (next: boolean) => void;
@@ -13,6 +15,7 @@ function openOptions() {
 }
 
 export function AppHeader({ expertMode, onExpertModeChange }: AppHeaderProps) {
+  const [realtime, setRealtime] = useRealtimeProtection();
   return (
     <header className="app-header">
       <div className="app-header-brand">
@@ -20,6 +23,17 @@ export function AppHeader({ expertMode, onExpertModeChange }: AppHeaderProps) {
         <span className="app-header-title">Domain Guardian</span>
       </div>
       <div className="app-header-actions">
+        <label className="expert-toggle" title="Warn me before dangerous sites load">
+          <input
+            type="checkbox"
+            checked={realtime}
+            onChange={(event) => setRealtime(event.target.checked)}
+          />
+          <span className="expert-toggle-track">
+            <span className="expert-toggle-thumb" />
+          </span>
+          <span className="expert-toggle-label">Live</span>
+        </label>
         <label className="expert-toggle">
           <input
             type="checkbox"

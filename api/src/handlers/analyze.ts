@@ -4,6 +4,11 @@ import { jsonResponse } from "../services/http.js";
 import { analyzeUrl } from "../services/orchestrator.js";
 
 export const handler: APIGatewayProxyHandlerV2 = async (event) => {
+  // Scheduled warmer pings (EventBridge) keep the Lambda hot — short-circuit
+  // before any work or schema parsing.
+  if ((event as unknown as { warmup?: boolean }).warmup === true) {
+    return jsonResponse(200, { warm: true });
+  }
   // Tolerate both API Gateway payload formats: REST API (v1) exposes
   // event.httpMethod; HTTP API (v2) exposes event.requestContext.http.method.
   const evt = event as unknown as {
