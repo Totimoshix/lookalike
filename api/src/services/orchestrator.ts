@@ -1,5 +1,6 @@
 import {
   analysisResultSchema,
+  isLegitDomain,
   normalizeInputUrl,
   type AnalyzeRequest,
   type AnalysisResult,
@@ -129,13 +130,22 @@ export async function analyzeUrl(request: AnalyzeRequest): Promise<AnalysisResul
     })
   ]);
 
+  // The domain is legitimate (not a lookalike of anything) if it IS the matched
+  // brand's canonical domain, or it's a top-10k popular site. Suppress all
+  // lookalike scoring for it; reputation signals are still evaluated.
+  const registrable = normalized.registrableDomain.toLowerCase();
+  const isLegit =
+    (brandMatch.method !== "unknown" && brandMatch.canonical_domain.toLowerCase() === registrable) ||
+    isLegitDomain(registrable);
+
   const lexical = buildLexicalSignals({
     normalizedDomain: normalized.registrableDomain,
     punycodeHostname: normalized.punycodeHostname,
     isIdn: normalized.isIdn,
     tld: normalized.tld,
     isIpLiteral: normalized.isIpLiteral,
-    brandMatch
+    brandMatch,
+    isLegit
   });
 
   const infrastructure: RiskFactors["infrastructure"] = {
@@ -203,7 +213,8 @@ export async function analyzeUrl(request: AnalyzeRequest): Promise<AnalysisResul
 
   const { score, verdict } = computeThreatScore(riskFactors, {
     brandConfidence: brandMatch.confidence,
-    registrableDomain: normalized.registrableDomain
+    registrableDomain: normalized.registrableDomain,
+    isLegit
   });
 
   const preLlmDiagnostics: SignalDiagnostic[] = [

@@ -1,5 +1,6 @@
 import {
   analysisResultSchema,
+  isLegitDomain,
   normalizeInputUrl,
   type AnalyzeRequest,
   type AnalysisResult,
@@ -118,13 +119,19 @@ export async function analyzeUrlFast(request: AnalyzeRequest): Promise<AnalysisR
     REPUTATION_BUDGET_MS
   );
 
+  const registrable = normalized.registrableDomain.toLowerCase();
+  const isLegit =
+    (brandMatch.method !== "unknown" && brandMatch.canonical_domain.toLowerCase() === registrable) ||
+    isLegitDomain(registrable);
+
   const lexical = buildLexicalSignals({
     normalizedDomain: normalized.registrableDomain,
     punycodeHostname: normalized.punycodeHostname,
     isIdn: normalized.isIdn,
     tld: normalized.tld,
     isIpLiteral: normalized.isIpLiteral,
-    brandMatch
+    brandMatch,
+    isLegit
   });
 
   const infrastructure = emptyInfrastructure();
@@ -168,7 +175,8 @@ export async function analyzeUrlFast(request: AnalyzeRequest): Promise<AnalysisR
 
   const { score, verdict } = computeThreatScore(riskFactors, {
     brandConfidence: brandMatch.confidence,
-    registrableDomain: normalized.registrableDomain
+    registrableDomain: normalized.registrableDomain,
+    isLegit
   });
 
   const diagnostics: SignalDiagnostic[] = [

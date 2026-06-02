@@ -30,10 +30,16 @@ export function buildLexicalSignals(input: {
   tld: string | null;
   isIpLiteral: boolean;
   brandMatch: BrandMatch;
+  isLegit?: boolean;
 }): RiskFactors["lexical"] {
   const sourceLabel = baseDomainLabel(input.normalizedDomain);
   const suspiciousKeywords = suspiciousKeywordsInDomain(input.normalizedDomain);
-  const hasTargetBrand = input.brandMatch.method !== "unknown" && input.brandMatch.confidence > 0;
+  // A legitimate domain (it IS the brand's canonical domain, or a top-10k site)
+  // cannot be a lookalike of itself — comparing its label to the brand's own
+  // label yields jaro=1.0 and spurious homoglyph hits. Treat it as having no
+  // target brand so all lookalike/similarity signals stay null.
+  const hasTargetBrand =
+    input.brandMatch.method !== "unknown" && input.brandMatch.confidence > 0 && input.isLegit !== true;
 
   if (!hasTargetBrand) {
     return {
@@ -123,7 +129,7 @@ function categoryScore(values: Array<number | null | boolean>, weights: number[]
 
 export function computeThreatScore(
   riskFactors: RiskFactors,
-  opts?: { brandConfidence?: number; registrableDomain?: string }
+  opts?: { brandConfidence?: number; registrableDomain?: string; isLegit?: boolean }
 ): { score: number; verdict: AnalysisResult["verdict"] } {
   const lexicalScore = categoryScore(
     [
@@ -251,6 +257,10 @@ export function computeThreatScore(
   const lexical = riskFactors.lexical;
   const brandConfidence = opts?.brandConfidence ?? 0;
   const onSharedHost = isSharedHost(opts?.registrableDomain);
+  // A legitimate domain (its own canonical, or a top-10k site) is never a
+  // lookalike — never apply the brand-similarity floors to it. Reputation
+  // floors below still apply so a compromised legit domain can be flagged.
+  const isLegit = opts?.isLegit === true;
 
   let floor = 0;
   // Google Safe Browsing is authoritative → treat as malicious.
@@ -275,7 +285,9 @@ export function computeThreatScore(
   }
   // Confident lookalike of a known brand (homoglyph / keyword-stuffing / very
   // high string similarity) — high risk even if the page never resolved.
+  // Skipped for legitimate domains (a real site is not a lookalike of itself).
   if (
+    !isLegit &&
     brandConfidence >= 0.85 &&
     (lexical.is_homoglyph === true ||
       lexical.typosquatting_type === "keyword_stuffing" ||
