@@ -21,6 +21,21 @@ const TRANSLATIONS: Record<string, Translator> = {
     brand && brand !== "Unknown"
       ? `Combines a phishing word (like 'payment-' or 'login-') with the real ${brand} name`
       : "Combines a phishing word (like 'payment-' or 'login-') with a real brand name",
+  redirect_offdomain: (item) => {
+    const dest = typeof item.value === "string" && item.value ? item.value : item.note ?? null;
+    let host: string | null = null;
+    if (dest) {
+      try {
+        host = new URL(dest).hostname;
+      } catch {
+        host = dest;
+      }
+    }
+    return host
+      ? `Secretly sends you to ${host}, an unrelated site`
+      : "Secretly redirects you to an unrelated site";
+  },
+  client_side_redirect: () => "Uses a hidden script to redirect you somewhere else",
   domain_age: (item) => {
     const days = typeof item.value === "number" ? item.value : null;
     if (days === null) return "Registered very recently";

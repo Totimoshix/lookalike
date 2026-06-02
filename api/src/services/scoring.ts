@@ -129,7 +129,7 @@ function categoryScore(values: Array<number | null | boolean>, weights: number[]
 
 export function computeThreatScore(
   riskFactors: RiskFactors,
-  opts?: { brandConfidence?: number; registrableDomain?: string; isLegit?: boolean }
+  opts?: { brandConfidence?: number; registrableDomain?: string; isLegit?: boolean; crossDomainRedirect?: boolean }
 ): { score: number; verdict: AnalysisResult["verdict"] } {
   const lexicalScore = categoryScore(
     [
@@ -198,9 +198,11 @@ export function computeThreatScore(
     [
       riskFactors.behavioral.keyboard_event_listeners,
       riskFactors.behavioral.http_to_https_mismatch,
-      riskFactors.behavioral.external_form_action
+      riskFactors.behavioral.external_form_action,
+      riskFactors.behavioral.cross_domain_redirect,
+      riskFactors.behavioral.client_side_redirect
     ],
-    [0.8, 0.6, 0.9]
+    [0.8, 0.6, 0.9, 1.0, 0.6]
   );
 
   const emailAuthScore = categoryScore(
@@ -298,6 +300,12 @@ export function computeThreatScore(
   // Credential-harvesting page hosted on a shared host (blogspot, ipfs, …),
   // where the benign parent domain would otherwise mask the threat.
   if (onSharedHost && content.credential_harvesting_detected === true) {
+    floor = Math.max(floor, 65);
+  }
+  // Off-domain redirect (HTTP / meta / JS) from a non-legitimate source domain
+  // to an unrelated registrable domain — classic cloaking. Legit/allowlisted
+  // sources legitimately redirect (apex→www, vanity domains) so they're exempt.
+  if (!isLegit && (opts?.crossDomainRedirect === true || riskFactors.behavioral.cross_domain_redirect === true)) {
     floor = Math.max(floor, 65);
   }
 
@@ -436,6 +444,16 @@ export function buildEvidenceSummary(result: {
 
   if (result.riskFactors.behavioral.external_form_action) {
     addEvidence("external_form_action", "Form posts to an external destination", "behavioral", "high", true);
+  }
+
+  if (result.riskFactors.behavioral.cross_domain_redirect) {
+    highlights.push("The site redirects to an unrelated domain — a common cloaking tactic.");
+    const dest = result.riskFactors.infrastructure.final_url ?? null;
+    addEvidence("redirect_offdomain", "Redirects to an unrelated domain", "behavioral", "high", true, dest ?? undefined);
+  }
+
+  if (result.riskFactors.behavioral.client_side_redirect) {
+    addEvidence("client_side_redirect", "Hidden script/meta redirect detected", "behavioral", "medium", true);
   }
 
   if (

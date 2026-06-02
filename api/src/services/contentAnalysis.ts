@@ -5,7 +5,26 @@ import type { BrandMatch, RiskFactors } from "@capstone/shared";
 type PageContentAnalysis = {
   content: RiskFactors["content"];
   externalFormAction: boolean | null;
+  // A script- or meta-based redirect target extracted from the page (absolute
+  // URL), when it's a static string literal. null if none or built dynamically.
+  clientSideRedirectTarget: string | null;
 };
+
+// JS redirect via location assignment: location(.href|.replace|.assign) = "URL"
+// or window/top.location[.href] = "URL". Captures the first string-literal URL.
+const JS_REDIRECT_RE =
+  /(?:window\.|top\.|self\.|document\.)?location(?:\.href|\.replace|\.assign)?\s*(?:=|\(\s*)["']([^"']+)["']/i;
+const META_REFRESH_RE = /<meta[^>]+http-equiv=["']?refresh["']?[^>]*url=([^"'>\s]+)/i;
+
+function extractClientSideRedirect(html: string, baseUrl: string | null): string | null {
+  const raw = JS_REDIRECT_RE.exec(html)?.[1] ?? META_REFRESH_RE.exec(html)?.[1] ?? null;
+  if (!raw) return null;
+  try {
+    return new URL(raw, baseUrl ?? "https://example.invalid").toString();
+  } catch {
+    return raw; // keep the raw token even if it isn't absolute-resolvable
+  }
+}
 
 const COMMON_STOP_WORDS = new Set([
   "and",
@@ -91,7 +110,8 @@ export function analyzePageContent(
         redirect_chain: redirectChain,
         body_keywords: []
       },
-      externalFormAction: null
+      externalFormAction: null,
+      clientSideRedirectTarget: null
     };
   }
 
@@ -120,6 +140,15 @@ export function analyzePageContent(
       suspiciousPatterns.add("network_postback");
     }
   });
+
+  // Client-side redirect (JS location assignment or <meta refresh>). These
+  // bounce a visitor elsewhere without an HTTP 30x — a common cloaking vector.
+  const clientSideRedirectTarget = extractClientSideRedirect(html, pageUrl);
+  const hasClientSideRedirect =
+    clientSideRedirectTarget !== null || JS_REDIRECT_RE.test(html) || META_REFRESH_RE.test(html);
+  if (hasClientSideRedirect) {
+    suspiciousPatterns.add("client_side_redirect");
+  }
 
   const missingSecurityHeaders = ["content-security-policy", "x-frame-options", "strict-transport-security"].filter(
     (header) => !headers[header]
@@ -211,6 +240,7 @@ export function analyzePageContent(
       redirect_chain: redirectChain,
       body_keywords: bodyKeywords
     },
-    externalFormAction
+    externalFormAction,
+    clientSideRedirectTarget
   };
 }
