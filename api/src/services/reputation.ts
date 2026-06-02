@@ -344,21 +344,25 @@ async function checkPhishTank(url: string): Promise<ProviderCheckResult<boolean>
       value: matchesPhishingFeed(url, feed),
       diagnostic: okDiagnostic("blacklisted_in_phishTank", "phishtank")
     };
-  } catch (feedError) {
+  } catch {
     try {
       return {
         value: await checkPhishTankDirect(url),
         diagnostic: okDiagnostic("blacklisted_in_phishTank", "phishtank")
       };
-    } catch (directError) {
-      const detailParts = [
-        feedError instanceof Error ? `feed: ${feedError.message}` : "feed lookup failed",
-        directError instanceof Error ? `direct: ${directError.message}` : "direct lookup failed"
-      ];
-
+    } catch {
+      // PhishTank shut off anonymous access (the feed/direct endpoints now
+      // redirect / 403 without a registered API key, which PhishTank rarely
+      // issues). This isn't a pipeline error and OpenPhish already covers the
+      // same "is this URL blacklisted" signal — report it as not-configured
+      // (neutral) rather than a red failure.
       return {
         value: null,
-        diagnostic: queryFailedDiagnostic("blacklisted_in_phishTank", "phishtank", detailParts.join("; "))
+        diagnostic: notConfiguredDiagnostic(
+          "blacklisted_in_phishTank",
+          "phishtank",
+          "PhishTank requires a registered API key (anonymous access is gated); OpenPhish covers this signal."
+        )
       };
     }
   }
