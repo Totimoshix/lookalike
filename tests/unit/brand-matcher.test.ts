@@ -128,6 +128,44 @@ describe("inferBrandMatch — universal resolver (keyword stuffing + Tranco)", (
     expect(result.method).toBe("unknown");
   });
 
+  it("fuzzy-matches a near-miss typosquat to the catalogued brand", async () => {
+    // single transposition: sherdiancollege ↔ sheridancollege
+    const result = await inferBrandMatch({
+      analyzedUrl: "https://sherdiancollege.ca",
+      normalizedDomain: "sherdiancollege.ca",
+      pageTitle: null,
+      bodyText: "",
+      skipLlm: true
+    });
+    expect(result.brand_name).toBe("Sheridan College");
+    expect(result.canonical_domain).toBe("sheridancollege.ca");
+    expect(result.method).toBe("heuristic");
+    expect(result.confidence).toBeGreaterThanOrEqual(0.85);
+  });
+
+  it("fuzzy-matches an obvious brand typo (amazo → amazon)", async () => {
+    const result = await inferBrandMatch({
+      analyzedUrl: "https://amazo.com",
+      normalizedDomain: "amazo.com",
+      pageTitle: null,
+      bodyText: "",
+      skipLlm: true
+    });
+    expect(result.brand_name).toBe("Amazon");
+    expect(result.confidence).toBeGreaterThanOrEqual(0.85);
+  });
+
+  it("does not fuzzy-match an unrelated domain", async () => {
+    const result = await inferBrandMatch({
+      analyzedUrl: "https://mybusinesssite.ca",
+      normalizedDomain: "mybusinesssite.ca",
+      pageTitle: null,
+      bodyText: "",
+      skipLlm: true
+    });
+    expect(result.method).toBe("unknown");
+  });
+
   it("does not claim a shared host's label as the impersonated brand", async () => {
     // blogspot.com is a shared host; phishing lives on the subdomain. The
     // resolver must NOT report brand_name "Blogspot".
