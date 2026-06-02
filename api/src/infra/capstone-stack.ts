@@ -17,6 +17,7 @@ import {
 } from "aws-cdk-lib/aws-apigateway";
 import { Alarm, ComparisonOperator, TreatMissingData } from "aws-cdk-lib/aws-cloudwatch";
 import { AttributeType, BillingMode, Table } from "aws-cdk-lib/aws-dynamodb";
+import { Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { Runtime } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunction, OutputFormat } from "aws-cdk-lib/aws-lambda-nodejs";
 import { LogGroup, RetentionDays } from "aws-cdk-lib/aws-logs";
@@ -132,6 +133,23 @@ export class CapstoneDomainGuardianStack extends Stack {
     providerConfigSecret.grantRead(analyzeFastFunction);
     providerConfigSecret.grantRead(generateFunction);
     providerConfigSecret.grantRead(healthFunction);
+
+    // Allow the analyze Lambda to invoke Bedrock for the analyst explanation,
+    // brand-inference LLM fallback, and reporting-contact notes. The Converse
+    // API maps to bedrock:InvokeModel. Scoped to inference profiles in this
+    // account (any region, to support cross-region/global profiles) and the
+    // account-less foundation-model ARNs those profiles fan out to. Only the
+    // analyze path calls Bedrock — fast/generate/health do not.
+    analyzeFunction.addToRolePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["bedrock:InvokeModel", "bedrock:InvokeModelWithResponseStream"],
+        resources: [
+          `arn:aws:bedrock:*:${this.account}:inference-profile/*`,
+          "arn:aws:bedrock:*::foundation-model/*"
+        ]
+      })
+    );
 
     const apiAccessLogs = new LogGroup(this, "ApiAccessLogs", {
       retention: retentionForStage(props.stageName),
