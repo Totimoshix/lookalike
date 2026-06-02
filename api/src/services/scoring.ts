@@ -11,6 +11,7 @@ import {
   levenshtein,
   ngramSimilarity,
   safeNumber,
+  STUFFING_WORDS,
   suspiciousKeywordsInDomain,
   tokenizationPattern,
   urlEntropy
@@ -73,7 +74,15 @@ export function buildLexicalSignals(input: {
     damerau_levenshtein_distance: damerauLevenshtein(sourceLabel, targetLabel),
     jaro_winkler_similarity: Number(jaroWinkler(sourceLabel, targetLabel).toFixed(3)),
     ngram_similarity: Number(ngramSimilarity(sourceLabel, targetLabel).toFixed(3)),
-    typosquatting_type: classifyTyposquatting(sourceLabel, targetLabel),
+    typosquatting_type:
+      // When the brand resolver flagged stuffing tokens (e.g. "payment-" or
+      // "-login" wrapped around a real brand label), surface that here so the
+      // evidence panel and plain-language reasons explain the attack pattern.
+      input.brandMatch.matched_keywords.some((kw) =>
+        STUFFING_WORDS.has(kw.toLowerCase())
+      )
+        ? "keyword_stuffing"
+        : classifyTyposquatting(sourceLabel, targetLabel),
     character_substitution_pattern: detectHomoglyphPattern(sourceLabel, targetLabel),
     keyboard_proximity_score: keyboardProximityScore(sourceLabel, targetLabel),
     dictionary_similarity_score: Number(jaroWinkler(sourceLabel, targetLabel).toFixed(3)),
@@ -225,6 +234,11 @@ export function computeThreatScore(riskFactors: RiskFactors): { score: number; v
 
   const score = toPercentage(Math.min(1, weightedScore + criticalBoost) * 100);
 
+  // Verdict thresholds are heuristic — informed by the per-category weights
+  // and critical boosts above. Real tuning requires labelled phishing/benign
+  // samples from a feedback loop that does not yet exist (see plan item #6
+  // for the dormant Report button + /feedback endpoint). If the weights
+  // change, revisit these breakpoints to keep the verdict distribution sane.
   if (score >= 90) {
     return { score, verdict: "Malicious" };
   }
@@ -291,6 +305,17 @@ export function buildEvidenceSummary(result: {
   if (result.riskFactors.lexical.is_homoglyph) {
     highlights.push("Lookalike character substitution detected in the domain label.");
     addEvidence("homoglyph", "Homoglyph detected", "lexical", "high", true);
+  }
+
+  if (result.riskFactors.lexical.typosquatting_type === "keyword_stuffing") {
+    highlights.push("Domain combines a phishing word with a real brand name.");
+    addEvidence(
+      "keyword_stuffing",
+      "Keyword stuffing detected",
+      "lexical",
+      "high",
+      true
+    );
   }
 
   if (result.riskFactors.infrastructure.domain_age_days !== null && result.riskFactors.infrastructure.domain_age_days < 30) {

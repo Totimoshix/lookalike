@@ -17,6 +17,7 @@ import {
 } from "aws-cdk-lib/aws-apigateway";
 import { Alarm, ComparisonOperator, TreatMissingData } from "aws-cdk-lib/aws-cloudwatch";
 import { AttributeType, BillingMode, Table } from "aws-cdk-lib/aws-dynamodb";
+import { Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { Runtime } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunction, OutputFormat } from "aws-cdk-lib/aws-lambda-nodejs";
 import { LogGroup, RetentionDays } from "aws-cdk-lib/aws-logs";
@@ -68,7 +69,12 @@ export class CapstoneDomainGuardianStack extends Stack {
       APP_VERSION: props.appVersion,
       CACHE_TABLE_NAME: cacheTable.tableName,
       PROVIDER_CONFIG_SECRET_NAME: providerConfigSecret.secretName,
-      BEDROCK_REGION: "ca-central-1",
+      // Bedrock region is decoupled from the stack region: Amazon Nova Lite is
+      // not offered in ca-central-1, so the LLM step defaults to us-east-1 with
+      // the cross-region inference profile (us.amazon.nova-lite-v1:0). Override
+      // via the BEDROCK_REGION env var at deploy time. The bedrock:InvokeModel
+      // grant uses a wildcard region, so it already covers this.
+      BEDROCK_REGION: process.env.BEDROCK_REGION ?? "us-east-1",
       DNSTWISTER_API_BASE_URL: process.env.DNSTWISTER_API_BASE_URL ?? "https://dnstwister.report/api",
       DNSTWISTER_TIMEOUT_MS: process.env.DNSTWISTER_TIMEOUT_MS ?? "10000"
     };
@@ -132,6 +138,23 @@ export class CapstoneDomainGuardianStack extends Stack {
     providerConfigSecret.grantRead(analyzeFastFunction);
     providerConfigSecret.grantRead(generateFunction);
     providerConfigSecret.grantRead(healthFunction);
+
+    // Allow the analyze Lambda to invoke Bedrock for the analyst explanation,
+    // brand-inference LLM fallback, and reporting-contact notes. The Converse
+    // API maps to bedrock:InvokeModel. Scoped to inference profiles in this
+    // account (any region, to support cross-region/global profiles) and the
+    // account-less foundation-model ARNs those profiles fan out to. Only the
+    // analyze path calls Bedrock — fast/generate/health do not.
+    analyzeFunction.addToRolePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["bedrock:InvokeModel", "bedrock:InvokeModelWithResponseStream"],
+        resources: [
+          `arn:aws:bedrock:*:${this.account}:inference-profile/*`,
+          "arn:aws:bedrock:*::foundation-model/*"
+        ]
+      })
+    );
 
     const apiAccessLogs = new LogGroup(this, "ApiAccessLogs", {
       retention: retentionForStage(props.stageName),
