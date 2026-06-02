@@ -279,4 +279,55 @@ describe("computeThreatScore verdict floors", () => {
     const { verdict } = computeThreatScore(rf, { brandConfidence: 0.4 });
     expect(["Safe", "Low"]).toContain(verdict);
   });
+
+  it("does NOT flag a legitimate domain even at jaro 1.0 / homoglyph true (isLegit)", () => {
+    const rf = blankRiskFactors();
+    // What a self-match against its own canonical would produce before suppression:
+    rf.lexical.is_homoglyph = true;
+    rf.lexical.jaro_winkler_similarity = 1.0;
+    const { verdict } = computeThreatScore(rf, {
+      brandConfidence: 0.95,
+      registrableDomain: "sheridancollege.ca",
+      isLegit: true
+    });
+    expect(["Safe", "Low"]).toContain(verdict);
+  });
+
+  it("still flags a real lookalike (same signals) when NOT legit", () => {
+    const rf = blankRiskFactors();
+    rf.lexical.is_homoglyph = true;
+    rf.lexical.jaro_winkler_similarity = 0.95;
+    const { verdict, score } = computeThreatScore(rf, {
+      brandConfidence: 0.95,
+      registrableDomain: "g00gle.com",
+      isLegit: false
+    });
+    expect(score).toBeGreaterThanOrEqual(65);
+    expect(verdict).toBe("High");
+  });
+});
+
+describe("buildLexicalSignals legitimacy suppression", () => {
+  it("nulls brand-comparison signals for a legitimate self-match", () => {
+    const sheridan: BrandMatch = {
+      brand_name: "Sheridan College",
+      canonical_domain: "sheridancollege.ca",
+      confidence: 0.95,
+      method: "catalog",
+      matched_keywords: []
+    };
+    const normalized = normalizeInputUrl("sheridancollege.ca");
+    const lexical = buildLexicalSignals({
+      normalizedDomain: normalized.registrableDomain,
+      punycodeHostname: normalized.punycodeHostname,
+      isIdn: normalized.isIdn,
+      tld: normalized.tld,
+      isIpLiteral: normalized.isIpLiteral,
+      brandMatch: sheridan,
+      isLegit: true
+    });
+    expect(lexical.is_homoglyph).toBeNull();
+    expect(lexical.jaro_winkler_similarity).toBeNull();
+    expect(lexical.typosquatting_type).toBeNull();
+  });
 });

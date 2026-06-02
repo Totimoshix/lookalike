@@ -16,6 +16,18 @@ export const trancoDomainSet: ReadonlySet<string> = new Set(
   TRANCO_DOMAINS.map((d) => d.toLowerCase())
 );
 
+/**
+ * A registrable domain is treated as legitimate (not a lookalike of anything)
+ * if it is itself a top-10k popular domain — a domain cannot impersonate
+ * itself. Used to suppress lookalike scoring for real sites. Reputation
+ * signals (Safe Browsing, phishing feeds) are checked separately and still
+ * apply, so a genuinely compromised popular domain can still be flagged.
+ */
+export function isLegitDomain(registrableDomain: string | null | undefined): boolean {
+  if (!registrableDomain) return false;
+  return trancoDomainSet.has(registrableDomain.toLowerCase());
+}
+
 // label → list of registrable domains that have that exact label.
 // e.g. "google" → ["google.com", "google.co.uk", "google.de", ...]
 //      "sheridancollege" → ["sheridancollege.ca"]
