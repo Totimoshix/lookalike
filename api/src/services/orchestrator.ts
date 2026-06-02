@@ -1,5 +1,7 @@
 import {
   analysisResultSchema,
+  areDifferentRegistrableDomains,
+  isBlockedFetchTarget,
   isLegitDomain,
   normalizeInputUrl,
   type AnalyzeRequest,
@@ -184,13 +186,57 @@ export async function analyzeUrl(request: AnalyzeRequest): Promise<AnalysisResul
     )
   };
 
+  // Redirect analysis. The page can bounce a visitor off to an unrelated
+  // domain via HTTP 30x / meta-refresh (followed by the fetcher) or a JS
+  // location assignment (extracted from the HTML). Either off-domain hop is a
+  // strong cloaking/phishing signal.
+  const httpFinalUrl = fetchedPage.finalUrl ?? normalized.normalizedUrl;
+  const jsRedirectTarget = contentAnalysis.clientSideRedirectTarget;
+  const offDomainJsTarget =
+    jsRedirectTarget &&
+    !isBlockedFetchTarget(jsRedirectTarget) &&
+    areDifferentRegistrableDomains(normalized.normalizedUrl, jsRedirectTarget)
+      ? jsRedirectTarget
+      : null;
+  const httpCrossDomain = areDifferentRegistrableDomains(normalized.normalizedUrl, httpFinalUrl);
+  const crossDomainRedirect = httpCrossDomain || Boolean(offDomainJsTarget);
+  const clientSideRedirect = contentAnalysis.content.suspicious_script_patterns.includes("client_side_redirect");
+
+  // If a JS redirect points off-domain, also run reputation on that real
+  // destination so a known-bad target trips the reputation floor.
+  let reputational = reputationResult.reputational;
+  let redirectReputationDiagnostics: SignalDiagnostic[] = [];
+  if (offDomainJsTarget) {
+    const targetRep = await collectReputationSignals(offDomainJsTarget, null);
+    redirectReputationDiagnostics = targetRep.diagnostics.map((d) => ({
+      ...d,
+      detail: `redirect target: ${d.detail ?? d.signal}`
+    }));
+    reputational = {
+      blacklisted_in_phishTank: reputational.blacklisted_in_phishTank || targetRep.reputational.blacklisted_in_phishTank,
+      blacklisted_in_openPhish: reputational.blacklisted_in_openPhish || targetRep.reputational.blacklisted_in_openPhish,
+      google_safe_browsing: reputational.google_safe_browsing || targetRep.reputational.google_safe_browsing,
+      virus_total_detections: Math.max(
+        reputational.virus_total_detections ?? 0,
+        targetRep.reputational.virus_total_detections ?? 0
+      ),
+      abuse_ipdb_reports: reputational.abuse_ipdb_reports,
+      phishing_feed_hits: Math.max(
+        reputational.phishing_feed_hits ?? 0,
+        targetRep.reputational.phishing_feed_hits ?? 0
+      )
+    };
+  }
+
   const behavioral: RiskFactors["behavioral"] = {
     keyboard_event_listeners: contentAnalysis.content.suspicious_script_patterns.includes("keyboard_capture"),
     http_to_https_mismatch:
       Boolean(fetchedPage.finalUrl) &&
       fetchedPage.finalUrl.startsWith("http://") &&
       normalized.normalizedUrl.startsWith("https://"),
-    external_form_action: contentAnalysis.externalFormAction
+    external_form_action: contentAnalysis.externalFormAction,
+    cross_domain_redirect: crossDomainRedirect,
+    client_side_redirect: clientSideRedirect
   };
 
   const machineLearning = buildMachineLearningSignals({
@@ -204,7 +250,7 @@ export async function analyzeUrl(request: AnalyzeRequest): Promise<AnalysisResul
     lexical,
     infrastructure,
     content: contentAnalysis.content,
-    reputational: reputationResult.reputational,
+    reputational,
     behavioral,
     email_auth: emailAuth,
     passive_history: passiveHistoryResult.passiveHistory,
@@ -214,7 +260,8 @@ export async function analyzeUrl(request: AnalyzeRequest): Promise<AnalysisResul
   const { score, verdict } = computeThreatScore(riskFactors, {
     brandConfidence: brandMatch.confidence,
     registrableDomain: normalized.registrableDomain,
-    isLegit
+    isLegit,
+    crossDomainRedirect
   });
 
   const preLlmDiagnostics: SignalDiagnostic[] = [
@@ -241,6 +288,7 @@ export async function analyzeUrl(request: AnalyzeRequest): Promise<AnalysisResul
           : "RDAP registrar metadata was unavailable."
     },
     ...reputationResult.diagnostics,
+    ...redirectReputationDiagnostics,
     ...passiveHistoryResult.diagnostics
   ];
 

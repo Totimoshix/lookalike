@@ -123,7 +123,12 @@ export const reputationalRiskSchema = z.object({
 export const behavioralRiskSchema = z.object({
   keyboard_event_listeners: z.boolean().nullable(),
   http_to_https_mismatch: z.boolean().nullable(),
-  external_form_action: z.boolean().nullable()
+  external_form_action: z.boolean().nullable(),
+  // The page redirects (HTTP, meta-refresh, or JS) to an unrelated registrable
+  // domain — classic cloaking/phishing behaviour.
+  cross_domain_redirect: z.boolean().nullable().default(null),
+  // The page contains a script- or meta-based redirect (vs. a plain HTTP 30x).
+  client_side_redirect: z.boolean().nullable().default(null)
 });
 
 export const emailAuthRiskSchema = z.object({

@@ -141,7 +141,9 @@ function cachedToResult(cached: CachedAnalysis, fallbackUrl: string): AnalysisRe
       behavioral: {
         keyboard_event_listeners: null,
         http_to_https_mismatch: null,
-        external_form_action: null
+        external_form_action: null,
+        cross_domain_redirect: null,
+        client_side_redirect: null
       },
       email_auth: {
         spf_present: null,

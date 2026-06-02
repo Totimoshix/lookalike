@@ -226,7 +226,7 @@ function blankRiskFactors(): RiskFactors {
       blacklisted_in_phishTank: null, blacklisted_in_openPhish: null, google_safe_browsing: null,
       virus_total_detections: null, abuse_ipdb_reports: null, phishing_feed_hits: null
     },
-    behavioral: { keyboard_event_listeners: null, http_to_https_mismatch: null, external_form_action: null },
+    behavioral: { keyboard_event_listeners: null, http_to_https_mismatch: null, external_form_action: null, cross_domain_redirect: null, client_side_redirect: null },
     email_auth: { spf_present: null, dkim_present: null, dmarc_present: null, spf_dkim_dmarc_missing: null },
     passive_history: { passive_dns_observed: null, passive_dns_notes: [], archive_first_seen_days: null, ownership_changes_detected: null },
     machine_learning: { brand_similarity_score: null, visual_similarity_score: null, url_entropy: null, time_based_risk: null }
@@ -265,6 +265,21 @@ describe("computeThreatScore verdict floors", () => {
     const { score, verdict } = computeThreatScore(rf, { registrableDomain: "blogspot.com" });
     expect(score).toBeGreaterThanOrEqual(65);
     expect(verdict).toBe("High");
+  });
+
+  it("floors an off-domain redirect from a non-legit domain to High", () => {
+    const rf = blankRiskFactors();
+    rf.behavioral.cross_domain_redirect = true;
+    const { score, verdict } = computeThreatScore(rf, { crossDomainRedirect: true, isLegit: false });
+    expect(score).toBeGreaterThanOrEqual(65);
+    expect(verdict).toBe("High");
+  });
+
+  it("does NOT floor an off-domain redirect when the source is legit (apex→www, vanity)", () => {
+    const rf = blankRiskFactors();
+    rf.behavioral.cross_domain_redirect = true;
+    const { verdict } = computeThreatScore(rf, { crossDomainRedirect: true, isLegit: true });
+    expect(["Safe", "Low"]).toContain(verdict);
   });
 
   it("does NOT floor a benign domain (guards against false positives)", () => {

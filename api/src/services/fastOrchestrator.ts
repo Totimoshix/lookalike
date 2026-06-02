@@ -147,7 +147,10 @@ export async function analyzeUrlFast(request: AnalyzeRequest): Promise<AnalysisR
   const behavioral: RiskFactors["behavioral"] = {
     keyboard_event_listeners: null,
     http_to_https_mismatch: null,
-    external_form_action: null
+    external_form_action: null,
+    // Fast path skips page fetch, so redirect behaviour can't be observed here.
+    cross_domain_redirect: null,
+    client_side_redirect: null
   };
 
   const machineLearning = buildMachineLearningSignals({

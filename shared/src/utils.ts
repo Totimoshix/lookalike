@@ -122,6 +122,59 @@ export function isSharedHost(registrableDomain: string | null | undefined): bool
   return SHARED_HOSTS.has(registrableDomain.toLowerCase());
 }
 
+/**
+ * True when two URLs resolve to different registrable domains (e.g. a domain
+ * that redirects you off to an unrelated site). Returns false if either URL is
+ * unparseable or they share a registrable domain.
+ */
+export function areDifferentRegistrableDomains(a: string, b: string): boolean {
+  try {
+    // Reuse normalizeInputUrl's registrable-domain logic (which falls back to
+    // the raw hostname when tldts getDomain returns null, e.g. for some
+    // two-label domains) so this matches the rest of the app's domain handling.
+    const da = normalizeInputUrl(a).registrableDomain;
+    const db = normalizeInputUrl(b).registrableDomain;
+    if (!da || !db) return false;
+    return da.toLowerCase() !== db.toLowerCase();
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * SSRF guard: should a server-side fetch REFUSE this URL? Blocks non-http(s)
+ * schemes and hosts that are private/loopback/link-local IP literals (so a
+ * malicious redirect can't make the API hit internal services or cloud
+ * metadata at 169.254.169.254). Hostnames are allowed (DNS may still resolve
+ * to private space — a deeper guard would resolve + check, but for an
+ * analysis fetch with no credentials and capped hops this covers the obvious
+ * SSRF vectors).
+ */
+export function isBlockedFetchTarget(rawUrl: string): boolean {
+  let url: URL;
+  try {
+    url = new URL(rawUrl);
+  } catch {
+    return true;
+  }
+  if (url.protocol !== "http:" && url.protocol !== "https:") return true;
+  const host = url.hostname.toLowerCase().replace(/^\[|\]$/g, "");
+  if (host === "localhost" || host.endsWith(".localhost") || host === "0.0.0.0") return true;
+  // IPv6 loopback / link-local / unique-local
+  if (host === "::1" || host.startsWith("fe80:") || host.startsWith("fc") || host.startsWith("fd")) return true;
+  // IPv4 literal ranges
+  const m = host.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/);
+  if (m) {
+    const [a, b] = [Number(m[1]), Number(m[2])];
+    if (a === 127 || a === 10 || a === 0) return true;
+    if (a === 169 && b === 254) return true; // link-local incl. cloud metadata
+    if (a === 192 && b === 168) return true;
+    if (a === 172 && b >= 16 && b <= 31) return true;
+    if (a === 100 && b >= 64 && b <= 127) return true; // CGNAT
+  }
+  return false;
+}
+
 const keyboardAdjacency: Record<string, string[]> = {
   a: ["q", "s", "w", "z"],
   b: ["f", "g", "h", "n", "v"],
