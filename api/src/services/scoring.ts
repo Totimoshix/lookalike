@@ -5,6 +5,7 @@ import {
   detectHomoglyphPattern,
   hyphenationPattern,
   isHomoglyphDomain,
+  isSharedHost,
   isSuspiciousTld,
   jaroWinkler,
   keyboardProximityScore,
@@ -120,7 +121,10 @@ function categoryScore(values: Array<number | null | boolean>, weights: number[]
   return denominator === 0 ? 0 : numerator / denominator;
 }
 
-export function computeThreatScore(riskFactors: RiskFactors): { score: number; verdict: AnalysisResult["verdict"] } {
+export function computeThreatScore(
+  riskFactors: RiskFactors,
+  opts?: { brandConfidence?: number; registrableDomain?: string }
+): { score: number; verdict: AnalysisResult["verdict"] } {
   const lexicalScore = categoryScore(
     [
       riskFactors.lexical.is_homoglyph,
@@ -171,6 +175,9 @@ export function computeThreatScore(riskFactors: RiskFactors): { score: number; v
       riskFactors.reputational.google_safe_browsing,
       riskFactors.reputational.blacklisted_in_openPhish,
       riskFactors.reputational.blacklisted_in_phishTank,
+      riskFactors.reputational.phishing_feed_hits !== null
+        ? Math.min(1, riskFactors.reputational.phishing_feed_hits)
+        : null,
       riskFactors.reputational.virus_total_detections !== null
         ? Math.min(1, riskFactors.reputational.virus_total_detections / 25)
         : null,
@@ -178,7 +185,7 @@ export function computeThreatScore(riskFactors: RiskFactors): { score: number; v
         ? Math.min(1, riskFactors.reputational.abuse_ipdb_reports / 75)
         : null
     ],
-    [1.2, 1, 1, 0.8, 0.6]
+    [1.2, 1, 1, 1, 0.8, 0.6]
   );
 
   const behavioralScore = categoryScore(
@@ -232,13 +239,58 @@ export function computeThreatScore(riskFactors: RiskFactors): { score: number; v
     criticalBoost += 0.02;
   }
 
-  const score = toPercentage(Math.min(1, weightedScore + criticalBoost) * 100);
+  const weighted = toPercentage(Math.min(1, weightedScore + criticalBoost) * 100);
 
-  // Verdict thresholds are heuristic — informed by the per-category weights
-  // and critical boosts above. Real tuning requires labelled phishing/benign
-  // samples from a feedback loop that does not yet exist (see plan item #6
-  // for the dormant Report button + /feedback endpoint). If the weights
-  // change, revisit these breakpoints to keep the verdict distribution sane.
+  // Verdict floors. The weighted blend above under-counts authoritative
+  // signals: a confirmed blacklist hit only nudges an 18%-weighted, internally
+  // averaged category, so known phishing can land in "Low". These floors give
+  // a guaranteed MINIMUM score when a high-confidence indicator is present —
+  // they only ever raise the score, never lower it. Favour catching phishing.
+  const rep = riskFactors.reputational;
+  const content = riskFactors.content;
+  const lexical = riskFactors.lexical;
+  const brandConfidence = opts?.brandConfidence ?? 0;
+  const onSharedHost = isSharedHost(opts?.registrableDomain);
+
+  let floor = 0;
+  // Google Safe Browsing is authoritative → treat as malicious.
+  if (rep.google_safe_browsing === true) {
+    floor = Math.max(floor, 90);
+  }
+  // Curated phishing feeds (OpenPhish / PhishTank) — confirmed phishing.
+  if (
+    rep.blacklisted_in_openPhish === true ||
+    rep.blacklisted_in_phishTank === true ||
+    (rep.phishing_feed_hits ?? 0) > 0
+  ) {
+    floor = Math.max(floor, 80);
+  }
+  // Multiple AV engines flagging it.
+  if ((rep.virus_total_detections ?? 0) >= 3) {
+    floor = Math.max(floor, 70);
+  }
+  // Credential harvesting that posts to the real brand's domain.
+  if (content.credential_harvesting_detected === true && content.form_submits_to_real_brand === true) {
+    floor = Math.max(floor, 70);
+  }
+  // Confident lookalike of a known brand (homoglyph / keyword-stuffing / very
+  // high string similarity) — high risk even if the page never resolved.
+  if (
+    brandConfidence >= 0.85 &&
+    (lexical.is_homoglyph === true ||
+      lexical.typosquatting_type === "keyword_stuffing" ||
+      (lexical.jaro_winkler_similarity ?? 0) >= 0.9)
+  ) {
+    floor = Math.max(floor, 65);
+  }
+  // Credential-harvesting page hosted on a shared host (blogspot, ipfs, …),
+  // where the benign parent domain would otherwise mask the threat.
+  if (onSharedHost && content.credential_harvesting_detected === true) {
+    floor = Math.max(floor, 65);
+  }
+
+  const score = Math.max(weighted, floor);
+
   if (score >= 90) {
     return { score, verdict: "Malicious" };
   }

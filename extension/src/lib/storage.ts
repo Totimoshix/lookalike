@@ -94,7 +94,9 @@ export async function setExpertMode(value: boolean): Promise<void> {
 
 export async function getRealtimeProtection(): Promise<boolean> {
   const result = await readArea("sync", [SYNC_KEYS.realtimeProtection]);
-  return Boolean(result[SYNC_KEYS.realtimeProtection]);
+  // Default ON: the value is only `false` if the user explicitly turned it off.
+  const value = result[SYNC_KEYS.realtimeProtection];
+  return value === undefined ? true : Boolean(value);
 }
 
 export async function setRealtimeProtection(value: boolean): Promise<void> {
@@ -235,7 +237,8 @@ export function useExpertMode(): [boolean, (next: boolean) => void] {
 }
 
 export function useRealtimeProtection(): [boolean, (next: boolean) => void] {
-  const [value, setValue] = useState(false);
+  // Initialize ON to match the storage default and avoid a flash of "off".
+  const [value, setValue] = useState(true);
 
   useEffect(() => {
     let cancelled = false;

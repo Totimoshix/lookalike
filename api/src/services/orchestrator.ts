@@ -201,7 +201,10 @@ export async function analyzeUrl(request: AnalyzeRequest): Promise<AnalysisResul
     machine_learning: machineLearning
   };
 
-  const { score, verdict } = computeThreatScore(riskFactors);
+  const { score, verdict } = computeThreatScore(riskFactors, {
+    brandConfidence: brandMatch.confidence,
+    registrableDomain: normalized.registrableDomain
+  });
 
   const preLlmDiagnostics: SignalDiagnostic[] = [
     {
@@ -308,7 +311,10 @@ export async function analyzeUrl(request: AnalyzeRequest): Promise<AnalysisResul
     normalized_url: normalized.normalizedUrl,
     brand_match: brandMatch,
     threat_score: score,
-    verdict: llmReasoning?.verdict ?? verdict,
+    // Always use the deterministic (floored) verdict. The LLM provides the
+    // human-readable reasoning only — it must not be able to talk down a
+    // verdict that the floors raised (e.g. a blacklisted domain).
+    verdict,
     reasoning: llmReasoning?.reasoning ?? fallbackReasoning,
     risk_factors: riskFactors,
     evidence_summary: {

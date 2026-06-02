@@ -87,6 +87,41 @@ export function stripStuffingTokens(tokens: readonly string[]): {
   return { brandCandidates, stuffingTokens };
 }
 
+// Registrable domains that host arbitrary user content under subdomains/paths.
+// Phishing on these (e.g. evil.blogspot.com) resolves to a benign parent
+// domain, so the parent's age/SSL/infra must NOT be treated as reassuring, and
+// the parent label must NOT be claimed as the impersonated brand.
+export const SHARED_HOSTS: ReadonlySet<string> = new Set([
+  "blogspot.com",
+  "wordpress.com",
+  "weebly.com",
+  "wixsite.com",
+  "github.io",
+  "gitlab.io",
+  "pages.dev",
+  "web.app",
+  "firebaseapp.com",
+  "netlify.app",
+  "vercel.app",
+  "glitch.me",
+  "repl.co",
+  "replit.app",
+  "herokuapp.com",
+  "r2.dev",
+  "workers.dev",
+  "dweb.link",
+  "ipfs.io",
+  "azurewebsites.net",
+  "amazonaws.com",
+  "translate.goog",
+  "googleusercontent.com"
+]);
+
+export function isSharedHost(registrableDomain: string | null | undefined): boolean {
+  if (!registrableDomain) return false;
+  return SHARED_HOSTS.has(registrableDomain.toLowerCase());
+}
+
 const keyboardAdjacency: Record<string, string[]> = {
   a: ["q", "s", "w", "z"],
   b: ["f", "g", "h", "n", "v"],

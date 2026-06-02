@@ -166,7 +166,10 @@ export async function analyzeUrlFast(request: AnalyzeRequest): Promise<AnalysisR
     machine_learning: machineLearning
   };
 
-  const { score, verdict } = computeThreatScore(riskFactors);
+  const { score, verdict } = computeThreatScore(riskFactors, {
+    brandConfidence: brandMatch.confidence,
+    registrableDomain: normalized.registrableDomain
+  });
 
   const diagnostics: SignalDiagnostic[] = [
     {
