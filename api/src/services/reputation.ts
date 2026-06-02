@@ -1,4 +1,4 @@
-import { normalizeInputUrl, type RiskFactors, type SignalDiagnostic } from "@capstone/shared";
+import { isLegitDomain, isSharedHost, normalizeInputUrl, type RiskFactors, type SignalDiagnostic } from "@capstone/shared";
 import { withTtlCache } from "./feedCache.js";
 import { getRuntimeConfig } from "./runtimeConfig.js";
 
@@ -297,15 +297,21 @@ async function checkPhishTankDirect(url: string): Promise<boolean> {
 
 function matchesPhishingFeed(url: string, candidates: string[]): boolean {
   const target = normalizeMatchTargets(url);
+  // Multi-tenant hosts (Tranco-popular apexes like google.com, and shared
+  // hosts like blogspot.com) carry phishing on SUBDOMAINS/paths. Matching by
+  // registrable domain would taint the legitimate apex and every sibling
+  // subdomain. For those, require a hostname or full-URL match so phishing on
+  // sites.google.com flags only that host, not google.com itself.
+  const requireSpecificMatch =
+    isLegitDomain(target.registrableDomain) || isSharedHost(target.registrableDomain);
 
   return candidates.some((candidateUrl) => {
     try {
       const candidate = normalizeMatchTargets(candidateUrl);
-      return (
-        candidate.normalizedUrl === target.normalizedUrl ||
-        candidate.hostname === target.hostname ||
-        candidate.registrableDomain === target.registrableDomain
-      );
+      if (candidate.normalizedUrl === target.normalizedUrl || candidate.hostname === target.hostname) {
+        return true;
+      }
+      return !requireSpecificMatch && candidate.registrableDomain === target.registrableDomain;
     } catch {
       return false;
     }
