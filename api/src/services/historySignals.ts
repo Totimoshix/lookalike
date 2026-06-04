@@ -19,10 +19,12 @@ type CdxRow = [string, string, string?, string?];
 
 const HISTORY_TTL_MS = 6 * 60 * 60 * 1000;
 // crt.sh and the Internet Archive CDX are free, no-SLA services that are
-// frequently slow (crt.sh routinely takes 6–10s). 8s was too tight; 12s
-// recovers most borderline responses while staying well under the 30s
-// analyze-Lambda budget. These signals are passive-history enrichment only.
-const PROVIDER_TIMEOUT_MS = 12000;
+// frequently slow (crt.sh routinely takes 6–10s). These are passive-history
+// *enrichment* only — never the basis of a verdict — so we cap them at 8s to
+// keep the rep+history wave from stacking up against the API Gateway 29s
+// ceiling on slow/unreachable hosts. A few borderline crt.sh responses are
+// sacrificed for a guaranteed-timely verdict.
+const PROVIDER_TIMEOUT_MS = 8000;
 
 function okDiagnostic(signal: string, provider: string): SignalDiagnostic {
   return {

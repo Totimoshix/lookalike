@@ -33,6 +33,14 @@ import {
 
 const cache = new AnalysisCache();
 
+// API Gateway hard-kills the request at 29s. The two optional, network-bound
+// tail stages — the redirect-target reputation probe and the Bedrock reasoning
+// call — are skipped once enrichment has already consumed this much of the
+// budget, so a verdict is always returned within the ceiling. The main-domain
+// reputation + the deterministic verdict have already been computed by then.
+const REDIRECT_REPUTATION_DEADLINE_MS = 16_000;
+const LLM_REASONING_DEADLINE_MS = 19_000;
+
 function mergeSignalSources(diagnostics: SignalDiagnostic[]): SignalSource[] {
   const grouped = new Map<string, SignalSource>();
 
@@ -100,18 +108,21 @@ export async function analyzeUrl(request: AnalyzeRequest): Promise<AnalysisResul
   const pageTitleMatch = fetchedPage.html?.match(/<title[^>]*>([^<]*)<\/title>/i);
   const pageTitle = pageTitleMatch?.[1]?.trim() ?? null;
 
-  const brandMatch = await inferBrandMatch({
-    analyzedUrl: normalized.normalizedUrl,
-    normalizedDomain: normalized.registrableDomain,
-    pageTitle,
-    bodyText,
-    brandOverride: request.brand_override
-  });
-
-  const infrastructureBase = await collectInfrastructureSignals(
-    normalized.registrableDomain,
-    fetchedPage.finalUrl ?? normalized.normalizedUrl
-  );
+  // Brand resolution and infrastructure enrichment don't depend on each other,
+  // so run them concurrently — their latencies overlap instead of summing.
+  const [brandMatch, infrastructureBase] = await Promise.all([
+    inferBrandMatch({
+      analyzedUrl: normalized.normalizedUrl,
+      normalizedDomain: normalized.registrableDomain,
+      pageTitle,
+      bodyText,
+      brandOverride: request.brand_override
+    }),
+    collectInfrastructureSignals(
+      normalized.registrableDomain,
+      fetchedPage.finalUrl ?? normalized.normalizedUrl
+    )
+  ]);
 
   const contentAnalysis = analyzePageContent(
     fetchedPage.html,
@@ -206,7 +217,7 @@ export async function analyzeUrl(request: AnalyzeRequest): Promise<AnalysisResul
   // destination so a known-bad target trips the reputation floor.
   let reputational = reputationResult.reputational;
   let redirectReputationDiagnostics: SignalDiagnostic[] = [];
-  if (offDomainJsTarget) {
+  if (offDomainJsTarget && Date.now() - startedAt < REDIRECT_REPUTATION_DEADLINE_MS) {
     const targetRep = await collectReputationSignals(offDomainJsTarget, null);
     redirectReputationDiagnostics = targetRep.diagnostics.map((d) => ({
       ...d,
@@ -307,31 +318,37 @@ export async function analyzeUrl(request: AnalyzeRequest): Promise<AnalysisResul
   });
 
   const llmStartedAt = Date.now();
-  const llmReasoning = await callBedrockJson<{ reasoning: string; verdict: AnalysisResult["verdict"] }>({
-    promptName: "analyst_explanation",
-    prompt: buildAnalystExplanationPrompt({
-      analyzed_url: normalized.normalizedUrl,
-      normalized_domain: normalized.registrableDomain,
-      brand_match: brandMatch,
-      threat_score: score,
-      verdict,
-      risk_factors: riskFactors,
-      evidence_highlights: evidenceSummary.highlights
-    }),
-    validator: (value) => {
-      if (!value || typeof value !== "object") {
-        return null;
-      }
-      const candidate = value as { reasoning?: unknown; verdict?: unknown };
-      if (typeof candidate.reasoning !== "string") {
-        return null;
-      }
-      return {
-        reasoning: candidate.reasoning,
-        verdict: typeof candidate.verdict === "string" ? (candidate.verdict as AnalysisResult["verdict"]) : verdict
-      };
-    }
-  });
+  // If enrichment already ate most of the budget (e.g. a slow / unreachable
+  // host), skip the LLM entirely and use the deterministic fallback reasoning
+  // so we still return a verdict before API Gateway times out.
+  const overBudget = llmStartedAt - startedAt > LLM_REASONING_DEADLINE_MS;
+  const llmReasoning = overBudget
+    ? null
+    : await callBedrockJson<{ reasoning: string; verdict: AnalysisResult["verdict"] }>({
+        promptName: "analyst_explanation",
+        prompt: buildAnalystExplanationPrompt({
+          analyzed_url: normalized.normalizedUrl,
+          normalized_domain: normalized.registrableDomain,
+          brand_match: brandMatch,
+          threat_score: score,
+          verdict,
+          risk_factors: riskFactors,
+          evidence_highlights: evidenceSummary.highlights
+        }),
+        validator: (value) => {
+          if (!value || typeof value !== "object") {
+            return null;
+          }
+          const candidate = value as { reasoning?: unknown; verdict?: unknown };
+          if (typeof candidate.reasoning !== "string") {
+            return null;
+          }
+          return {
+            reasoning: candidate.reasoning,
+            verdict: typeof candidate.verdict === "string" ? (candidate.verdict as AnalysisResult["verdict"]) : verdict
+          };
+        }
+      });
   const llmDuration = Date.now() - llmStartedAt;
 
   const finalDiagnostics = [

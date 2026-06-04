@@ -117,7 +117,12 @@ function resolveClaimedBrand(input: { normalizedDomain: string }):
     }
 
     // 2. Tranco probe — exact label match in the top-10k known-popular set.
-    const trancoMatches = trancoLabelMap.get(token);
+    // Require ≥5 chars: the Tranco list is full of generic short labels
+    // ("biz", "app", "web", "api", "cdn", "dev", "vpn", "now", …) that are
+    // ordinary words, not impersonation targets — matching them turns random
+    // domains (e.g. "…-biz-…") into bogus brand hits. The curated catalog above
+    // already covers legitimately short brands (UPS, BMO, TD, CIBC).
+    const trancoMatches = token.length >= 5 ? trancoLabelMap.get(token) : undefined;
     if (trancoMatches && trancoMatches.length > 0) {
       // Prefer a Tranco entry whose TLD matches the analyzed domain's TLD.
       const analyzedTld = input.normalizedDomain.split(".").slice(1).join(".");
@@ -167,6 +172,38 @@ function resolveClaimedBrand(input: { normalizedDomain: string }):
           brand_name: best.entry.brandName,
           canonical_domain: best.entry.canonicalDomain,
           confidence: best.dist === 1 ? 0.9 : 0.87,
+          method: "heuristic",
+          matched_keywords: stuffingTokens
+        }
+      };
+    }
+
+    // 4. Fuzzy Tranco probe — broad coverage for brands NOT in the curated
+    // catalog (e.g. "faceboook" ↔ "facebook"). Stricter than the catalog fuzzy
+    // pass to keep false positives down across 10k labels: token & label ≥6
+    // chars, Damerau-Levenshtein exactly 1, Jaro-Winkler ≥0.92, ±1 length.
+    const analyzedTld = input.normalizedDomain.split(".").slice(1).join(".");
+    let trancoBest: { domain: string } | null = null;
+    for (const token of ordered) {
+      if (token.length < 6) continue;
+      for (const [tlabel, domains] of trancoLabelMap) {
+        if (tlabel.length < 6 || Math.abs(tlabel.length - token.length) > 1) continue;
+        if (tlabel === token) continue; // exact handled by the Tranco probe above
+        if (damerauLevenshtein(token, tlabel) !== 1) continue;
+        if (jaroWinkler(token, tlabel) < 0.92) continue;
+        const chosen = domains.find((d) => d.split(".").slice(1).join(".") === analyzedTld) ?? domains[0];
+        trancoBest = { domain: chosen };
+        break;
+      }
+      if (trancoBest) break;
+    }
+    if (trancoBest) {
+      return {
+        stuffingDetected,
+        match: {
+          brand_name: capitalizeLabel(trancoBest.domain.split(".")[0]),
+          canonical_domain: trancoBest.domain,
+          confidence: 0.85,
           method: "heuristic",
           matched_keywords: stuffingTokens
         }

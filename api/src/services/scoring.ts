@@ -290,7 +290,7 @@ export function computeThreatScore(
   // Skipped for legitimate domains (a real site is not a lookalike of itself).
   if (
     !isLegit &&
-    brandConfidence >= 0.85 &&
+    brandConfidence >= 0.8 &&
     (lexical.is_homoglyph === true ||
       lexical.typosquatting_type === "keyword_stuffing" ||
       (lexical.jaro_winkler_similarity ?? 0) >= 0.9)
@@ -309,7 +309,19 @@ export function computeThreatScore(
     floor = Math.max(floor, 65);
   }
 
-  const score = Math.max(weighted, floor);
+  // A floor is a guaranteed MINIMUM, but two domains that trip the same floor
+  // should still differ by their other evidence — otherwise every lookalike
+  // reads exactly 65 and every feed hit exactly 80 (a flat plateau). Let the
+  // weighted evidence lift the score within the headroom above the floor, but
+  // DAMPEN that lift (FLOOR_LIFT) so a floored lookalike (65) spreads inside
+  // the High band rather than bleeding into the feed-confirmed Critical band
+  // (80+) — preserving the meaning of the verdict tiers. The Math.max keeps a
+  // genuinely high weighted score from being dampened *down* by the floor.
+  const FLOOR_LIFT = 0.55;
+  const score =
+    floor > 0
+      ? Math.min(100, Math.round(Math.max(weighted, floor + (100 - floor) * (weighted / 100) * FLOOR_LIFT)))
+      : weighted;
 
   if (score >= 90) {
     return { score, verdict: "Malicious" };

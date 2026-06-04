@@ -20,23 +20,59 @@ function safeArray<T>(value: T[] | null | undefined): T[] {
   return value ?? [];
 }
 
-async function lookupDns(domain: string): Promise<DnsResult> {
-  const [aRecords, mxRecords, txtRecords, nsRecords] = await Promise.allSettled([
-    dns.resolve4(domain),
-    dns.resolveMx(domain),
-    dns.resolveTxt(domain),
-    dns.resolveNs(domain)
-  ]);
+// Hard upper bounds for each enrichment probe. API Gateway kills the request at
+// 29s, so every network call MUST be individually time-boxed — a single
+// non-resolving / firewalled phishing host (e.g. a registered domain that drops
+// :443) would otherwise hang the whole analysis until the gateway 504s. With
+// these caps + the parallel fan-out below, infrastructure collection is bounded
+// at roughly max(DNS, RDAP, TLS) + ASN ≈ 9s even in the worst case.
+const DNS_TIMEOUT_MS = 4000;
+const RDAP_TIMEOUT_MS = 5000;
+const TLS_TIMEOUT_MS = 5000;
+const ASN_TIMEOUT_MS = 4000;
 
-  return {
-    a: aRecords.status === "fulfilled" ? aRecords.value : [],
-    mx: mxRecords.status === "fulfilled" ? mxRecords.value.map((record) => record.exchange) : [],
-    txt:
-      txtRecords.status === "fulfilled"
-        ? txtRecords.value.map((value) => value.join(""))
-        : [],
-    ns: nsRecords.status === "fulfilled" ? nsRecords.value : []
-  };
+// Race a promise against a timer; resolve with `fallback` if it doesn't settle
+// in time (and swallow rejections to the same fallback). Never rejects.
+function withTimeout<T>(promise: Promise<T>, ms: number, fallback: T): Promise<T> {
+  return new Promise<T>((resolve) => {
+    const timer = setTimeout(() => resolve(fallback), ms);
+    promise.then(
+      (value) => {
+        clearTimeout(timer);
+        resolve(value);
+      },
+      () => {
+        clearTimeout(timer);
+        resolve(fallback);
+      }
+    );
+  });
+}
+
+async function lookupDns(domain: string): Promise<DnsResult> {
+  const empty: DnsResult = { a: [], mx: [], txt: [], ns: [] };
+  return withTimeout(
+    (async () => {
+      const [aRecords, mxRecords, txtRecords, nsRecords] = await Promise.allSettled([
+        dns.resolve4(domain),
+        dns.resolveMx(domain),
+        dns.resolveTxt(domain),
+        dns.resolveNs(domain)
+      ]);
+
+      return {
+        a: aRecords.status === "fulfilled" ? aRecords.value : [],
+        mx: mxRecords.status === "fulfilled" ? mxRecords.value.map((record) => record.exchange) : [],
+        txt:
+          txtRecords.status === "fulfilled"
+            ? txtRecords.value.map((value) => value.join(""))
+            : [],
+        ns: nsRecords.status === "fulfilled" ? nsRecords.value : []
+      };
+    })(),
+    DNS_TIMEOUT_MS,
+    empty
+  );
 }
 
 async function lookupRdap(domain: string): Promise<RdapResult> {
@@ -45,7 +81,8 @@ async function lookupRdap(domain: string): Promise<RdapResult> {
       headers: {
         "accept": "application/json",
         "user-agent": "CapstoneDomainGuardian/0.1"
-      }
+      },
+      signal: AbortSignal.timeout(RDAP_TIMEOUT_MS)
     });
     if (!response.ok) {
       throw new Error(`RDAP lookup failed with status ${response.status}`);
@@ -125,6 +162,13 @@ async function lookupTls(hostname: string) {
         () => resolve(connection)
       );
       connection.once("error", reject);
+      // A host that accepts the TCP connection but never completes the TLS
+      // handshake (common with cloaking / tarpitting phishing infra) would hang
+      // this promise forever without a timeout. Tear the socket down and reject.
+      connection.setTimeout(TLS_TIMEOUT_MS, () => {
+        connection.destroy();
+        reject(new Error("TLS handshake timed out"));
+      });
     });
 
     const certificate = socket.getPeerCertificate();
@@ -170,7 +214,9 @@ async function lookupAsn(ipAddress: string | null) {
   }
 
   try {
-    const response = await fetch(`https://ipwho.is/${ipAddress}`);
+    const response = await fetch(`https://ipwho.is/${ipAddress}`, {
+      signal: AbortSignal.timeout(ASN_TIMEOUT_MS)
+    });
     if (!response.ok) {
       throw new Error(`ASN lookup failed with status ${response.status}`);
     }
@@ -189,11 +235,18 @@ async function lookupAsn(ipAddress: string | null) {
 }
 
 export async function collectInfrastructureSignals(domain: string, finalUrl: string | null) {
-  const dnsRecords = await lookupDns(domain);
-  const rdap = await lookupRdap(domain);
   const inferredHost =
     finalUrl && /^https?:\/\//i.test(finalUrl) ? new URL(finalUrl).hostname : parse(finalUrl ?? domain).hostname ?? domain;
-  const tlsSignals = await lookupTls(inferredHost);
+
+  // Fan out the independent probes concurrently — DNS, RDAP and TLS don't
+  // depend on one another, so running them in parallel turns a sum-of-latencies
+  // into a max-of-latencies (≈5s instead of ≈14s). ASN needs the resolved A
+  // record, so it runs once DNS lands.
+  const [dnsRecords, rdap, tlsSignals] = await Promise.all([
+    lookupDns(domain),
+    lookupRdap(domain),
+    lookupTls(inferredHost)
+  ]);
   const asn = await lookupAsn(safeArray(dnsRecords.a)[0] ?? null);
   const parsed = parse(domain);
 
