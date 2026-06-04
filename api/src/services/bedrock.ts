@@ -7,6 +7,10 @@ type BedrockJsonCall<T> = {
   validator: (value: unknown) => T | null;
 };
 
+// Cap the LLM call so a slow/hung Bedrock response can't push the whole
+// analysis past the API Gateway 29s ceiling.
+const BEDROCK_TIMEOUT_MS = 8000;
+
 let client: BedrockRuntimeClient | null = null;
 let clientRegion: string | null = null;
 
@@ -46,7 +50,10 @@ export async function callBedrockJson<T>({ prompt, validator }: BedrockJsonCall<
           maxTokens: 1000,
           temperature: 0.2
         }
-      })
+      }),
+      // On abort/timeout we fall through to the catch and return null; the
+      // orchestrator then uses its deterministic fallback reasoning.
+      { abortSignal: AbortSignal.timeout(BEDROCK_TIMEOUT_MS) }
     );
 
     const content = response.output?.message?.content

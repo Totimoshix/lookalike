@@ -322,6 +322,57 @@ describe("computeThreatScore verdict floors", () => {
   });
 });
 
+describe("computeThreatScore — plateau spread + confidence gate", () => {
+  it("gives two same-floor lookalikes DIFFERENT scores (no flat plateau)", () => {
+    // Both trip the lookalike floor (65) via keyword stuffing at high brand
+    // confidence, but B carries far more weighted evidence than A. Before the
+    // plateau fix both pinned to exactly 65; now the evidence lifts B above A.
+    const a = blankRiskFactors();
+    a.lexical.typosquatting_type = "keyword_stuffing";
+
+    const b = blankRiskFactors();
+    b.lexical.typosquatting_type = "keyword_stuffing";
+    b.lexical.is_homoglyph = true;
+    b.lexical.jaro_winkler_similarity = 0.95;
+    b.lexical.suspicious_tld = true;
+    b.lexical.suspicious_keywords = ["login", "verify", "secure"];
+    b.infrastructure.domain_age_days = 2;
+    b.infrastructure.creation_date_anomaly = true;
+    b.infrastructure.ssl_valid = false;
+    b.content.credential_harvesting_detected = true;
+    b.content.forms_detected = 1;
+    b.content.password_fields_detected = 1;
+    b.email_auth.spf_dkim_dmarc_missing = true;
+
+    const ra = computeThreatScore(a, { brandConfidence: 0.9 });
+    const rb = computeThreatScore(b, { brandConfidence: 0.9 });
+
+    expect(ra.score).toBeGreaterThanOrEqual(65);
+    expect(rb.score).toBeGreaterThan(ra.score);
+  });
+
+  it("admits a 0.84-confidence homoglyph lookalike to High (lowered 0.85→0.80 gate)", () => {
+    // micros0ft-login.com resolves to Microsoft at confidence 0.84 — under the
+    // old 0.85 gate it fell to Medium; the lowered gate now floors it to High.
+    const rf = blankRiskFactors();
+    rf.lexical.is_homoglyph = true;
+    const { score, verdict } = computeThreatScore(rf, {
+      brandConfidence: 0.84,
+      registrableDomain: "micros0ft-login.com",
+      isLegit: false
+    });
+    expect(score).toBeGreaterThanOrEqual(65);
+    expect(verdict).toBe("High");
+  });
+
+  it("keeps the gate above hunches — 0.79 confidence does NOT floor to High", () => {
+    const rf = blankRiskFactors();
+    rf.lexical.is_homoglyph = true;
+    const { verdict } = computeThreatScore(rf, { brandConfidence: 0.79, isLegit: false });
+    expect(["Safe", "Low", "Medium"]).toContain(verdict);
+  });
+});
+
 describe("buildLexicalSignals legitimacy suppression", () => {
   it("nulls brand-comparison signals for a legitimate self-match", () => {
     const sheridan: BrandMatch = {

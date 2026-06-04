@@ -13,7 +13,12 @@ export type FetchedPage = {
 
 const MAX_REDIRECTS = 5;
 const MAX_HTML_BYTES = 250_000;
-const FETCH_TIMEOUT_MS = 10_000;
+const FETCH_TIMEOUT_MS = 8_000;
+// Hard ceiling across ALL hops (initial request + every redirect). Without this
+// a 5-redirect chain could spend 6 × per-hop timeout (~48s) and blow the API
+// Gateway 29s limit. Each hop is given whichever is smaller: the per-hop
+// timeout or the budget remaining.
+const TOTAL_FETCH_BUDGET_MS = 15_000;
 // A realistic browser UA so user-agent cloakers don't trivially serve our
 // scanner a clean page (many phishing/cloaking hosts return benign content to
 // obvious bots). We still never execute JS.
@@ -63,6 +68,22 @@ export async function fetchPage(url: string): Promise<FetchedPage> {
         };
       }
 
+      // Give this hop the smaller of the per-hop timeout and the budget left;
+      // if the budget is already spent, stop here rather than start another hop.
+      const remainingBudget = TOTAL_FETCH_BUDGET_MS - (Date.now() - startedAt);
+      if (remainingBudget <= 0) {
+        return {
+          requestedUrl: url,
+          finalUrl: currentUrl,
+          redirectChain,
+          statusCode: null,
+          html: null,
+          headers: {},
+          fetchMs: Date.now() - startedAt,
+          error: "Fetch budget exceeded"
+        };
+      }
+
       const response = await fetch(currentUrl, {
         method: "GET",
         redirect: "manual",
@@ -70,7 +91,7 @@ export async function fetchPage(url: string): Promise<FetchedPage> {
           "user-agent": BROWSER_UA,
           accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
         },
-        signal: AbortSignal.timeout(FETCH_TIMEOUT_MS)
+        signal: AbortSignal.timeout(Math.min(FETCH_TIMEOUT_MS, remainingBudget))
       });
 
       if (response.status >= 300 && response.status < 400) {

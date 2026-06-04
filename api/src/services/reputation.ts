@@ -295,23 +295,35 @@ async function checkPhishTankDirect(url: string): Promise<boolean> {
   );
 }
 
-function matchesPhishingFeed(url: string, candidates: string[]): boolean {
+export function matchesPhishingFeed(url: string, candidates: string[]): boolean {
   const target = normalizeMatchTargets(url);
-  // Multi-tenant hosts (Tranco-popular apexes like google.com, and shared
-  // hosts like blogspot.com) carry phishing on SUBDOMAINS/paths. Matching by
-  // registrable domain would taint the legitimate apex and every sibling
-  // subdomain. For those, require a hostname or full-URL match so phishing on
-  // sites.google.com flags only that host, not google.com itself.
-  const requireSpecificMatch =
-    isLegitDomain(target.registrableDomain) || isSharedHost(target.registrableDomain);
+  // A known-legitimate apex (google.com, …) hosts BOTH real content and abused
+  // paths/redirectors that phishers submit to feeds (e.g. google.com/url?q=…).
+  // Its hostname is therefore NOT a safe match key — only an exact full-URL hit
+  // counts, so the real homepage is never condemned by a feed-listed deep link.
+  const isLegit = isLegitDomain(target.registrableDomain);
+  // A shared host (blogspot.com, …) carries phishing on distinct SUBDOMAINS, so
+  // a hostname match flags the specific malicious host without tainting the
+  // apex or its siblings. It must NOT match by registrable domain.
+  const isShared = isSharedHost(target.registrableDomain);
 
   return candidates.some((candidateUrl) => {
     try {
       const candidate = normalizeMatchTargets(candidateUrl);
-      if (candidate.normalizedUrl === target.normalizedUrl || candidate.hostname === target.hostname) {
+      // Exact full-URL match always counts — even for a legit apex it means the
+      // user is on the exact feed-listed page.
+      if (candidate.normalizedUrl === target.normalizedUrl) {
         return true;
       }
-      return !requireSpecificMatch && candidate.registrableDomain === target.registrableDomain;
+      // Legit apex: do not fall through to hostname/registrable matching.
+      if (isLegit) {
+        return false;
+      }
+      if (candidate.hostname === target.hostname) {
+        return true;
+      }
+      // Ordinary domains match by registrable domain; shared hosts do not.
+      return !isShared && candidate.registrableDomain === target.registrableDomain;
     } catch {
       return false;
     }
