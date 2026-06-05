@@ -13,6 +13,8 @@
     "typecheck": "npm run build:shared && npm run typecheck --workspaces --if-present",
     "test": "vitest run",
     "test:watch": "vitest",
+    "eval": "tsx scripts/evaluate.ts",
+    "lint": "eslint .",
     "build:shared": "npm --workspace @capstone/shared run build",
     "build:api": "npm --workspace @capstone/api run build",
     "build:extension": "npm --workspace @capstone/extension run build",
@@ -21,8 +23,12 @@
     "synth": "npm --workspace @capstone/api run synth"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/node": "^24.5.2",
+    "eslint": "^10.4.1",
+    "tsx": "^4.20.5",
     "typescript": "^5.9.2",
+    "typescript-eslint": "^8.60.1",
     "vitest": "^3.2.4"
   }
 }

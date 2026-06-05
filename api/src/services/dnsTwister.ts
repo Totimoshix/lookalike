@@ -42,10 +42,10 @@ function candidateComparisonLabel(candidateDomain: string, canonicalTld: string)
   const tldSuffix = canonicalTld.length > 0 ? `.${canonicalTld.toLowerCase()}` : "";
 
   if (tldSuffix && normalizedCandidate.endsWith(tldSuffix)) {
-    return normalizedCandidate.slice(0, -tldSuffix.length).replace(/[.\-]/g, "");
+    return normalizedCandidate.slice(0, -tldSuffix.length).replace(/[.-]/g, "");
   }
 
-  return normalizedCandidate.split(".").slice(0, -1).join("").replace(/[\-]/g, "");
+  return normalizedCandidate.split(".").slice(0, -1).join("").replace(/-/g, "");
 }
 
 function lexicalScoreForCandidate(candidateDomain: string, canonicalDomain: string): number {
