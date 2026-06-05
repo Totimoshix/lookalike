@@ -48,7 +48,9 @@ async function postJson<TResponse, TRequest>(path: string, payload: TRequest, op
     });
   } catch (error) {
     if (error instanceof TypeError) {
-      throw new Error(`API unreachable at ${apiBaseUrl}. Start 'npm run start:api' and reload the extension.`);
+      throw new Error(`API unreachable at ${apiBaseUrl}. Start 'npm run start:api' and reload the extension.`, {
+        cause: error
+      });
     }
     throw error;
   }

@@ -12,7 +12,6 @@ import {
   type SignalDiagnostic,
   type SignalSource
 } from "@capstone/shared";
-import { brandCatalog } from "../data/brandCatalog.js";
 import { buildAnalystExplanationPrompt } from "../prompts/analystExplanation.js";
 import { inferBrandMatch } from "./brandMatcher.js";
 import { callBedrockJson } from "./bedrock.js";
