@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 import type { AnalysisResult, LookalikeCandidateSet } from "@capstone/shared";
-import { analyzeDomain, generateLookalikes } from "../lib/api";
+import { analyzeDomainFast, generateLookalikes } from "../lib/api";
 import { JsonExportButton } from "./JsonExportButton";
 
 type BatchResult = {
@@ -45,29 +45,32 @@ export function LookalikeView() {
     }
 
     setIsBatchScoring(true);
+    setBatchResults([]);
     const topCandidates = candidateSet.candidates.slice(0, 5);
-    const results: BatchResult[] = [];
+    const brandOverride = candidateSet.brand_name ?? candidateSet.canonical_domain;
 
-    for (const candidate of topCandidates) {
-      try {
-        const result = await analyzeDomain({
-          url: candidate.candidate_domain,
-          mode: "manual_entry",
-          brand_override: candidateSet.brand_name ?? candidateSet.canonical_domain
-        });
-        results.push({
-          domain: candidate.candidate_domain,
-          result,
-          error: null
-        });
-      } catch (caughtError) {
-        results.push({
-          domain: candidate.candidate_domain,
-          result: null,
-          error: caughtError instanceof Error ? caughtError.message : "Analysis failed"
-        });
-      }
-    }
+    // Score all five concurrently via the fast path (brand + lexical + a
+    // budgeted reputation check; no page fetch / WHOIS / LLM). Sequential full
+    // scans took 20s+ — most typosquat candidates don't resolve, so the full
+    // pipeline's enrichment was pure wait. This returns in a couple of seconds.
+    const results = await Promise.all(
+      topCandidates.map(async (candidate): Promise<BatchResult> => {
+        try {
+          const result = await analyzeDomainFast({
+            url: candidate.candidate_domain,
+            mode: "manual_entry",
+            brand_override: brandOverride
+          });
+          return { domain: candidate.candidate_domain, result, error: null };
+        } catch (caughtError) {
+          return {
+            domain: candidate.candidate_domain,
+            result: null,
+            error: caughtError instanceof Error ? caughtError.message : "Analysis failed"
+          };
+        }
+      })
+    );
 
     setBatchResults(results);
     setIsBatchScoring(false);
@@ -113,6 +116,24 @@ export function LookalikeView() {
         {error ? <p className="error-banner">{error}</p> : null}
       </form>
 
+      {batchResults.length > 0 ? (
+        <section className="panel">
+          <div className="panel-head">
+            <h3>Top Candidate Scoring</h3>
+          </div>
+          <div className="candidate-list">
+            {batchResults.map((entry) => (
+              <article className="candidate-item" key={entry.domain}>
+                <div>
+                  <strong>{entry.domain}</strong>
+                  <p>{entry.error ?? `${entry.result?.verdict} · ${entry.result?.threat_score}/100`}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
       {candidateSet ? (
         <section className="panel">
           <div className="panel-head">
@@ -129,24 +150,6 @@ export function LookalikeView() {
                   <p>{candidate.pattern}</p>
                 </div>
                 <span>{Math.round(candidate.lexical_score * 100)}%</span>
-              </article>
-            ))}
-          </div>
-        </section>
-      ) : null}
-
-      {batchResults.length > 0 ? (
-        <section className="panel">
-          <div className="panel-head">
-            <h3>Top Candidate Scoring</h3>
-          </div>
-          <div className="candidate-list">
-            {batchResults.map((entry) => (
-              <article className="candidate-item" key={entry.domain}>
-                <div>
-                  <strong>{entry.domain}</strong>
-                  <p>{entry.error ?? `${entry.result?.verdict} · ${entry.result?.threat_score}/100`}</p>
-                </div>
               </article>
             ))}
           </div>
