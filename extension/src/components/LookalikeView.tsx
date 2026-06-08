@@ -19,6 +19,13 @@ export function LookalikeView() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [isBatchScoring, setIsBatchScoring] = useState(false);
 
+  // Candidates come back from DNSTwister in generation order, not risk order.
+  // Rank by lexical similarity (highest-risk first) so both the displayed queue
+  // and the "Analyze Top 5" selection use the same highest-risk candidates.
+  const rankedCandidates = candidateSet
+    ? [...candidateSet.candidates].sort((a, b) => b.lexical_score - a.lexical_score)
+    : [];
+
   const handleGenerate = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(null);
@@ -46,7 +53,7 @@ export function LookalikeView() {
 
     setIsBatchScoring(true);
     setBatchResults([]);
-    const topCandidates = candidateSet.candidates.slice(0, 5);
+    const topCandidates = rankedCandidates.slice(0, 5);
     const brandOverride = candidateSet.brand_name ?? candidateSet.canonical_domain;
 
     // Score all five concurrently via the fast path (brand + lexical + a
@@ -143,7 +150,7 @@ export function LookalikeView() {
             </button>
           </div>
           <div className="candidate-list">
-            {candidateSet.candidates.map((candidate) => (
+            {rankedCandidates.map((candidate) => (
               <article className="candidate-item" key={candidate.candidate_domain}>
                 <div>
                   <strong>{candidate.candidate_domain}</strong>
