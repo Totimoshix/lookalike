@@ -229,6 +229,23 @@ describe("inferBrandMatch — universal resolver (keyword stuffing + Tranco)", (
     }
   });
 
+  it("does not copy catalog SEO keywords into an override match", async () => {
+    // Regression: a brand_override that hits a catalog entry used to return
+    // the entry's keyword list ("signin", "delivery", …) as matched_keywords,
+    // which the scorer then misread as keyword stuffing in the domain.
+    const result = await inferBrandMatch({
+      analyzedUrl: "https://cmazon.com",
+      normalizedDomain: "cmazon.com",
+      pageTitle: null,
+      bodyText: "",
+      brandOverride: "amazon.com",
+      skipLlm: true
+    });
+    expect(result.method).toBe("override");
+    expect(result.canonical_domain).toBe("amazon.com");
+    expect(result.matched_keywords).toEqual([]);
+  });
+
   it("does not claim a shared host's label as the impersonated brand", async () => {
     // blogspot.com is a shared host; phishing lives on the subdomain. The
     // resolver must NOT report brand_name "Blogspot".

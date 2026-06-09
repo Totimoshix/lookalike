@@ -15,6 +15,7 @@ import {
   STUFFING_WORDS,
   suspiciousKeywordsInDomain,
   tokenizationPattern,
+  tokenizeDomainLabel,
   urlEntropy
 } from "@capstone/shared";
 import type { AnalysisResult, BrandMatch, RiskFactors, SignalDiagnostic } from "@capstone/shared";
@@ -71,6 +72,9 @@ export function buildLexicalSignals(input: {
   }
 
   const targetLabel = baseDomainLabel(input.brandMatch.canonical_domain);
+  // Tokens of the ANALYZED domain — used to validate that a claimed stuffing
+  // keyword actually appears in the domain itself (see typosquatting_type).
+  const sourceTokens = new Set(tokenizeDomainLabel(sourceLabel));
 
   return {
     is_homoglyph: isHomoglyphDomain(sourceLabel, targetLabel),
@@ -85,8 +89,12 @@ export function buildLexicalSignals(input: {
       // When the brand resolver flagged stuffing tokens (e.g. "payment-" or
       // "-login" wrapped around a real brand label), surface that here so the
       // evidence panel and plain-language reasons explain the attack pattern.
-      input.brandMatch.matched_keywords.some((kw) =>
-        STUFFING_WORDS.has(kw.toLowerCase())
+      // The keyword must ALSO be a token of the analyzed domain itself — a
+      // brand match can carry catalog/page keywords ("signin", "delivery")
+      // that say nothing about this domain's spelling, and those must not
+      // relabel a plain typo (cmazon) as keyword stuffing.
+      input.brandMatch.matched_keywords.some(
+        (kw) => STUFFING_WORDS.has(kw.toLowerCase()) && sourceTokens.has(kw.toLowerCase())
       )
         ? "keyword_stuffing"
         : classifyTyposquatting(sourceLabel, targetLabel),
@@ -129,7 +137,13 @@ function categoryScore(values: Array<number | null | boolean>, weights: number[]
 
 export function computeThreatScore(
   riskFactors: RiskFactors,
-  opts?: { brandConfidence?: number; registrableDomain?: string; isLegit?: boolean; crossDomainRedirect?: boolean }
+  opts?: {
+    brandConfidence?: number;
+    brandMethod?: string;
+    registrableDomain?: string;
+    isLegit?: boolean;
+    crossDomainRedirect?: boolean;
+  }
 ): { score: number; verdict: AnalysisResult["verdict"] } {
   const lexicalScore = categoryScore(
     [
@@ -294,6 +308,23 @@ export function computeThreatScore(
     (lexical.is_homoglyph === true ||
       lexical.typosquatting_type === "keyword_stuffing" ||
       (lexical.jaro_winkler_similarity ?? 0) >= 0.9)
+  ) {
+    floor = Math.max(floor, 65);
+  }
+  // Single edit from an EXPLICITLY DECLARED target brand (brand_override —
+  // the lookalike-candidate scorer). Jaro-Winkler under-weights edits at the
+  // FRONT of a label (cmazon/mazon vs amazon score ~0.82-0.88), so DL is the
+  // right metric here, and the caller naming the brand makes the comparison
+  // conclusive. Inferred (catalog/heuristic) matches keep the stricter gates
+  // above: a fuzzy inference one edit away can be a dictionary collision
+  // (phase ↔ chase), so DL alone is not trusted for them. Labels shorter than
+  // 5 chars are excluded — one edit there is too large a relative change.
+  if (
+    !isLegit &&
+    opts?.brandMethod === "override" &&
+    brandConfidence >= 0.8 &&
+    (lexical.damerau_levenshtein_distance ?? Number.POSITIVE_INFINITY) <= 1 &&
+    baseDomainLabel(opts?.registrableDomain ?? "").length >= 5
   ) {
     floor = Math.max(floor, 65);
   }

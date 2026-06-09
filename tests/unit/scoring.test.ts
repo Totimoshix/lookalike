@@ -373,6 +373,112 @@ describe("computeThreatScore — plateau spread + confidence gate", () => {
   });
 });
 
+describe("typosquatting_type labeling (truthful patterns)", () => {
+  const overrideAmazon = (keywords: string[]): BrandMatch => ({
+    brand_name: "Amazon",
+    canonical_domain: "amazon.com",
+    confidence: 1,
+    method: "override",
+    matched_keywords: keywords
+  });
+
+  const lexicalFor = (domain: string, brandMatch: BrandMatch) => {
+    const normalized = normalizeInputUrl(domain);
+    return buildLexicalSignals({
+      normalizedDomain: normalized.registrableDomain,
+      punycodeHostname: normalized.punycodeHostname,
+      isIdn: normalized.isIdn,
+      tld: normalized.tld,
+      isIpLiteral: normalized.isIpLiteral,
+      brandMatch
+    });
+  };
+
+  it("does not relabel a plain typo as keyword_stuffing from catalog/page keywords", () => {
+    // Regression: the override path used to carry the catalog entry's SEO
+    // keywords ("signin", "delivery"), which made every override-scored typo
+    // read as keyword_stuffing. The keyword must appear in the domain itself.
+    const lexical = lexicalFor("cmazon.com", overrideAmazon(["signin", "delivery"]));
+    expect(lexical.typosquatting_type).toBe("substitution");
+  });
+
+  it("labels a transposition as transposition", () => {
+    expect(lexicalFor("maazon.com", overrideAmazon([])).typosquatting_type).toBe("transposition");
+  });
+
+  it("labels an omission as deletion", () => {
+    expect(lexicalFor("mazon.com", overrideAmazon([])).typosquatting_type).toBe("deletion");
+  });
+
+  it("labels a single repeated character as insertion, not keyword_stuffing", () => {
+    // "aamazon" contains "amazon" but the leftover is one letter — a typo,
+    // not stuffed words.
+    expect(lexicalFor("aamazon.com", overrideAmazon([])).typosquatting_type).toBe("insertion");
+  });
+
+  it("still labels real stuffing words around the brand as keyword_stuffing", () => {
+    expect(lexicalFor("amazon-payment.com", overrideAmazon([])).typosquatting_type).toBe("keyword_stuffing");
+  });
+
+  it("still honors stuffing keywords that DO appear in the domain (resolver path)", () => {
+    const sheridan: BrandMatch = {
+      brand_name: "Sheridan College",
+      canonical_domain: "sheridancollege.ca",
+      confidence: 0.9,
+      method: "catalog",
+      matched_keywords: ["payment"]
+    };
+    expect(lexicalFor("payment-sheridancollege.ca", sheridan).typosquatting_type).toBe("keyword_stuffing");
+  });
+});
+
+describe("single-edit floor for explicitly declared brands (override)", () => {
+  it("floors a single-edit candidate against a declared brand even when jaro < 0.9", () => {
+    // mazon/cmazon vs amazon: front-of-label edits score jaro ~0.82-0.88 and
+    // slipped under the lookalike floor despite being one edit from the brand
+    // the caller explicitly named.
+    const rf = blankRiskFactors();
+    rf.lexical.damerau_levenshtein_distance = 1;
+    rf.lexical.jaro_winkler_similarity = 0.878;
+    const { score, verdict } = computeThreatScore(rf, {
+      brandConfidence: 0.95,
+      brandMethod: "override",
+      registrableDomain: "mazon.com",
+      isLegit: false
+    });
+    expect(score).toBeGreaterThanOrEqual(65);
+    expect(verdict).toBe("High");
+  });
+
+  it("does NOT apply the single-edit floor to inferred matches (dictionary collisions)", () => {
+    // phase.com is one edit from chase.com — an inferred fuzzy match must not
+    // floor on DL alone.
+    const rf = blankRiskFactors();
+    rf.lexical.damerau_levenshtein_distance = 1;
+    rf.lexical.jaro_winkler_similarity = 0.867;
+    const { verdict } = computeThreatScore(rf, {
+      brandConfidence: 0.9,
+      brandMethod: "heuristic",
+      registrableDomain: "phase.com",
+      isLegit: false
+    });
+    expect(["Safe", "Low", "Medium"]).toContain(verdict);
+  });
+
+  it("does NOT apply the single-edit floor to very short labels", () => {
+    const rf = blankRiskFactors();
+    rf.lexical.damerau_levenshtein_distance = 1;
+    rf.lexical.jaro_winkler_similarity = 0.85;
+    const { verdict } = computeThreatScore(rf, {
+      brandConfidence: 1,
+      brandMethod: "override",
+      registrableDomain: "ebya.com",
+      isLegit: false
+    });
+    expect(["Safe", "Low", "Medium"]).toContain(verdict);
+  });
+});
+
 describe("buildLexicalSignals legitimacy suppression", () => {
   it("nulls brand-comparison signals for a legitimate self-match", () => {
     const sheridan: BrandMatch = {

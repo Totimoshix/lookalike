@@ -178,6 +178,7 @@ export async function analyzeUrlFast(request: AnalyzeRequest): Promise<AnalysisR
 
   const { score, verdict } = computeThreatScore(riskFactors, {
     brandConfidence: brandMatch.confidence,
+    brandMethod: brandMatch.method,
     registrableDomain: normalized.registrableDomain,
     isLegit
   });

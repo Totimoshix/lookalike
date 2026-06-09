@@ -439,7 +439,11 @@ function fromOverride(override: string): BrandMatch {
       canonical_domain: match.canonicalDomain,
       confidence: 1,
       method: "override",
-      matched_keywords: match.keywords
+      // Deliberately NOT the catalog entry's SEO keyword list ("signin",
+      // "delivery", …): matched_keywords means "tokens found in the analyzed
+      // domain". Copying catalog keywords here made the scorer relabel plain
+      // typos (cmazon) as keyword_stuffing for every override-scored domain.
+      matched_keywords: []
     };
   }
 
