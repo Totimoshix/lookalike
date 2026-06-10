@@ -499,7 +499,19 @@ export function classifyTyposquatting(input: string, target: string): string | n
     return "substitution";
   }
   if (input.length > target.length) {
-    return input.includes(target) ? "keyword_stuffing" : "insertion";
+    if (!input.includes(target)) {
+      return "insertion";
+    }
+    // The whole brand is embedded. Keyword stuffing means extra WORDS wrapped
+    // around the brand ("amazon-payment"); one or two stray characters is a
+    // typo ("aamazon" is a repetition, not stuffing). Only call it stuffing
+    // when the leftover is a known stuffing word or substantial enough to be
+    // a word at all.
+    const leftover = input.replace(target, "").replace(/[-_.]+/g, "");
+    const leftoverTokens = tokenizeDomainLabel(leftover);
+    return leftoverTokens.some((token) => STUFFING_WORDS.has(token)) || leftover.length >= 3
+      ? "keyword_stuffing"
+      : "insertion";
   }
   return "deletion";
 }

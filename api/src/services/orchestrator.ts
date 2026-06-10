@@ -93,6 +93,10 @@ export async function analyzeUrl(request: AnalyzeRequest): Promise<AnalysisResul
   const normalized = normalizeInputUrl(request.url);
   const cacheKey = JSON.stringify({
     schema_version: "analysis-result.v2",
+    // Bump whenever scoring/labeling changes so cached results from the
+    // previous revision miss instead of serving stale scores for up to the
+    // cache TTL after a deploy.
+    scoring_revision: 1,
     url: normalized.normalizedUrl,
     brand_override: request.brand_override ?? null
   });
@@ -269,6 +273,7 @@ export async function analyzeUrl(request: AnalyzeRequest): Promise<AnalysisResul
 
   const { score, verdict } = computeThreatScore(riskFactors, {
     brandConfidence: brandMatch.confidence,
+    brandMethod: brandMatch.method,
     registrableDomain: normalized.registrableDomain,
     isLegit,
     crossDomainRedirect
