@@ -1,0 +1,360 @@
+{
+  "schema_version": "analysis-result.v2",
+  "mode": "manual_entry",
+  "analyzed_url": "dhl.de",
+  "normalized_domain": "dhl.de",
+  "normalized_url": "https://dhl.de/",
+  "brand_match": {
+    "brand_name": "DHL",
+    "canonical_domain": "dhl.com",
+    "confidence": 0.95,
+    "method": "catalog",
+    "matched_keywords": []
+  },
+  "threat_score": 6,
+  "verdict": "Safe",
+  "reasoning": "The URL 'https://dhl.de/' has been assessed as Safe due to the presence of a valid SSL certificate issued by a known entity, Deutsche Post AG. The domain has a low threat score of 6/100, and the page content closely resembles the legitimate DHL website, as indicated by the HTML similarity score of 0.19. Additionally, the domain is not blacklisted in any major phishing databases, and there are no signs of credential harvesting or suspicious scripts. However, the reuse of the DHL logo and the presence of suspicious script patterns warrant close monitoring.",
+  "risk_factors": {
+    "lexical": {
+      "is_homoglyph": null,
+      "is_idn": false,
+      "punycode_domain": null,
+      "edit_distance_to_target": null,
+      "levenshtein_distance": null,
+      "damerau_levenshtein_distance": null,
+      "jaro_winkler_similarity": null,
+      "ngram_similarity": null,
+      "typosquatting_type": null,
+      "character_substitution_pattern": null,
+      "keyboard_proximity_score": null,
+      "dictionary_similarity_score": null,
+      "length_difference": null,
+      "tld_manipulation": null,
+      "suspicious_tld": false,
+      "tld_risk_score": 0.15,
+      "subdomain_structure_risk": 0.18,
+      "brand_keyword_detected": false,
+      "suspicious_keywords": [],
+      "hyphenation_pattern": null,
+      "tokenization_pattern": "multi_label",
+      "mixed_character_sets": false,
+      "url_shortener_detected": false,
+      "ip_literal_host": false
+    },
+    "infrastructure": {
+      "domain_age_days": null,
+      "registrar": null,
+      "registrant_org": null,
+      "registration_length_years": null,
+      "whois_privacy": null,
+      "hidden_ownership": null,
+      "registrant_country": null,
+      "ssl_valid": true,
+      "ssl_error": null,
+      "certificate_issuer": "Deutsche Post AG",
+      "certificate_reputation": "unknown_issuer",
+      "certificate_age_days": 14,
+      "certificate_domain_mismatch": false,
+      "creation_date_anomaly": null,
+      "mx_records_present": true,
+      "dns_records": {
+        "a": [
+          "23.65.199.81"
+        ],
+        "mx": [
+          "dhl-com.fortimailcloud.com"
+        ],
+        "txt": [
+          "ZOOM_verify_BBEKWU0GTg6kUPC8F2DwYg",
+          "MS=ms70018602",
+          "google-site-verification=OWWSi0tQkVX_sY1MHbq9sM9g-MpFCBHez-fGjGpDC4I",
+          "d4n734gnb864dcvpfmndwddpmd66wy7z",
+          "1pwxd4qqgzthr0ynqq51j36s4vl648dq",
+          "8dcvnmhfj36yh9hwxr8ssqp1q16g1h4r",
+          "nsfpq52fp6tdp5xhdsnzw4rtq4nx6xhb",
+          "google-site-verification=uUXh4zFnsjAvcEaPS8E8v7BNHyRrIsapmKABHE5i51w",
+          "_gnbq7pso09buezzgpcqscgd8on8r596",
+          "globalsign-domain-verification=2442CF347F01E354C650FE8724FE6007",
+          "_aq7jqdgol225vtcxoq4qh0ckxowgnd1",
+          "L91kINvx88YCqJ/wMAXC4VRNuA4yrmierly03AXCROo=",
+          "xg5196tlmfq771tjcck2v8ssnvmqf8z8",
+          "google-site-verification=TMsHX3vM8vbHKiJeR1KNdiJTUYUkQ0zHa1TJ9oiWRSE",
+          "_dazsu16egualwjrbzvbdvbtk5o6x0hk",
+          "v=spf1 ip4:149.239.48.15 ip4:149.239.48.16 include:dpdhl._spf.dhl.com include:dhlde._spf.dhl.com include:elaine-asp.de ~all",
+          "globalsign-domain-verification=CEAB988440878ACC010BD0D7DD129699",
+          "dtm-domain-verification=_b7je53sW-Y6BMe9I_OKY_gx70O0xMa5RvVxcXs1oZk",
+          "BEHMG7enwctbd+8W7Q7LpYVI9CQFm2ebGY5F/Lh1Z+4=",
+          "00d0y000001xopwuac",
+          "globalsign-domain-verification=3D38296D502515FEC018083A529D3843",
+          "1f9njmnh7jy1kfwpt5133s2s78ty9y04",
+          "google-site-verification=SHsgfaexLI1B5NE0CbUl9TZDql_cOKpRdnngzMn_OjA"
+        ],
+        "ns": [
+          "a3-66.akam.net",
+          "a2-65.akam.net",
+          "a1-52.akam.net",
+          "a12-66.akam.net",
+          "a16-66.akam.net",
+          "a13-66.akam.net"
+        ]
+      },
+      "dns_history_changes": null,
+      "fast_flux_detected": null,
+      "ip_reputation_score": 0,
+      "hosting_asn": "16625 Akamai International, BV",
+      "hosting_asn_reputation": "mainstream_hosting",
+      "shared_hosting_risk": null,
+      "redirect_count": 3,
+      "final_url": "https://www.dhl.de/de/privatkunden.html"
+    },
+    "content": {
+      "page_title": "DHL Privatkunden - Paketversand und Paketempfang mit DHL",
+      "html_similarity_score": 0.19,
+      "logo_reuse_detected": true,
+      "text_reuse_score": 0,
+      "credential_harvesting_detected": false,
+      "forms_detected": 6,
+      "password_fields_detected": 0,
+      "form_submits_to_real_brand": false,
+      "hidden_iframes": false,
+      "obfuscated_javascript": false,
+      "suspicious_script_patterns": [
+        "network_postback"
+      ],
+      "missing_security_headers": [
+        "x-frame-options"
+      ],
+      "server_header_exposure": null,
+      "redirect_chain": [
+        "https://www.dhl.de/",
+        "https://www.dhl.de/de.html",
+        "https://www.dhl.de/de/privatkunden.html"
+      ],
+      "body_keywords": []
+    },
+    "reputational": {
+      "blacklisted_in_phishTank": null,
+      "blacklisted_in_openPhish": false,
+      "google_safe_browsing": false,
+      "virus_total_detections": 0,
+      "abuse_ipdb_reports": 0,
+      "phishing_feed_hits": 0
+    },
+    "behavioral": {
+      "keyboard_event_listeners": false,
+      "http_to_https_mismatch": false,
+      "external_form_action": false,
+      "cross_domain_redirect": false,
+      "client_side_redirect": false
+    },
+    "email_auth": {
+      "spf_present": true,
+      "dkim_present": false,
+      "dmarc_present": false,
+      "spf_dkim_dmarc_missing": false
+    },
+    "passive_history": {
+      "passive_dns_observed": null,
+      "passive_dns_notes": [],
+      "archive_first_seen_days": null,
+      "ownership_changes_detected": null
+    },
+    "machine_learning": {
+      "brand_similarity_score": 0,
+      "visual_similarity_score": 0.65,
+      "url_entropy": 3.19,
+      "time_based_risk": "stable_registration"
+    }
+  },
+  "evidence_summary": {
+    "highlights": [
+      "Overall verdict is Safe with a score of 6/100."
+    ],
+    "evidence_items": [],
+    "signal_diagnostics": [
+      {
+        "signal": "page_fetch",
+        "provider": "page_fetch",
+        "status": "ok"
+      },
+      {
+        "signal": "registrar_metadata",
+        "provider": "rdap",
+        "status": "query_failed",
+        "detail": "RDAP registrar metadata was unavailable."
+      },
+      {
+        "signal": "virus_total_detections",
+        "provider": "virustotal",
+        "status": "ok"
+      },
+      {
+        "signal": "abuse_ipdb_reports",
+        "provider": "abuseipdb",
+        "status": "ok"
+      },
+      {
+        "signal": "google_safe_browsing",
+        "provider": "google_safe_browsing",
+        "status": "ok"
+      },
+      {
+        "signal": "blacklisted_in_openPhish",
+        "provider": "openphish",
+        "status": "ok"
+      },
+      {
+        "signal": "blacklisted_in_phishTank",
+        "provider": "phishtank",
+        "status": "not_configured",
+        "detail": "PhishTank requires a registered API key (anonymous access is gated); OpenPhish covers this signal."
+      },
+      {
+        "signal": "passive_dns_observed",
+        "provider": "crt.sh",
+        "status": "unsupported",
+        "detail": "Optional source: crt.sh did not respond in time (free service, no SLA). Verdict unaffected."
+      },
+      {
+        "signal": "archive_first_seen_days",
+        "provider": "internet_archive",
+        "status": "unsupported",
+        "detail": "Optional source: Internet Archive did not respond in time (free service, no SLA). Verdict unaffected."
+      },
+      {
+        "signal": "analyst_explanation",
+        "provider": "bedrock",
+        "status": "ok"
+      }
+    ]
+  },
+  "reporting_contacts": {
+    "registrar_information": {
+      "registrar_name": null,
+      "abuse_contact": null,
+      "abuse_portal": null,
+      "whois_lookup_url": "https://lookup.icann.org/en"
+    },
+    "brand_protection": {
+      "brand_contact": "phishing-dpdhl@dhl.com",
+      "cert_contact": "certbund@bsi.bund.de",
+      "apwg_contact": "phishing@apwg.org",
+      "google_safe_browsing_report": "https://safebrowsing.google.com/safebrowsing/report_phish/",
+      "microsoft_submission": "https://www.microsoft.com/en-us/wdsi/filesubmission"
+    },
+    "local_authorities": {
+      "anti_fraud": "bka.de/cybercrime (BKA)",
+      "csirt": "certbund@bsi.bund.de",
+      "csirt_name": "BSI CERT-Bund (Germany)",
+      "csirt_country": "DE",
+      "csirt_portal": "https://www.bsi.bund.de/EN/Topics/IT-Crisis-Management/CERT-Bund/cert-bund_node.html"
+    },
+    "notes": [
+      "If you encounter a suspected phishing attempt, please report it to the brand contact at phishing-dpdhl@dhl.com. For further assistance and guidance, you can also reach out to BSI CERT-Bund (Germany) at certbund@bsi.bund.de. If you need to report cybercrime, you can contact BKA at bka.de/cybercrime."
+    ]
+  },
+  "signal_sources": [
+    {
+      "source": "page_fetch",
+      "status": "ok"
+    },
+    {
+      "source": "rdap",
+      "status": "partial",
+      "detail": "RDAP registrar metadata was unavailable."
+    },
+    {
+      "source": "virustotal",
+      "status": "ok"
+    },
+    {
+      "source": "abuseipdb",
+      "status": "ok"
+    },
+    {
+      "source": "google_safe_browsing",
+      "status": "ok"
+    },
+    {
+      "source": "openphish",
+      "status": "ok"
+    },
+    {
+      "source": "phishtank",
+      "status": "partial",
+      "detail": "PhishTank requires a registered API key (anonymous access is gated); OpenPhish covers this signal."
+    },
+    {
+      "source": "crt.sh",
+      "status": "unavailable",
+      "detail": "Optional source: crt.sh did not respond in time (free service, no SLA). Verdict unaffected."
+    },
+    {
+      "source": "internet_archive",
+      "status": "unavailable",
+      "detail": "Optional source: Internet Archive did not respond in time (free service, no SLA). Verdict unaffected."
+    },
+    {
+      "source": "bedrock",
+      "status": "ok"
+    }
+  ],
+  "timings": {
+    "total_ms": 13059,
+    "fetch_ms": 1268,
+    "enrichment_ms": 9800,
+    "llm_ms": 1991
+  },
+  "export_metadata": {
+    "generated_at": "2026-07-22T20:37:23.857Z",
+    "generated_by": "Capstone Domain Guardian",
+    "schema_version": "analysis-result.v2",
+    "sources": [
+      {
+        "source": "page_fetch",
+        "status": "ok"
+      },
+      {
+        "source": "rdap",
+        "status": "partial",
+        "detail": "RDAP registrar metadata was unavailable."
+      },
+      {
+        "source": "virustotal",
+        "status": "ok"
+      },
+      {
+        "source": "abuseipdb",
+        "status": "ok"
+      },
+      {
+        "source": "google_safe_browsing",
+        "status": "ok"
+      },
+      {
+        "source": "openphish",
+        "status": "ok"
+      },
+      {
+        "source": "phishtank",
+        "status": "partial",
+        "detail": "PhishTank requires a registered API key (anonymous access is gated); OpenPhish covers this signal."
+      },
+      {
+        "source": "crt.sh",
+        "status": "unavailable",
+        "detail": "Optional source: crt.sh did not respond in time (free service, no SLA). Verdict unaffected."
+      },
+      {
+        "source": "internet_archive",
+        "status": "unavailable",
+        "detail": "Optional source: Internet Archive did not respond in time (free service, no SLA). Verdict unaffected."
+      },
+      {
+        "source": "bedrock",
+        "status": "ok"
+      }
+    ]
+  },
+  "partial": false
+}
