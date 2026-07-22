@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Threat Report — cbr.ru</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 13px;
+      color: #111;
+      background: #fff;
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0;
+    }
+
+    .page-header {
+      background: #0f0f0f;
+      color: #fff;
+      padding: 18px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .page-header h1 { font-size: 15px; font-weight: 600; }
+    .page-header .meta { font-size: 11px; color: #aaa; text-align: right; }
+
+    .content { padding: 28px 32px; }
+
+    /* Verdict hero */
+    .verdict-hero {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 20px;
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      background: #fafafa;
+    }
+    .verdict-score {
+      text-align: center;
+      min-width: 72px;
+    }
+    .verdict-score .number {
+      font-size: 42px;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .verdict-score .out-of { font-size: 12px; color: #999; }
+    .score-bar {
+      height: 4px;
+      border-radius: 2px;
+      background: #eee;
+      margin-top: 6px;
+      overflow: hidden;
+    }
+    .score-bar-fill { height: 100%; border-radius: 2px; }
+    .verdict-body { flex: 1; }
+    .verdict-label { font-size: 20px; font-weight: 700; }
+    .verdict-headline { font-size: 13px; color: #555; margin-top: 2px; }
+    .verdict-reasoning {
+      margin-top: 10px;
+      font-size: 12px;
+      line-height: 1.7;
+      color: #333;
+      padding: 10px 12px;
+      background: #fff;
+      border: 1px solid #e8e8e8;
+      border-radius: 6px;
+    }
+
+    /* Sections */
+    .section { margin-bottom: 28px; }
+    .section-heading {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: #888;
+      padding: 5px 8px;
+      background: #f5f5f5;
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+
+    /* Contact cards */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .contact-card {
+      border: 1px solid #e8e8e8;
+      border-radius: 6px;
+      padding: 12px;
+    }
+    .contact-card-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #aaa;
+      margin-bottom: 6px;
+    }
+    .contact-name { font-size: 12px; font-weight: 600; color: #111; margin-bottom: 6px; }
+    .contact-row { font-size: 11px; color: #555; margin-top: 3px; word-break: break-all; }
+    .contact-row strong { color: #888; font-weight: 500; }
+
+    /* Footer */
+    .page-footer {
+      border-top: 1px solid #e8e8e8;
+      padding: 14px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      color: #bbb;
+    }
+
+    /* Print */
+    @media print {
+      body { max-width: 100%; }
+      .page-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .verdict-hero { break-inside: avoid; }
+      .section { break-inside: avoid; }
+      .contact-grid { break-inside: avoid; }
+      tr { break-inside: avoid; }
+      .print-hint { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <h1>Domain Threat Analysis Report</h1>
+    <div class="meta">
+      <div>Capstone Domain Guardian</div>
+      <div>7/22/2026, 4:51:17 PM</div>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- Verdict hero -->
+    <div class="verdict-hero">
+      <div class="verdict-score">
+        <div class="number" style="color:#166534;">14</div>
+        <div class="out-of">/ 100</div>
+        <div class="score-bar">
+          <div class="score-bar-fill" style="width:14%;background:#22c55e;"></div>
+        </div>
+      </div>
+      <div class="verdict-body">
+        <div class="verdict-label" style="color:#166534;">Safe</div>
+        <div class="verdict-headline">Looks safe</div>
+        <div class="verdict-reasoning">The URL https://cbr.ru/ has been assessed as 'Safe' with a threat score of 14. The domain matches the canonical domain of the Central Bank of the Russian Federation with a high confidence score of 0.9. The SSL certificate is valid, and the domain has a low risk profile with no suspicious keywords or typosquatting patterns detected. The content of the page includes the legitimate brand name in the title and form actions, which are directed to the real brand's domain. However, there are missing security headers and a low HTML similarity score, which are minor concerns. The domain's age and reputational indicators are stable, and there are no reports of abuse or phishing activities.</div>
+      </div>
+    </div>
+
+    <!-- Subject -->
+    <div class="section">
+      <div class="section-heading">Subject</div>
+      <table style="border-collapse:collapse;width:100%;">
+        
+    <tr>
+      <td style="padding:4px 12px 4px 0;color:#666;font-size:12px;white-space:nowrap;vertical-align:top;">Analyzed domain</td>
+      <td style="padding:4px 0;font-size:12px;color:#111;word-break:break-all;">cbr.ru</td>
+    </tr>
+        
+    <tr>
+      <td style="padding:4px 12px 4px 0;color:#666;font-size:12px;white-space:nowrap;vertical-align:top;">Analyzed URL</td>
+      <td style="padding:4px 0;font-size:12px;color:#111;word-break:break-all;">https://cbr.ru/</td>
+    </tr>
+        
+    <tr>
+      <td style="padding:4px 12px 4px 0;color:#666;font-size:12px;white-space:nowrap;vertical-align:top;">Target brand</td>
+      <td style="padding:4px 0;font-size:12px;color:#111;word-break:break-all;">Центральный банк Российской Федерации</td>
+    </tr>
+        
+    <tr>
+      <td style="padding:4px 12px 4px 0;color:#666;font-size:12px;white-space:nowrap;vertical-align:top;">Brand confidence</td>
+      <td style="padding:4px 0;font-size:12px;color:#111;word-break:break-all;">90% (llm)</td>
+    </tr>
+        
+        
+        
+        
+    <tr>
+      <td style="padding:4px 12px 4px 0;color:#666;font-size:12px;white-space:nowrap;vertical-align:top;">Analysis mode</td>
+      <td style="padding:4px 0;font-size:12px;color:#111;word-break:break-all;">manual_entry</td>
+    </tr>
+      </table>
+    </div>
+
+    <!-- Key evidence -->
+    <div class="section">
+      <div class="section-heading">Key evidence</div>
+      <table style="border-collapse:collapse;width:100%;">
+      <tr style="border-bottom:1px solid #f0f0f0;">
+        <td style="padding:8px 10px 8px 0;vertical-align:top;white-space:nowrap;">
+          <span style="font-size:10px;font-weight:600;padding:2px 7px;border-radius:3px;background:#fee2e2;color:#991b1b;">
+            CRITICAL
+          </span>
+        </td>
+        <td style="padding:8px 10px 8px 0;vertical-align:top;width:100%;">
+          <div style="font-size:12px;font-weight:500;color:#111;">Form sends data to Центральный банк Российской Федерации's real domain — a classic phishing pattern</div>
+          
+        </td>
+        <td style="padding:8px 0;vertical-align:top;text-align:right;white-space:nowrap;">
+          <span style="font-size:10px;color:#aaa;">content</span>
+        </td>
+      </tr></table>
+    </div>
+
+    <!-- Reporting contacts -->
+    <div class="section">
+      <div class="section-heading">Reporting contacts</div>
+      <div class="contact-grid">
+
+        <div class="contact-card">
+          <div class="contact-card-label">Registrar abuse</div>
+          <div class="contact-name">Unknown registrar</div>
+          <div class="contact-row"><strong>Email: </strong>—</div>
+          <div class="contact-row"><strong>Portal: </strong>—</div>
+        </div>
+
+        <div class="contact-card">
+          <div class="contact-card-label">Brand / APWG</div>
+          <div class="contact-name">Центральный банк Российской Федерации</div>
+          <div class="contact-row"><strong>Brand: </strong>—</div>
+          <div class="contact-row"><strong>APWG: </strong>phishing@apwg.org</div>
+          <div class="contact-row"><strong>GSB report: </strong>https://safebrowsing.google.com/safebrowsing/report_phish/</div>
+        </div>
+
+        <div class="contact-card">
+          <div class="contact-card-label">CERT / CSIRT</div>
+          <div class="contact-name">GOV-CERT.RU (Russia)</div>
+          <div class="contact-row"><strong>Country: </strong>RU</div>
+          <div class="contact-row"><strong>Email: </strong>cert@gov-cert.ru</div>
+          <div class="contact-row"><strong>Portal: </strong>—</div>
+        </div>
+
+      </div>
+      <ul style="margin:10px 0 0;padding-left:18px;">
+        <li style="font-size:12px;color:#444;margin-bottom:4px;">If you encounter a phishing incident, please report it to GOV-CERT.RU (Russia) at cert@gov-cert.ru for immediate assistance.</li><li style="font-size:12px;color:#444;margin-bottom:4px;">For any fraud-related concerns, contact the Russian Ministry of Internal Affairs at mvd.ru.</li>
+       </ul>
+    </div>
+
+    <!-- Signal coverage -->
+    <div class="section">
+      <div class="section-heading">Signal coverage</div>
+      <table style="border-collapse:collapse;width:100%;">
+        <thead>
+          <tr style="border-bottom:1px solid #e8e8e8;">
+            <th style="text-align:left;font-size:11px;color:#888;font-weight:500;padding:4px 12px 4px 0;">Provider</th>
+            <th style="text-align:left;font-size:11px;color:#888;font-weight:500;padding:4px 12px 4px 0;">Signal</th>
+            <th style="text-align:right;font-size:11px;color:#888;font-weight:500;padding:4px 0;">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+    <tr style="border-bottom:1px solid #f8f8f8;">
+      <td style="padding:5px 12px 5px 0;font-size:12px;color:#111;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#22c55e;margin-right:5px;vertical-align:middle;"></span>page_fetch</td>
+      <td style="padding:5px 0;font-size:11px;color:#666;">page_fetch</td>
+      <td style="padding:5px 0;font-size:11px;text-align:right;color:#166534;">ok</td>
+    </tr>
+    <tr style="border-bottom:1px solid #f8f8f8;">
+      <td style="padding:5px 12px 5px 0;font-size:12px;color:#111;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#dc2626;margin-right:5px;vertical-align:middle;"></span>rdap</td>
+      <td style="padding:5px 0;font-size:11px;color:#666;">registrar_metadata</td>
+      <td style="padding:5px 0;font-size:11px;text-align:right;color:#991b1b;">query failed</td>
+    </tr>
+    <tr style="border-bottom:1px solid #f8f8f8;">
+      <td style="padding:5px 12px 5px 0;font-size:12px;color:#111;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#22c55e;margin-right:5px;vertical-align:middle;"></span>virustotal</td>
+      <td style="padding:5px 0;font-size:11px;color:#666;">virus_total_detections</td>
+      <td style="padding:5px 0;font-size:11px;text-align:right;color:#166534;">ok</td>
+    </tr>
+    <tr style="border-bottom:1px solid #f8f8f8;">
+      <td style="padding:5px 12px 5px 0;font-size:12px;color:#111;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#22c55e;margin-right:5px;vertical-align:middle;"></span>abuseipdb</td>
+      <td style="padding:5px 0;font-size:11px;color:#666;">abuse_ipdb_reports</td>
+      <td style="padding:5px 0;font-size:11px;text-align:right;color:#166534;">ok</td>
+    </tr>
+    <tr style="border-bottom:1px solid #f8f8f8;">
+      <td style="padding:5px 12px 5px 0;font-size:12px;color:#111;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#22c55e;margin-right:5px;vertical-align:middle;"></span>google_safe_browsing</td>
+      <td style="padding:5px 0;font-size:11px;color:#666;">google_safe_browsing</td>
+      <td style="padding:5px 0;font-size:11px;text-align:right;color:#166534;">ok</td>
+    </tr>
+    <tr style="border-bottom:1px solid #f8f8f8;">
+      <td style="padding:5px 12px 5px 0;font-size:12px;color:#111;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#22c55e;margin-right:5px;vertical-align:middle;"></span>openphish</td>
+      <td style="padding:5px 0;font-size:11px;color:#666;">blacklisted_in_openPhish</td>
+      <td style="padding:5px 0;font-size:11px;text-align:right;color:#166534;">ok</td>
+    </tr>
+    <tr style="border-bottom:1px solid #f8f8f8;">
+      <td style="padding:5px 12px 5px 0;font-size:12px;color:#111;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#aaa;margin-right:5px;vertical-align:middle;"></span>phishtank</td>
+      <td style="padding:5px 0;font-size:11px;color:#666;">blacklisted_in_phishTank</td>
+      <td style="padding:5px 0;font-size:11px;text-align:right;color:#999;">not configured</td>
+    </tr>
+    <tr style="border-bottom:1px solid #f8f8f8;">
+      <td style="padding:5px 12px 5px 0;font-size:12px;color:#111;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#f97316;margin-right:5px;vertical-align:middle;"></span>crt.sh</td>
+      <td style="padding:5px 0;font-size:11px;color:#666;">passive_dns_observed</td>
+      <td style="padding:5px 0;font-size:11px;text-align:right;color:#999;">unsupported</td>
+    </tr>
+    <tr style="border-bottom:1px solid #f8f8f8;">
+      <td style="padding:5px 12px 5px 0;font-size:12px;color:#111;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#f97316;margin-right:5px;vertical-align:middle;"></span>internet_archive</td>
+      <td style="padding:5px 0;font-size:11px;color:#666;">archive_first_seen_days</td>
+      <td style="padding:5px 0;font-size:11px;text-align:right;color:#999;">unsupported</td>
+    </tr>
+    <tr style="border-bottom:1px solid #f8f8f8;">
+      <td style="padding:5px 12px 5px 0;font-size:12px;color:#111;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#22c55e;margin-right:5px;vertical-align:middle;"></span>bedrock</td>
+      <td style="padding:5px 0;font-size:11px;color:#666;">analyst_explanation</td>
+      <td style="padding:5px 0;font-size:11px;text-align:right;color:#166534;">ok</td>
+    </tr></tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <footer class="page-footer">
+    <span>Capstone Domain Guardian · analysis-result.v2</span>
+    <span class="print-hint" style="color:#bbb;font-size:10px;">To save as PDF: File → Print → Save as PDF</span>
+    <span>7/22/2026, 4:51:17 PM</span>
+  </footer>
+
+</body>
+</html>

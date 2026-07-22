@@ -1,0 +1,348 @@
+{
+  "schema_version": "analysis-result.v2",
+  "mode": "manual_entry",
+  "analyzed_url": "www-paypal.com",
+  "normalized_domain": "www-paypal.com",
+  "normalized_url": "https://www-paypal.com/",
+  "brand_match": {
+    "brand_name": "PayPal",
+    "canonical_domain": "paypal.com",
+    "confidence": 0.9,
+    "method": "catalog",
+    "matched_keywords": [
+      "www"
+    ]
+  },
+  "threat_score": 72,
+  "verdict": "High",
+  "reasoning": "The domain 'www-paypal.com' combines a phishing word with a real brand name, which is a common tactic used in phishing attacks. The lexical analysis shows a high similarity to the legitimate domain 'paypal.com', but with a significant edit distance and typosquatting type of 'keyword_stuffing'. The threat score of 72 and high verdict are driven by the domain's lexical similarity to a well-known brand, the presence of suspicious DNS records, and the SSL certificate being issued by a known issuer. The domain's age and reputational factors also contribute to the high risk.",
+  "risk_factors": {
+    "lexical": {
+      "is_homoglyph": false,
+      "is_idn": false,
+      "punycode_domain": null,
+      "edit_distance_to_target": 4,
+      "levenshtein_distance": 4,
+      "damerau_levenshtein_distance": 4,
+      "jaro_winkler_similarity": 0.867,
+      "ngram_similarity": 0.571,
+      "typosquatting_type": "keyword_stuffing",
+      "character_substitution_pattern": null,
+      "keyboard_proximity_score": 0.075,
+      "dictionary_similarity_score": 0.867,
+      "length_difference": 4,
+      "tld_manipulation": false,
+      "suspicious_tld": false,
+      "tld_risk_score": 0.15,
+      "subdomain_structure_risk": 0.18,
+      "brand_keyword_detected": false,
+      "suspicious_keywords": [],
+      "hyphenation_pattern": "single_hyphen",
+      "tokenization_pattern": "multi_label",
+      "mixed_character_sets": false,
+      "url_shortener_detected": false,
+      "ip_literal_host": false
+    },
+    "infrastructure": {
+      "domain_age_days": 3400,
+      "registrar": "TurnCommerce, Inc. DBA NameBright.com",
+      "registrant_org": null,
+      "registration_length_years": 10.01,
+      "whois_privacy": null,
+      "hidden_ownership": null,
+      "registrant_country": null,
+      "ssl_valid": true,
+      "ssl_error": null,
+      "certificate_issuer": "Sectigo Limited",
+      "certificate_reputation": "known_issuer",
+      "certificate_age_days": 1,
+      "certificate_domain_mismatch": false,
+      "creation_date_anomaly": false,
+      "mx_records_present": true,
+      "dns_records": {
+        "a": [
+          "64.190.63.222"
+        ],
+        "mx": [
+          "localhost"
+        ],
+        "txt": [
+          "v=spf1 -all"
+        ],
+        "ns": [
+          "ns1.sedoparking.com",
+          "ns2.sedoparking.com"
+        ]
+      },
+      "dns_history_changes": 0,
+      "fast_flux_detected": null,
+      "ip_reputation_score": 18,
+      "hosting_asn": "47846 Sedo GmbH",
+      "hosting_asn_reputation": "unclassified",
+      "shared_hosting_risk": null,
+      "redirect_count": 0,
+      "final_url": "https://www-paypal.com/"
+    },
+    "content": {
+      "page_title": "www-paypal.com - Www paypal Resources and Information.",
+      "html_similarity_score": 0.08,
+      "logo_reuse_detected": false,
+      "text_reuse_score": 0,
+      "credential_harvesting_detected": false,
+      "forms_detected": 0,
+      "password_fields_detected": 0,
+      "form_submits_to_real_brand": null,
+      "hidden_iframes": false,
+      "obfuscated_javascript": false,
+      "suspicious_script_patterns": [
+        "network_postback"
+      ],
+      "missing_security_headers": [
+        "content-security-policy",
+        "x-frame-options",
+        "strict-transport-security"
+      ],
+      "server_header_exposure": "Parking/1.0",
+      "redirect_chain": [],
+      "body_keywords": []
+    },
+    "reputational": {
+      "blacklisted_in_phishTank": null,
+      "blacklisted_in_openPhish": false,
+      "google_safe_browsing": false,
+      "virus_total_detections": 10,
+      "abuse_ipdb_reports": 18,
+      "phishing_feed_hits": 0
+    },
+    "behavioral": {
+      "keyboard_event_listeners": false,
+      "http_to_https_mismatch": false,
+      "external_form_action": null,
+      "cross_domain_redirect": false,
+      "client_side_redirect": false
+    },
+    "email_auth": {
+      "spf_present": true,
+      "dkim_present": false,
+      "dmarc_present": false,
+      "spf_dkim_dmarc_missing": false
+    },
+    "passive_history": {
+      "passive_dns_observed": true,
+      "passive_dns_notes": [
+        "Internet Archive first-seen record observed on 2003-02-21."
+      ],
+      "archive_first_seen_days": 8552,
+      "ownership_changes_detected": null
+    },
+    "machine_learning": {
+      "brand_similarity_score": 0.867,
+      "visual_similarity_score": 0.12,
+      "url_entropy": 3.729,
+      "time_based_risk": "stable_registration"
+    }
+  },
+  "evidence_summary": {
+    "highlights": [
+      "Domain combines a phishing word with a real brand name."
+    ],
+    "evidence_items": [
+      {
+        "key": "keyword_stuffing",
+        "label": "Keyword stuffing detected",
+        "category": "lexical",
+        "severity": "high",
+        "value": true
+      },
+      {
+        "key": "passive_history_notes",
+        "label": "Passive history observations",
+        "category": "passive_history",
+        "severity": "info",
+        "value": 1,
+        "note": "Internet Archive first-seen record observed on 2003-02-21."
+      }
+    ],
+    "signal_diagnostics": [
+      {
+        "signal": "page_fetch",
+        "provider": "page_fetch",
+        "status": "ok"
+      },
+      {
+        "signal": "registrar_metadata",
+        "provider": "rdap",
+        "status": "ok"
+      },
+      {
+        "signal": "virus_total_detections",
+        "provider": "virustotal",
+        "status": "ok"
+      },
+      {
+        "signal": "abuse_ipdb_reports",
+        "provider": "abuseipdb",
+        "status": "ok"
+      },
+      {
+        "signal": "google_safe_browsing",
+        "provider": "google_safe_browsing",
+        "status": "ok"
+      },
+      {
+        "signal": "blacklisted_in_openPhish",
+        "provider": "openphish",
+        "status": "ok"
+      },
+      {
+        "signal": "blacklisted_in_phishTank",
+        "provider": "phishtank",
+        "status": "not_configured",
+        "detail": "PhishTank requires a registered API key (anonymous access is gated); OpenPhish covers this signal."
+      },
+      {
+        "signal": "passive_dns_observed",
+        "provider": "crt.sh",
+        "status": "unsupported",
+        "detail": "Optional source: crt.sh did not respond in time (free service, no SLA). Verdict unaffected."
+      },
+      {
+        "signal": "archive_first_seen_days",
+        "provider": "internet_archive",
+        "status": "ok"
+      },
+      {
+        "signal": "analyst_explanation",
+        "provider": "bedrock",
+        "status": "ok"
+      }
+    ]
+  },
+  "reporting_contacts": {
+    "registrar_information": {
+      "registrar_name": "TurnCommerce, Inc. DBA NameBright.com",
+      "abuse_contact": null,
+      "abuse_portal": null,
+      "whois_lookup_url": "https://lookup.icann.org/en"
+    },
+    "brand_protection": {
+      "brand_contact": "phishing@paypal.com",
+      "cert_contact": "report@cisa.gov",
+      "apwg_contact": "phishing@apwg.org",
+      "google_safe_browsing_report": "https://safebrowsing.google.com/safebrowsing/report_phish/",
+      "microsoft_submission": "https://www.microsoft.com/en-us/wdsi/filesubmission"
+    },
+    "local_authorities": {
+      "anti_fraud": "ic3.gov/complaint (FBI IC3)",
+      "csirt": "report@cisa.gov",
+      "csirt_name": "CISA (US Cybersecurity and Infrastructure Security Agency)",
+      "csirt_country": "US",
+      "csirt_portal": "https://www.cisa.gov/report"
+    },
+    "notes": [
+      "If you encounter a phishing attempt, immediately report it to the CISA (US Cybersecurity and Infrastructure Security Agency) at report@cisa.gov.",
+      "For brand-specific phishing issues, contact phishing@paypal.com.",
+      "If you need to report cybercrime or seek assistance, use the FBI IC3 complaint portal at ic3.gov/complaint."
+    ]
+  },
+  "signal_sources": [
+    {
+      "source": "page_fetch",
+      "status": "ok"
+    },
+    {
+      "source": "rdap",
+      "status": "ok"
+    },
+    {
+      "source": "virustotal",
+      "status": "ok"
+    },
+    {
+      "source": "abuseipdb",
+      "status": "ok"
+    },
+    {
+      "source": "google_safe_browsing",
+      "status": "ok"
+    },
+    {
+      "source": "openphish",
+      "status": "ok"
+    },
+    {
+      "source": "phishtank",
+      "status": "partial",
+      "detail": "PhishTank requires a registered API key (anonymous access is gated); OpenPhish covers this signal."
+    },
+    {
+      "source": "crt.sh",
+      "status": "unavailable",
+      "detail": "Optional source: crt.sh did not respond in time (free service, no SLA). Verdict unaffected."
+    },
+    {
+      "source": "internet_archive",
+      "status": "ok"
+    },
+    {
+      "source": "bedrock",
+      "status": "ok"
+    }
+  ],
+  "timings": {
+    "total_ms": 13176,
+    "fetch_ms": 2737,
+    "enrichment_ms": 8721,
+    "llm_ms": 1718
+  },
+  "export_metadata": {
+    "generated_at": "2026-07-22T20:36:34.789Z",
+    "generated_by": "Capstone Domain Guardian",
+    "schema_version": "analysis-result.v2",
+    "sources": [
+      {
+        "source": "page_fetch",
+        "status": "ok"
+      },
+      {
+        "source": "rdap",
+        "status": "ok"
+      },
+      {
+        "source": "virustotal",
+        "status": "ok"
+      },
+      {
+        "source": "abuseipdb",
+        "status": "ok"
+      },
+      {
+        "source": "google_safe_browsing",
+        "status": "ok"
+      },
+      {
+        "source": "openphish",
+        "status": "ok"
+      },
+      {
+        "source": "phishtank",
+        "status": "partial",
+        "detail": "PhishTank requires a registered API key (anonymous access is gated); OpenPhish covers this signal."
+      },
+      {
+        "source": "crt.sh",
+        "status": "unavailable",
+        "detail": "Optional source: crt.sh did not respond in time (free service, no SLA). Verdict unaffected."
+      },
+      {
+        "source": "internet_archive",
+        "status": "ok"
+      },
+      {
+        "source": "bedrock",
+        "status": "ok"
+      }
+    ]
+  },
+  "partial": false
+}

@@ -1,0 +1,373 @@
+{
+  "schema_version": "analysis-result.v2",
+  "mode": "manual_entry",
+  "analyzed_url": "easyweb.td.com",
+  "normalized_domain": "td.com",
+  "normalized_url": "https://easyweb.td.com/",
+  "brand_match": {
+    "brand_name": "TD Bank",
+    "canonical_domain": "td.com",
+    "confidence": 0.99,
+    "method": "catalog",
+    "matched_keywords": [
+      "td",
+      "login"
+    ]
+  },
+  "threat_score": 10,
+  "verdict": "Safe",
+  "reasoning": "The URL 'https://easyweb.td.com/' has been assessed as 'Safe' with a threat score of 10/100. The primary risk drivers include the presence of a valid SSL certificate issued by a known issuer, a long-standing domain age of 10,325 days, and a stable registration history. Additionally, the domain is hosted on a mainstream hosting provider with a good reputation. Despite the presence of obfuscated JavaScript, there are no signs of credential harvesting or suspicious script patterns that would typically indicate a phishing attempt.",
+  "risk_factors": {
+    "lexical": {
+      "is_homoglyph": null,
+      "is_idn": false,
+      "punycode_domain": null,
+      "edit_distance_to_target": null,
+      "levenshtein_distance": null,
+      "damerau_levenshtein_distance": null,
+      "jaro_winkler_similarity": null,
+      "ngram_similarity": null,
+      "typosquatting_type": null,
+      "character_substitution_pattern": null,
+      "keyboard_proximity_score": null,
+      "dictionary_similarity_score": null,
+      "length_difference": null,
+      "tld_manipulation": null,
+      "suspicious_tld": false,
+      "tld_risk_score": 0.15,
+      "subdomain_structure_risk": 0.18,
+      "brand_keyword_detected": false,
+      "suspicious_keywords": [],
+      "hyphenation_pattern": null,
+      "tokenization_pattern": "multi_label",
+      "mixed_character_sets": false,
+      "url_shortener_detected": false,
+      "ip_literal_host": false
+    },
+    "infrastructure": {
+      "domain_age_days": 10325,
+      "registrar": "CSC Corporate Domains, Inc.",
+      "registrant_org": null,
+      "registration_length_years": 30.02,
+      "whois_privacy": null,
+      "hidden_ownership": null,
+      "registrant_country": null,
+      "ssl_valid": true,
+      "ssl_error": null,
+      "certificate_issuer": "DigiCert, Inc.",
+      "certificate_reputation": "known_issuer",
+      "certificate_age_days": 232,
+      "certificate_domain_mismatch": false,
+      "creation_date_anomaly": false,
+      "mx_records_present": true,
+      "dns_records": {
+        "a": [
+          "2.16.170.142",
+          "2.16.170.136",
+          "2.16.170.134",
+          "2.16.170.138",
+          "2.16.170.141"
+        ],
+        "mx": [
+          "cluster5a.us.messagelabs.com",
+          "cluster5.us.messagelabs.com"
+        ],
+        "txt": [
+          "duo_sso_verification=eic1SztC2TLFiEkOfDT3HUhOH7lXQr2nuSIM3XAM7U4r4XG50LNtT1sbFXa4JyZJ",
+          "jamf-site-verification=XziUdxheYP3jRPvx3Qh7xQ",
+          "google-site-verification=vux3y2-18P6N8xIJrRmrWiKaLXIwTUqciku5Wd-PjPU",
+          "apple-domain-verification=x6lDWsiaROdqpbU0",
+          "Dynatrace-site-verification=97d568b9-cfe2-4b8b-9123-ee6bbab90536__htu7baej1ejfqju9s1gukpempk",
+          "v=spf1 ip4:142.205.0.0/16 ip4:23.103.224.0/19 ip4:206.191.224.0/19 ip4:40.103.0.0/16 include:spf.protection.outlook.com include:_spf.salesforce.com ip4:206.71.18.20/31 include:spf.messagelabs.com a:outbd-pstfx.customercenter.net include:spf.cashedge.com ip4:205.189.240.46 ip4:205.189.242.12 ip4:206.19.48.18 ip4:104.152.152.132/30 -all",
+          "apple-domain-verification=G5svgVlyOp2op14p",
+          "adobe-idp-site-verification=ee5e265407824facc4722a70cef8dce042ce9fbd50f49939b1d6b033510124d5",
+          "/riWEPlg17dSD9DgXqlo6+EGsDpatazOfdMrKt9SXJsGcdL6QZf2uB2Htfye7ctOPh7Ow8Vyq63KpOo5djg6Xg==",
+          "atlassian-domain-verification=oRtaAAnmqjpSX85zzFpty3VuiWZpLJpcBCBKRN7lAWjrqRlIxYGcCXgUJAY9jC0L",
+          "jamf-site-verification=_7vc7dwwO2dMP1aIUaQ0Gw",
+          "Dynatrace-site-verification=502f6b2a-1826-46f5-9040-6b785c6435ce__vuit4v0tpm0vmr71npu9s287ij",
+          "ciscocidomainverification=36f012812ad82213c3d7cd8a75682aa4a86b1dd9f3e9d84bd090eee219ab3519",
+          "adobe-idp-site-verification=7450d651-fff2-4ed9-aebd-7af8fd72e3ca",
+          "intersight=5990a6d0a8774efe107b562ea8eb89f6989845348e29953be85c1a1b1f3d0237",
+          "MS=ms90345429",
+          "Dynatrace-site-verification=b3143b2f-7494-47c0-a56f-4969812d09f9__bfr4sa5bevc02aelg187jtbvig",
+          "QuS8J2b6XaFK7qIIfIiIbwwBWqELMozoB+8ZH3D44sOInKV6tiV5H4kKxKH7sP8aJBEgmkXdVXmTTEBeZJSnMg==",
+          "paloaltonetworks-site-verification=587cc0889a5742e98ce5208ff29104d22d7a25aea38e873fe653e4065b1a8976",
+          "webexdomainverification.59f34d987478e66de053ab06fc0a4453=c4644979-97d5-4ffe-95fb-fdb45355a344",
+          "google-site-verification=zr-IIMl9y61ysL3vSRXIh_UdOUr16u6a3IKFtg-AGG4",
+          "jamf-site-verification=XziUdxheYP3jRPvx3"
+        ],
+        "ns": [
+          "a10-66.akam.net",
+          "a1-113.akam.net",
+          "a9-66.akam.net",
+          "a22-64.akam.net",
+          "a16-67.akam.net",
+          "a7-65.akam.net"
+        ]
+      },
+      "dns_history_changes": 0,
+      "fast_flux_detected": true,
+      "ip_reputation_score": 0,
+      "hosting_asn": "20940 Akamai Technologies",
+      "hosting_asn_reputation": "mainstream_hosting",
+      "shared_hosting_risk": true,
+      "redirect_count": 3,
+      "final_url": "https://authentication.td.com/uap-ui/?consumer=easyweb&locale=en_CA"
+    },
+    "content": {
+      "page_title": "TD Login",
+      "html_similarity_score": 0,
+      "logo_reuse_detected": false,
+      "text_reuse_score": 0,
+      "credential_harvesting_detected": false,
+      "forms_detected": 0,
+      "password_fields_detected": 0,
+      "form_submits_to_real_brand": null,
+      "hidden_iframes": false,
+      "obfuscated_javascript": true,
+      "suspicious_script_patterns": [
+        "script_obfuscation"
+      ],
+      "missing_security_headers": [],
+      "server_header_exposure": "Apache",
+      "redirect_chain": [
+        "https://authentication.td.com/uap-ui/index.html?consumer=easyweb&locale=en_CA&goto=https://easyweb.td.com/ui/gateway",
+        "https://authentication.td.com/uap-ui/index.html?consumer=easyweb&locale=en_CA",
+        "https://authentication.td.com/uap-ui/?consumer=easyweb&locale=en_CA"
+      ],
+      "body_keywords": []
+    },
+    "reputational": {
+      "blacklisted_in_phishTank": null,
+      "blacklisted_in_openPhish": false,
+      "google_safe_browsing": false,
+      "virus_total_detections": 0,
+      "abuse_ipdb_reports": 0,
+      "phishing_feed_hits": 0
+    },
+    "behavioral": {
+      "keyboard_event_listeners": false,
+      "http_to_https_mismatch": false,
+      "external_form_action": null,
+      "cross_domain_redirect": false,
+      "client_side_redirect": false
+    },
+    "email_auth": {
+      "spf_present": true,
+      "dkim_present": false,
+      "dmarc_present": false,
+      "spf_dkim_dmarc_missing": false
+    },
+    "passive_history": {
+      "passive_dns_observed": true,
+      "passive_dns_notes": [
+        "Internet Archive first-seen record observed on 1996-12-27."
+      ],
+      "archive_first_seen_days": 10799,
+      "ownership_changes_detected": null
+    },
+    "machine_learning": {
+      "brand_similarity_score": 0,
+      "visual_similarity_score": 0.12,
+      "url_entropy": 3.849,
+      "time_based_risk": "stable_registration"
+    }
+  },
+  "evidence_summary": {
+    "highlights": [
+      "Overall verdict is Safe with a score of 10/100."
+    ],
+    "evidence_items": [
+      {
+        "key": "passive_history_notes",
+        "label": "Passive history observations",
+        "category": "passive_history",
+        "severity": "info",
+        "value": 1,
+        "note": "Internet Archive first-seen record observed on 1996-12-27."
+      }
+    ],
+    "signal_diagnostics": [
+      {
+        "signal": "page_fetch",
+        "provider": "page_fetch",
+        "status": "ok"
+      },
+      {
+        "signal": "registrar_metadata",
+        "provider": "rdap",
+        "status": "ok"
+      },
+      {
+        "signal": "virus_total_detections",
+        "provider": "virustotal",
+        "status": "ok"
+      },
+      {
+        "signal": "abuse_ipdb_reports",
+        "provider": "abuseipdb",
+        "status": "ok"
+      },
+      {
+        "signal": "google_safe_browsing",
+        "provider": "google_safe_browsing",
+        "status": "ok"
+      },
+      {
+        "signal": "blacklisted_in_openPhish",
+        "provider": "openphish",
+        "status": "ok"
+      },
+      {
+        "signal": "blacklisted_in_phishTank",
+        "provider": "phishtank",
+        "status": "not_configured",
+        "detail": "PhishTank requires a registered API key (anonymous access is gated); OpenPhish covers this signal."
+      },
+      {
+        "signal": "passive_dns_observed",
+        "provider": "crt.sh",
+        "status": "unsupported",
+        "detail": "Optional source: crt.sh did not respond in time (free service, no SLA). Verdict unaffected."
+      },
+      {
+        "signal": "archive_first_seen_days",
+        "provider": "internet_archive",
+        "status": "ok"
+      },
+      {
+        "signal": "analyst_explanation",
+        "provider": "bedrock",
+        "status": "ok"
+      }
+    ]
+  },
+  "reporting_contacts": {
+    "registrar_information": {
+      "registrar_name": "CSC Corporate Domains, Inc.",
+      "abuse_contact": "domainabuse@cscglobal.com",
+      "abuse_portal": "https://www.cscglobal.com/global/web/csc/legal-notices.html",
+      "whois_lookup_url": "https://lookup.icann.org/en"
+    },
+    "brand_protection": {
+      "brand_contact": "tdphishing@td.com",
+      "cert_contact": "contact@cyber.gc.ca",
+      "apwg_contact": "phishing@apwg.org",
+      "google_safe_browsing_report": "https://safebrowsing.google.com/safebrowsing/report_phish/",
+      "microsoft_submission": "https://www.microsoft.com/en-us/wdsi/filesubmission"
+    },
+    "local_authorities": {
+      "anti_fraud": "report@antifraudcentre-centreantifraude.gc.ca",
+      "csirt": "contact@cyber.gc.ca",
+      "csirt_name": "Canadian Centre for Cyber Security (CCCS)",
+      "csirt_country": "CA",
+      "csirt_portal": "https://www.cyber.gc.ca/en/incident-management"
+    },
+    "notes": [
+      "If you suspect a phishing attempt, please report it to the Canadian Centre for Cyber Security (CCCS) at contact@cyber.gc.ca.",
+      "For domain-related abuse, you can contact the registrar at domainabuse@cscglobal.com or use the abuse portal at https://www.cscglobal.com/global/web/csc/legal-notices.html.",
+      "If you need assistance with phishing incidents, reach out to the brand contact at tdphishing@td.com.",
+      "For anti-fraud reporting, you can contact the Anti-Fraud Centre at report@antifraudcentre-centreantifraude.gc.ca."
+    ]
+  },
+  "signal_sources": [
+    {
+      "source": "page_fetch",
+      "status": "ok"
+    },
+    {
+      "source": "rdap",
+      "status": "ok"
+    },
+    {
+      "source": "virustotal",
+      "status": "ok"
+    },
+    {
+      "source": "abuseipdb",
+      "status": "ok"
+    },
+    {
+      "source": "google_safe_browsing",
+      "status": "ok"
+    },
+    {
+      "source": "openphish",
+      "status": "ok"
+    },
+    {
+      "source": "phishtank",
+      "status": "partial",
+      "detail": "PhishTank requires a registered API key (anonymous access is gated); OpenPhish covers this signal."
+    },
+    {
+      "source": "crt.sh",
+      "status": "unavailable",
+      "detail": "Optional source: crt.sh did not respond in time (free service, no SLA). Verdict unaffected."
+    },
+    {
+      "source": "internet_archive",
+      "status": "ok"
+    },
+    {
+      "source": "bedrock",
+      "status": "ok"
+    }
+  ],
+  "timings": {
+    "total_ms": 12535,
+    "fetch_ms": 1072,
+    "enrichment_ms": 9765,
+    "llm_ms": 1698
+  },
+  "export_metadata": {
+    "generated_at": "2026-07-22T20:54:50.110Z",
+    "generated_by": "Capstone Domain Guardian",
+    "schema_version": "analysis-result.v2",
+    "sources": [
+      {
+        "source": "page_fetch",
+        "status": "ok"
+      },
+      {
+        "source": "rdap",
+        "status": "ok"
+      },
+      {
+        "source": "virustotal",
+        "status": "ok"
+      },
+      {
+        "source": "abuseipdb",
+        "status": "ok"
+      },
+      {
+        "source": "google_safe_browsing",
+        "status": "ok"
+      },
+      {
+        "source": "openphish",
+        "status": "ok"
+      },
+      {
+        "source": "phishtank",
+        "status": "partial",
+        "detail": "PhishTank requires a registered API key (anonymous access is gated); OpenPhish covers this signal."
+      },
+      {
+        "source": "crt.sh",
+        "status": "unavailable",
+        "detail": "Optional source: crt.sh did not respond in time (free service, no SLA). Verdict unaffected."
+      },
+      {
+        "source": "internet_archive",
+        "status": "ok"
+      },
+      {
+        "source": "bedrock",
+        "status": "ok"
+      }
+    ]
+  },
+  "partial": false
+}

@@ -1,0 +1,339 @@
+{
+  "schema_version": "analysis-result.v2",
+  "mode": "manual_entry",
+  "analyzed_url": "mercedes.com",
+  "normalized_domain": "mercedes.com",
+  "normalized_url": "https://mercedes.com/",
+  "brand_match": {
+    "brand_name": "Mercedes-Benz",
+    "canonical_domain": "mercedes-benz.com",
+    "confidence": 0.9,
+    "method": "llm",
+    "matched_keywords": [
+      "mercedes"
+    ]
+  },
+  "threat_score": 67,
+  "verdict": "High",
+  "reasoning": "The URL 'https://mercedes.com/' has a high threat score of 67/100 due to several risk factors. The normalized domain 'mercedes.com' closely resembles the canonical domain'mercedes-benz.com', with a high lexical similarity score of 0.923, indicating a potential typosquatting attempt. Additionally, the SSL certificate is valid but issued by a known issuer, and the domain has a low DNS history change count. The page title 'Access Denied' and low HTML similarity score suggest the site may be a phishing attempt. Despite the valid SSL certificate, the overall risk factors lead to a High verdict.",
+  "risk_factors": {
+    "lexical": {
+      "is_homoglyph": false,
+      "is_idn": false,
+      "punycode_domain": null,
+      "edit_distance_to_target": 5,
+      "levenshtein_distance": 5,
+      "damerau_levenshtein_distance": 5,
+      "jaro_winkler_similarity": 0.923,
+      "ngram_similarity": 0.583,
+      "typosquatting_type": "deletion",
+      "character_substitution_pattern": null,
+      "keyboard_proximity_score": 0.615,
+      "dictionary_similarity_score": 0.923,
+      "length_difference": 5,
+      "tld_manipulation": false,
+      "suspicious_tld": false,
+      "tld_risk_score": 0.15,
+      "subdomain_structure_risk": 0.18,
+      "brand_keyword_detected": false,
+      "suspicious_keywords": [],
+      "hyphenation_pattern": null,
+      "tokenization_pattern": "multi_label",
+      "mixed_character_sets": false,
+      "url_shortener_detected": false,
+      "ip_literal_host": false
+    },
+    "infrastructure": {
+      "domain_age_days": null,
+      "registrar": null,
+      "registrant_org": null,
+      "registration_length_years": null,
+      "whois_privacy": null,
+      "hidden_ownership": null,
+      "registrant_country": null,
+      "ssl_valid": true,
+      "ssl_error": null,
+      "certificate_issuer": "Let's Encrypt",
+      "certificate_reputation": "known_issuer",
+      "certificate_age_days": 9,
+      "certificate_domain_mismatch": false,
+      "creation_date_anomaly": null,
+      "mx_records_present": false,
+      "dns_records": {
+        "a": [
+          "23.12.144.202"
+        ],
+        "mx": [],
+        "txt": [
+          "v=spf1 -all"
+        ],
+        "ns": [
+          "ns4.corpinter.de",
+          "ns2.corpinter.de",
+          "ns3.corpinter.net",
+          "ns1.corpinter.net"
+        ]
+      },
+      "dns_history_changes": 0,
+      "fast_flux_detected": null,
+      "ip_reputation_score": 0,
+      "hosting_asn": "20940 Akamai Technologies, Inc.",
+      "hosting_asn_reputation": "mainstream_hosting",
+      "shared_hosting_risk": null,
+      "redirect_count": 0,
+      "final_url": "https://mercedes.com/"
+    },
+    "content": {
+      "page_title": "Access Denied",
+      "html_similarity_score": 0.04,
+      "logo_reuse_detected": false,
+      "text_reuse_score": 0.07,
+      "credential_harvesting_detected": false,
+      "forms_detected": 0,
+      "password_fields_detected": 0,
+      "form_submits_to_real_brand": null,
+      "hidden_iframes": false,
+      "obfuscated_javascript": false,
+      "suspicious_script_patterns": [],
+      "missing_security_headers": [
+        "content-security-policy",
+        "x-frame-options"
+      ],
+      "server_header_exposure": null,
+      "redirect_chain": [],
+      "body_keywords": []
+    },
+    "reputational": {
+      "blacklisted_in_phishTank": null,
+      "blacklisted_in_openPhish": false,
+      "google_safe_browsing": false,
+      "virus_total_detections": 1,
+      "abuse_ipdb_reports": 0,
+      "phishing_feed_hits": 0
+    },
+    "behavioral": {
+      "keyboard_event_listeners": false,
+      "http_to_https_mismatch": false,
+      "external_form_action": null,
+      "cross_domain_redirect": false,
+      "client_side_redirect": false
+    },
+    "email_auth": {
+      "spf_present": true,
+      "dkim_present": false,
+      "dmarc_present": false,
+      "spf_dkim_dmarc_missing": false
+    },
+    "passive_history": {
+      "passive_dns_observed": true,
+      "passive_dns_notes": [
+        "Internet Archive first-seen record observed on 1997-01-24."
+      ],
+      "archive_first_seen_days": 10771,
+      "ownership_changes_detected": null
+    },
+    "machine_learning": {
+      "brand_similarity_score": 0.923,
+      "visual_similarity_score": 0.12,
+      "url_entropy": 3.559,
+      "time_based_risk": "stable_registration"
+    }
+  },
+  "evidence_summary": {
+    "highlights": [
+      "Overall verdict is High with a score of 67/100."
+    ],
+    "evidence_items": [
+      {
+        "key": "passive_history_notes",
+        "label": "Passive history observations",
+        "category": "passive_history",
+        "severity": "info",
+        "value": 1,
+        "note": "Internet Archive first-seen record observed on 1997-01-24."
+      }
+    ],
+    "signal_diagnostics": [
+      {
+        "signal": "page_fetch",
+        "provider": "page_fetch",
+        "status": "ok"
+      },
+      {
+        "signal": "registrar_metadata",
+        "provider": "rdap",
+        "status": "query_failed",
+        "detail": "RDAP registrar metadata was unavailable."
+      },
+      {
+        "signal": "virus_total_detections",
+        "provider": "virustotal",
+        "status": "ok"
+      },
+      {
+        "signal": "abuse_ipdb_reports",
+        "provider": "abuseipdb",
+        "status": "ok"
+      },
+      {
+        "signal": "google_safe_browsing",
+        "provider": "google_safe_browsing",
+        "status": "ok"
+      },
+      {
+        "signal": "blacklisted_in_openPhish",
+        "provider": "openphish",
+        "status": "ok"
+      },
+      {
+        "signal": "blacklisted_in_phishTank",
+        "provider": "phishtank",
+        "status": "not_configured",
+        "detail": "PhishTank requires a registered API key (anonymous access is gated); OpenPhish covers this signal."
+      },
+      {
+        "signal": "passive_dns_observed",
+        "provider": "crt.sh",
+        "status": "unsupported",
+        "detail": "Optional source: crt.sh did not respond in time (free service, no SLA). Verdict unaffected."
+      },
+      {
+        "signal": "archive_first_seen_days",
+        "provider": "internet_archive",
+        "status": "ok"
+      },
+      {
+        "signal": "analyst_explanation",
+        "provider": "bedrock",
+        "status": "ok"
+      }
+    ]
+  },
+  "reporting_contacts": {
+    "registrar_information": {
+      "registrar_name": null,
+      "abuse_contact": null,
+      "abuse_portal": null,
+      "whois_lookup_url": "https://lookup.icann.org/en"
+    },
+    "brand_protection": {
+      "brand_contact": null,
+      "cert_contact": "phishing@apwg.org",
+      "apwg_contact": "phishing@apwg.org",
+      "google_safe_browsing_report": "https://safebrowsing.google.com/safebrowsing/report_phish/",
+      "microsoft_submission": "https://www.microsoft.com/en-us/wdsi/filesubmission"
+    },
+    "local_authorities": {
+      "anti_fraud": "report@antifraudcentre-centreantifraude.gc.ca",
+      "csirt": "phishing@apwg.org",
+      "csirt_name": "APWG (Anti-Phishing Working Group)",
+      "csirt_country": "GLOBAL",
+      "csirt_portal": "https://apwg.org/reportphishing/"
+    },
+    "notes": [
+      "If you suspect a phishing attempt, please report it to the APWG (Anti-Phishing Working Group) at phishing@apwg.org. For fraud-related incidents, you can also report to the Anti-Fraud Centre at report@antifraudcentre-centreantifraude.gc.ca."
+    ]
+  },
+  "signal_sources": [
+    {
+      "source": "page_fetch",
+      "status": "ok"
+    },
+    {
+      "source": "rdap",
+      "status": "partial",
+      "detail": "RDAP registrar metadata was unavailable."
+    },
+    {
+      "source": "virustotal",
+      "status": "ok"
+    },
+    {
+      "source": "abuseipdb",
+      "status": "ok"
+    },
+    {
+      "source": "google_safe_browsing",
+      "status": "ok"
+    },
+    {
+      "source": "openphish",
+      "status": "ok"
+    },
+    {
+      "source": "phishtank",
+      "status": "partial",
+      "detail": "PhishTank requires a registered API key (anonymous access is gated); OpenPhish covers this signal."
+    },
+    {
+      "source": "crt.sh",
+      "status": "unavailable",
+      "detail": "Optional source: crt.sh did not respond in time (free service, no SLA). Verdict unaffected."
+    },
+    {
+      "source": "internet_archive",
+      "status": "ok"
+    },
+    {
+      "source": "bedrock",
+      "status": "ok"
+    }
+  ],
+  "timings": {
+    "total_ms": 8749,
+    "fetch_ms": 257,
+    "enrichment_ms": 6878,
+    "llm_ms": 1614
+  },
+  "export_metadata": {
+    "generated_at": "2026-07-22T20:41:48.724Z",
+    "generated_by": "Capstone Domain Guardian",
+    "schema_version": "analysis-result.v2",
+    "sources": [
+      {
+        "source": "page_fetch",
+        "status": "ok"
+      },
+      {
+        "source": "rdap",
+        "status": "partial",
+        "detail": "RDAP registrar metadata was unavailable."
+      },
+      {
+        "source": "virustotal",
+        "status": "ok"
+      },
+      {
+        "source": "abuseipdb",
+        "status": "ok"
+      },
+      {
+        "source": "google_safe_browsing",
+        "status": "ok"
+      },
+      {
+        "source": "openphish",
+        "status": "ok"
+      },
+      {
+        "source": "phishtank",
+        "status": "partial",
+        "detail": "PhishTank requires a registered API key (anonymous access is gated); OpenPhish covers this signal."
+      },
+      {
+        "source": "crt.sh",
+        "status": "unavailable",
+        "detail": "Optional source: crt.sh did not respond in time (free service, no SLA). Verdict unaffected."
+      },
+      {
+        "source": "internet_archive",
+        "status": "ok"
+      },
+      {
+        "source": "bedrock",
+        "status": "ok"
+      }
+    ]
+  },
+  "partial": false
+}

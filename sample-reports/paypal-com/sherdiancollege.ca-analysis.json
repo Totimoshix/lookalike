@@ -1,0 +1,346 @@
+{
+  "schema_version": "analysis-result.v2",
+  "mode": "manual_entry",
+  "analyzed_url": "sherdiancollege.ca",
+  "normalized_domain": "sherdiancollege.ca",
+  "normalized_url": "https://sherdiancollege.ca/",
+  "brand_match": {
+    "brand_name": "Sheridan College",
+    "canonical_domain": "sheridancollege.ca",
+    "confidence": 0.9,
+    "method": "heuristic",
+    "matched_keywords": []
+  },
+  "threat_score": 68,
+  "verdict": "High",
+  "reasoning": "The primary risk drivers for this domain include a high lexical similarity to the legitimate Sheridan College domain, a high threat score of 68, and the presence of lookalike character substitution in the domain label. The domain 'sherdiancollege.ca' is very similar to 'sheridancollege.ca', with a high Jaro-Winkler similarity score of 0.987 and a low Levenshtein distance of 2, indicating a high likelihood of typosquatting. Additionally, the domain has a high threat score, suggesting it has been flagged by multiple threat intelligence sources. These factors contribute to the high risk assessment.",
+  "risk_factors": {
+    "lexical": {
+      "is_homoglyph": true,
+      "is_idn": false,
+      "punycode_domain": null,
+      "edit_distance_to_target": 2,
+      "levenshtein_distance": 2,
+      "damerau_levenshtein_distance": 1,
+      "jaro_winkler_similarity": 0.987,
+      "ngram_similarity": 0.647,
+      "typosquatting_type": "transposition",
+      "character_substitution_pattern": "l->i",
+      "keyboard_proximity_score": 0.867,
+      "dictionary_similarity_score": 0.987,
+      "length_difference": 0,
+      "tld_manipulation": false,
+      "suspicious_tld": false,
+      "tld_risk_score": 0.15,
+      "subdomain_structure_risk": 0.18,
+      "brand_keyword_detected": false,
+      "suspicious_keywords": [],
+      "hyphenation_pattern": null,
+      "tokenization_pattern": "multi_label",
+      "mixed_character_sets": false,
+      "url_shortener_detected": false,
+      "ip_literal_host": false
+    },
+    "infrastructure": {
+      "domain_age_days": 1615,
+      "registrar": "CENTRALNIC CANADA INC",
+      "registrant_org": null,
+      "registration_length_years": 5,
+      "whois_privacy": null,
+      "hidden_ownership": null,
+      "registrant_country": ", , 301-1330 Martin Drive, White Rock, BC, V4B3W5, ",
+      "ssl_valid": true,
+      "ssl_error": null,
+      "certificate_issuer": "Let's Encrypt",
+      "certificate_reputation": "known_issuer",
+      "certificate_age_days": 1,
+      "certificate_domain_mismatch": false,
+      "creation_date_anomaly": false,
+      "mx_records_present": true,
+      "dns_records": {
+        "a": [
+          "172.238.172.115",
+          "172.238.171.6",
+          "172.239.47.201"
+        ],
+        "mx": [
+          "mx156.hostedmxserver.com"
+        ],
+        "txt": [
+          "v=spf1 -all"
+        ],
+        "ns": [
+          "ns1.parklogic.com",
+          "ns2.parklogic.com"
+        ]
+      },
+      "dns_history_changes": 0,
+      "fast_flux_detected": null,
+      "ip_reputation_score": 0,
+      "hosting_asn": "63949 Linode",
+      "hosting_asn_reputation": "unclassified",
+      "shared_hosting_risk": null,
+      "redirect_count": 0,
+      "final_url": "https://sherdiancollege.ca/"
+    },
+    "content": {
+      "page_title": null,
+      "html_similarity_score": null,
+      "logo_reuse_detected": null,
+      "text_reuse_score": null,
+      "credential_harvesting_detected": null,
+      "forms_detected": null,
+      "password_fields_detected": null,
+      "form_submits_to_real_brand": null,
+      "hidden_iframes": null,
+      "obfuscated_javascript": null,
+      "suspicious_script_patterns": [],
+      "missing_security_headers": [],
+      "server_header_exposure": null,
+      "redirect_chain": [],
+      "body_keywords": []
+    },
+    "reputational": {
+      "blacklisted_in_phishTank": null,
+      "blacklisted_in_openPhish": false,
+      "google_safe_browsing": false,
+      "virus_total_detections": null,
+      "abuse_ipdb_reports": 0,
+      "phishing_feed_hits": 0
+    },
+    "behavioral": {
+      "keyboard_event_listeners": false,
+      "http_to_https_mismatch": false,
+      "external_form_action": null,
+      "cross_domain_redirect": false,
+      "client_side_redirect": false
+    },
+    "email_auth": {
+      "spf_present": true,
+      "dkim_present": false,
+      "dmarc_present": false,
+      "spf_dkim_dmarc_missing": false
+    },
+    "passive_history": {
+      "passive_dns_observed": true,
+      "passive_dns_notes": [
+        "Internet Archive first-seen record observed on 2012-03-24."
+      ],
+      "archive_first_seen_days": 5233,
+      "ownership_changes_detected": null
+    },
+    "machine_learning": {
+      "brand_similarity_score": 0.987,
+      "visual_similarity_score": 0.12,
+      "url_entropy": 3.958,
+      "time_based_risk": "stable_registration"
+    }
+  },
+  "evidence_summary": {
+    "highlights": [
+      "Lookalike character substitution detected in the domain label."
+    ],
+    "evidence_items": [
+      {
+        "key": "homoglyph",
+        "label": "Homoglyph detected",
+        "category": "lexical",
+        "severity": "high",
+        "value": true
+      },
+      {
+        "key": "passive_history_notes",
+        "label": "Passive history observations",
+        "category": "passive_history",
+        "severity": "info",
+        "value": 1,
+        "note": "Internet Archive first-seen record observed on 2012-03-24."
+      }
+    ],
+    "signal_diagnostics": [
+      {
+        "signal": "page_fetch",
+        "provider": "page_fetch",
+        "status": "query_failed",
+        "detail": "fetch failed"
+      },
+      {
+        "signal": "registrar_metadata",
+        "provider": "rdap",
+        "status": "ok"
+      },
+      {
+        "signal": "virus_total_detections",
+        "provider": "virustotal",
+        "status": "query_failed",
+        "detail": "HTTP 404 returned from VirusTotal."
+      },
+      {
+        "signal": "abuse_ipdb_reports",
+        "provider": "abuseipdb",
+        "status": "ok"
+      },
+      {
+        "signal": "google_safe_browsing",
+        "provider": "google_safe_browsing",
+        "status": "ok"
+      },
+      {
+        "signal": "blacklisted_in_openPhish",
+        "provider": "openphish",
+        "status": "ok"
+      },
+      {
+        "signal": "blacklisted_in_phishTank",
+        "provider": "phishtank",
+        "status": "not_configured",
+        "detail": "PhishTank requires a registered API key (anonymous access is gated); OpenPhish covers this signal."
+      },
+      {
+        "signal": "passive_dns_observed",
+        "provider": "crt.sh",
+        "status": "unsupported",
+        "detail": "Optional source: crt.sh did not respond in time (free service, no SLA). Verdict unaffected."
+      },
+      {
+        "signal": "archive_first_seen_days",
+        "provider": "internet_archive",
+        "status": "ok"
+      },
+      {
+        "signal": "analyst_explanation",
+        "provider": "bedrock",
+        "status": "ok"
+      }
+    ]
+  },
+  "reporting_contacts": {
+    "registrar_information": {
+      "registrar_name": "CENTRALNIC CANADA INC",
+      "abuse_contact": null,
+      "abuse_portal": null,
+      "whois_lookup_url": "https://lookup.icann.org/en"
+    },
+    "brand_protection": {
+      "brand_contact": "security@sheridancollege.ca",
+      "cert_contact": "contact@cyber.gc.ca",
+      "apwg_contact": "phishing@apwg.org",
+      "google_safe_browsing_report": "https://safebrowsing.google.com/safebrowsing/report_phish/",
+      "microsoft_submission": "https://www.microsoft.com/en-us/wdsi/filesubmission"
+    },
+    "local_authorities": {
+      "anti_fraud": "report@antifraudcentre-centreantifraude.gc.ca",
+      "csirt": "contact@cyber.gc.ca",
+      "csirt_name": "Canadian Centre for Cyber Security (CCCS)",
+      "csirt_country": "CA",
+      "csirt_portal": "https://www.cyber.gc.ca/en/incident-management"
+    },
+    "notes": [
+      "If you encounter a phishing attempt, immediately report it to the Canadian Centre for Cyber Security (CCCS) at contact@cyber.gc.ca. Additionally, consider reporting the incident to the Anti-Fraud Centre at report@antifraudcentre-centreantifraude.gc.ca. For any brand-related security concerns, contact security@sheridancollege.ca."
+    ]
+  },
+  "signal_sources": [
+    {
+      "source": "page_fetch",
+      "status": "partial",
+      "detail": "fetch failed"
+    },
+    {
+      "source": "rdap",
+      "status": "ok"
+    },
+    {
+      "source": "virustotal",
+      "status": "partial",
+      "detail": "HTTP 404 returned from VirusTotal."
+    },
+    {
+      "source": "abuseipdb",
+      "status": "ok"
+    },
+    {
+      "source": "google_safe_browsing",
+      "status": "ok"
+    },
+    {
+      "source": "openphish",
+      "status": "ok"
+    },
+    {
+      "source": "phishtank",
+      "status": "partial",
+      "detail": "PhishTank requires a registered API key (anonymous access is gated); OpenPhish covers this signal."
+    },
+    {
+      "source": "crt.sh",
+      "status": "unavailable",
+      "detail": "Optional source: crt.sh did not respond in time (free service, no SLA). Verdict unaffected."
+    },
+    {
+      "source": "internet_archive",
+      "status": "ok"
+    },
+    {
+      "source": "bedrock",
+      "status": "ok"
+    }
+  ],
+  "timings": {
+    "total_ms": 10834,
+    "fetch_ms": 118,
+    "enrichment_ms": 9274,
+    "llm_ms": 1442
+  },
+  "export_metadata": {
+    "generated_at": "2026-07-22T20:37:01.975Z",
+    "generated_by": "Capstone Domain Guardian",
+    "schema_version": "analysis-result.v2",
+    "sources": [
+      {
+        "source": "page_fetch",
+        "status": "partial",
+        "detail": "fetch failed"
+      },
+      {
+        "source": "rdap",
+        "status": "ok"
+      },
+      {
+        "source": "virustotal",
+        "status": "partial",
+        "detail": "HTTP 404 returned from VirusTotal."
+      },
+      {
+        "source": "abuseipdb",
+        "status": "ok"
+      },
+      {
+        "source": "google_safe_browsing",
+        "status": "ok"
+      },
+      {
+        "source": "openphish",
+        "status": "ok"
+      },
+      {
+        "source": "phishtank",
+        "status": "partial",
+        "detail": "PhishTank requires a registered API key (anonymous access is gated); OpenPhish covers this signal."
+      },
+      {
+        "source": "crt.sh",
+        "status": "unavailable",
+        "detail": "Optional source: crt.sh did not respond in time (free service, no SLA). Verdict unaffected."
+      },
+      {
+        "source": "internet_archive",
+        "status": "ok"
+      },
+      {
+        "source": "bedrock",
+        "status": "ok"
+      }
+    ]
+  },
+  "partial": false
+}

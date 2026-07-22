@@ -1,0 +1,393 @@
+{
+  "schema_version": "analysis-result.v2",
+  "mode": "manual_entry",
+  "analyzed_url": "mercedes-benz.com",
+  "normalized_domain": "mercedes-benz.com",
+  "normalized_url": "https://mercedes-benz.com/",
+  "brand_match": {
+    "brand_name": "Mercedes-Benz",
+    "canonical_domain": "mercedes-benz.com",
+    "confidence": 0.95,
+    "method": "llm",
+    "matched_keywords": [
+      "mercedes",
+      "benz"
+    ]
+  },
+  "threat_score": 3,
+  "verdict": "Safe",
+  "reasoning": "The URL 'https://mercedes-benz.com/' has a strong brand match with a confidence of 0.95, indicating a high likelihood of being the legitimate Mercedes-Benz website. The domain is registered with a reputable registrar, Key-Systems GmbH, and has a long registration length of 40.02 years. The SSL certificate is issued by Let's Encrypt, a known and trusted certificate authority, and there are no SSL errors. The domain's IP address is hosted by Akamai Technologies, a mainstream hosting provider with a good reputation. The URL has no history of DNS changes and no fast flux detection. The content analysis shows no credential harvesting or suspicious scripts. The URL is not blacklisted in any of the checked databases, and there are no reports of abuse. The overall verdict is Safe with a score of 3/100.",
+  "risk_factors": {
+    "lexical": {
+      "is_homoglyph": null,
+      "is_idn": false,
+      "punycode_domain": null,
+      "edit_distance_to_target": null,
+      "levenshtein_distance": null,
+      "damerau_levenshtein_distance": null,
+      "jaro_winkler_similarity": null,
+      "ngram_similarity": null,
+      "typosquatting_type": null,
+      "character_substitution_pattern": null,
+      "keyboard_proximity_score": null,
+      "dictionary_similarity_score": null,
+      "length_difference": null,
+      "tld_manipulation": null,
+      "suspicious_tld": false,
+      "tld_risk_score": 0.15,
+      "subdomain_structure_risk": 0.18,
+      "brand_keyword_detected": false,
+      "suspicious_keywords": [],
+      "hyphenation_pattern": "single_hyphen",
+      "tokenization_pattern": "multi_label",
+      "mixed_character_sets": false,
+      "url_shortener_detected": false,
+      "ip_literal_host": false
+    },
+    "infrastructure": {
+      "domain_age_days": 11548,
+      "registrar": "Key-Systems GmbH",
+      "registrant_org": null,
+      "registration_length_years": 40.02,
+      "whois_privacy": null,
+      "hidden_ownership": null,
+      "registrant_country": null,
+      "ssl_valid": true,
+      "ssl_error": null,
+      "certificate_issuer": "Let's Encrypt",
+      "certificate_reputation": "known_issuer",
+      "certificate_age_days": 26,
+      "certificate_domain_mismatch": false,
+      "creation_date_anomaly": false,
+      "mx_records_present": true,
+      "dns_records": {
+        "a": [
+          "23.212.249.197"
+        ],
+        "mx": [
+          "two.mail-in.corpinter.net",
+          "one.mail-in.corpinter.net"
+        ],
+        "txt": [
+          "_2c9xzirxpituymx00murdaix06fs3jg",
+          "cisco-ci-domain-verification=878c26d09ac4bbfc340f4a39516ad2a4be09379bcfbe77077ae5096995a64b1",
+          "TkJJzWmf2shqVgoa/D53XX1n4O8IpQQ3X0/ey4zc6rzpa72/Az3HykRXyKckMcvwbQGOn+M5hseTrjPi2GafIw==",
+          "_l9j2hinjhf25prwzr02zqaacro78s1j",
+          "_h6ep2r9pah2ohjif1ayq8167b32113l",
+          "yandex-verification: 1bea86ec2bf53817",
+          "docusign=3fea104d-aad3-4de2-8b9b-1a2ef5f8dc63",
+          "5238u2r90uli2cq1gvrg8cq6g1",
+          "42219c8y3yz9jjvdd5w1vwgnhd2t9tmw",
+          "bw=zs1CzTUZCoUZRR2DOxLbw3IiXVxijTWw5KNsl9aiVH4H",
+          "Dynatrace-site-verification=3ae56f3e-9cb5-4f23-92c7-2f30172a6408__r88geturb7a0gqk4ec4nn7m695",
+          "6gqx90kmxv6j7n72f6qcfzz60xt8nfgq",
+          "QuoVadis=6bbde5e1-0c44-4a1b-af09-fc1b66a6c87a",
+          "jsvk4prqj8dzts5nj9v4lq90sjq3tz7r",
+          "lrctk7kwk9vzv2t8v5jfws53t1k2ykwk",
+          "atlassian-domain-verification=yqM4YvwXs0ztgzqU6sG55pK1DevTpTDF5D2Pk+IeY0TR7AFpzKVQZBgXWNznXUbC",
+          "_skc2rrt4zvycjx1p3ynxb4ihj16xkb7",
+          "bw=hUMsqhVyULyfYdcsBtKuRYi64Y8Pd4lCFaYdOzANop11",
+          "mongodb-site-verification=qCLSse4Ig5lhafvT3AfcnI4nDj3BKHbm",
+          "openai-domain-verification=dv-WPu1yUWrWail3Ji9IXehBb2J",
+          "_hx5dbo0chnv2hg27le7dmt4gu2t76dy",
+          "00DhE000000KqC9=1TBhE00000003lt;00D7Z0000004r7Z=1TB9Z0000000B5C;00D0D0000004Y0y=1TB9Z00000006AJ;00D1x0000000g9H=1TBgN00000000Mb;00D0E00000057z1=1TBgN00000000Pp;00D3X000003JH50=1TBcz00000000zQ",
+          "slack-domain-verification=dO9QoZaR8XRaGzQhWqfpuewjmHjPYil6rr7V0lW3",
+          "2ctjysp7tlmcw1754yrs8pxqjnqdf79f",
+          "C98Sb4ucEsN7ovpCHiSQsSp8JxIY2etc9gBghhF393L5",
+          "v=spf1 a:mail-out.emea.daimler.com ip4:141.113.210.141 ip4:141.113.210.142 ip4:141.113.210.143 ip4:141.113.210.144 ip4:141.113.220.141 ip4:141.113.220.142 ip4:141.113.220.143 ip4:141.113.220.144 ip4:18.195.218.149 ip4:35.156.216.188 include:amazonses.com include:cust-spf.exacttarget.com include:spf.protection.outlook.com ~all",
+          "cloudflare_dashboard_sso=f972e20c2a04f97c3d5b1b9a265fb315",
+          "figma-domain-verification=6ac09327201f2e09d80749d1ac3b8b1787e26d6c866bc08280645ca921d0f0b9-1732630794",
+          "_32mrp3jxfqblaeaysmxo1i14tbaqjhr",
+          "_srvkzcazlv5uf3uu5lo6wcjsmsmnero",
+          "adobe-sign-verification=259c5de2eb3b734828be86a8833a7c8e",
+          "QuoVadis=44e4cbf1-6dd5-4084-9fbb-10624df7a8b1",
+          "google-site-verification=KsIMpiGbKaUJa0i5-aUWQJlcxlSCOGSYC0IqXzDwAZA",
+          "biBZ13gDDYog6XvQuy_w2rx948TJJwtO2oBzSn2idsc",
+          "_jjniu44dn9b50qzsazr1shj07xw7vsi",
+          "_344n1dwu3j46w75lpa7owpwonx5t71q",
+          "_d45z3f77pgmwb6qfmlgxltrwai1u5b3",
+          "_pyvk67f4zhef6kxz4jeqzzscud4xndk",
+          "cnhky9r3htmvm427p2t3fsxzbx1z8vpv",
+          "google-site-verification=lqCsItUjF1RKw2IdQIiCVNHdXMYnVXw3A4C-fglJj1M",
+          "brevo-code:ba173f68e6b3ee388a9665d6d27f0dbb",
+          "mongodb-site-verification=adiurx3rN7Gi0713MDHKbUhB3UNJhtmQ",
+          "cisco-ci-domain-verification=297a419516011b11798908289d0829fd876071eea76ef394c06f07a2839990ff",
+          "_x7ya8gkb2eanjh2scvk3tfy6pf8hn32",
+          "_q4qvxpq6b14xvim5odx0b59g2jp7pce",
+          "facebook-domain-verification=tp909dis1jat771ten1ucn6uczko20",
+          "autodesk-domain-verification=YmxyRF1KC95BoeNFPHeb",
+          "adobe-idp-site-verification=98751110d46d127b486658a7b79f6f4ee8d6bbe7f2e6129b1cd2b05786b8158a",
+          "_xru24ougigte5zyjiw1yhmedzjtobpd",
+          "00D3N0000008mzh=1TBhE00000002g9",
+          "MS=ms55145870",
+          "_lixwqk8uklrhfgm9arfa3sg56wwz422",
+          "QuoVadis=42f2010f-0c2f-4ca7-84d2-7efb8e579fb5",
+          "_sa03aump69hvrxg1b15x5u76yhx7l36",
+          "apple-domain-verification=QzjDx9YZ5zEj7pOt",
+          "atlassian-domain-verification=HWRid0T68KPt0tlxLiI24rYOqzux5IufCi6oHOdImax6Tgw3Mbnbats0/pJrC2d4",
+          "airtable-verification=04ccd98e74d1a2d7056beb7cd3b734f5"
+        ],
+        "ns": [
+          "ns4.corpinter.de",
+          "ns1.corpinter.net",
+          "ns2.corpinter.de",
+          "ns3.corpinter.net"
+        ]
+      },
+      "dns_history_changes": 0,
+      "fast_flux_detected": null,
+      "ip_reputation_score": 0,
+      "hosting_asn": "20940 Akamai Technologies, Inc.",
+      "hosting_asn_reputation": "mainstream_hosting",
+      "shared_hosting_risk": null,
+      "redirect_count": 0,
+      "final_url": "https://mercedes-benz.com/"
+    },
+    "content": {
+      "page_title": "Access Denied",
+      "html_similarity_score": 0.07,
+      "logo_reuse_detected": false,
+      "text_reuse_score": 0.13,
+      "credential_harvesting_detected": false,
+      "forms_detected": 0,
+      "password_fields_detected": 0,
+      "form_submits_to_real_brand": null,
+      "hidden_iframes": false,
+      "obfuscated_javascript": false,
+      "suspicious_script_patterns": [],
+      "missing_security_headers": [],
+      "server_header_exposure": null,
+      "redirect_chain": [],
+      "body_keywords": []
+    },
+    "reputational": {
+      "blacklisted_in_phishTank": null,
+      "blacklisted_in_openPhish": false,
+      "google_safe_browsing": false,
+      "virus_total_detections": 0,
+      "abuse_ipdb_reports": 0,
+      "phishing_feed_hits": 0
+    },
+    "behavioral": {
+      "keyboard_event_listeners": false,
+      "http_to_https_mismatch": false,
+      "external_form_action": null,
+      "cross_domain_redirect": false,
+      "client_side_redirect": false
+    },
+    "email_auth": {
+      "spf_present": true,
+      "dkim_present": false,
+      "dmarc_present": false,
+      "spf_dkim_dmarc_missing": false
+    },
+    "passive_history": {
+      "passive_dns_observed": true,
+      "passive_dns_notes": [
+        "Internet Archive first-seen record observed on 1996-11-10."
+      ],
+      "archive_first_seen_days": 10845,
+      "ownership_changes_detected": null
+    },
+    "machine_learning": {
+      "brand_similarity_score": 0,
+      "visual_similarity_score": 0.12,
+      "url_entropy": 3.902,
+      "time_based_risk": "stable_registration"
+    }
+  },
+  "evidence_summary": {
+    "highlights": [
+      "Overall verdict is Safe with a score of 3/100."
+    ],
+    "evidence_items": [
+      {
+        "key": "passive_history_notes",
+        "label": "Passive history observations",
+        "category": "passive_history",
+        "severity": "info",
+        "value": 1,
+        "note": "Internet Archive first-seen record observed on 1996-11-10."
+      }
+    ],
+    "signal_diagnostics": [
+      {
+        "signal": "page_fetch",
+        "provider": "page_fetch",
+        "status": "ok"
+      },
+      {
+        "signal": "registrar_metadata",
+        "provider": "rdap",
+        "status": "ok"
+      },
+      {
+        "signal": "virus_total_detections",
+        "provider": "virustotal",
+        "status": "ok"
+      },
+      {
+        "signal": "abuse_ipdb_reports",
+        "provider": "abuseipdb",
+        "status": "ok"
+      },
+      {
+        "signal": "google_safe_browsing",
+        "provider": "google_safe_browsing",
+        "status": "ok"
+      },
+      {
+        "signal": "blacklisted_in_openPhish",
+        "provider": "openphish",
+        "status": "ok"
+      },
+      {
+        "signal": "blacklisted_in_phishTank",
+        "provider": "phishtank",
+        "status": "not_configured",
+        "detail": "PhishTank requires a registered API key (anonymous access is gated); OpenPhish covers this signal."
+      },
+      {
+        "signal": "passive_dns_observed",
+        "provider": "crt.sh",
+        "status": "unsupported",
+        "detail": "Optional source: crt.sh did not respond in time (free service, no SLA). Verdict unaffected."
+      },
+      {
+        "signal": "archive_first_seen_days",
+        "provider": "internet_archive",
+        "status": "ok"
+      },
+      {
+        "signal": "analyst_explanation",
+        "provider": "bedrock",
+        "status": "ok"
+      }
+    ]
+  },
+  "reporting_contacts": {
+    "registrar_information": {
+      "registrar_name": "Key-Systems GmbH",
+      "abuse_contact": null,
+      "abuse_portal": null,
+      "whois_lookup_url": "https://lookup.icann.org/en"
+    },
+    "brand_protection": {
+      "brand_contact": null,
+      "cert_contact": "phishing@apwg.org",
+      "apwg_contact": "phishing@apwg.org",
+      "google_safe_browsing_report": "https://safebrowsing.google.com/safebrowsing/report_phish/",
+      "microsoft_submission": "https://www.microsoft.com/en-us/wdsi/filesubmission"
+    },
+    "local_authorities": {
+      "anti_fraud": "report@antifraudcentre-centreantifraude.gc.ca",
+      "csirt": "phishing@apwg.org",
+      "csirt_name": "APWG (Anti-Phishing Working Group)",
+      "csirt_country": "GLOBAL",
+      "csirt_portal": "https://apwg.org/reportphishing/"
+    },
+    "notes": [
+      "If you encounter a suspected phishing incident, please report it to the APWG (Anti-Phishing Working Group) at phishing@apwg.org. For additional support or to report fraud, you can also contact the Anti-Fraud Centre at report@antifraudcentre-centreantifraude.gc.ca."
+    ]
+  },
+  "signal_sources": [
+    {
+      "source": "page_fetch",
+      "status": "ok"
+    },
+    {
+      "source": "rdap",
+      "status": "ok"
+    },
+    {
+      "source": "virustotal",
+      "status": "ok"
+    },
+    {
+      "source": "abuseipdb",
+      "status": "ok"
+    },
+    {
+      "source": "google_safe_browsing",
+      "status": "ok"
+    },
+    {
+      "source": "openphish",
+      "status": "ok"
+    },
+    {
+      "source": "phishtank",
+      "status": "partial",
+      "detail": "PhishTank requires a registered API key (anonymous access is gated); OpenPhish covers this signal."
+    },
+    {
+      "source": "crt.sh",
+      "status": "unavailable",
+      "detail": "Optional source: crt.sh did not respond in time (free service, no SLA). Verdict unaffected."
+    },
+    {
+      "source": "internet_archive",
+      "status": "ok"
+    },
+    {
+      "source": "bedrock",
+      "status": "ok"
+    }
+  ],
+  "timings": {
+    "total_ms": 13853,
+    "fetch_ms": 214,
+    "enrichment_ms": 11871,
+    "llm_ms": 1768
+  },
+  "export_metadata": {
+    "generated_at": "2026-07-22T20:42:26.258Z",
+    "generated_by": "Capstone Domain Guardian",
+    "schema_version": "analysis-result.v2",
+    "sources": [
+      {
+        "source": "page_fetch",
+        "status": "ok"
+      },
+      {
+        "source": "rdap",
+        "status": "ok"
+      },
+      {
+        "source": "virustotal",
+        "status": "ok"
+      },
+      {
+        "source": "abuseipdb",
+        "status": "ok"
+      },
+      {
+        "source": "google_safe_browsing",
+        "status": "ok"
+      },
+      {
+        "source": "openphish",
+        "status": "ok"
+      },
+      {
+        "source": "phishtank",
+        "status": "partial",
+        "detail": "PhishTank requires a registered API key (anonymous access is gated); OpenPhish covers this signal."
+      },
+      {
+        "source": "crt.sh",
+        "status": "unavailable",
+        "detail": "Optional source: crt.sh did not respond in time (free service, no SLA). Verdict unaffected."
+      },
+      {
+        "source": "internet_archive",
+        "status": "ok"
+      },
+      {
+        "source": "bedrock",
+        "status": "ok"
+      }
+    ]
+  },
+  "partial": false
+}

@@ -1,0 +1,344 @@
+{
+  "schema_version": "analysis-result.v2",
+  "mode": "manual_entry",
+  "analyzed_url": "cocofreshtea.ca",
+  "normalized_domain": "cocofreshtea.ca",
+  "normalized_url": "https://cocofreshtea.ca/",
+  "brand_match": {
+    "brand_name": "Unknown",
+    "canonical_domain": "cocofreshtea.ca",
+    "confidence": 0,
+    "method": "unknown",
+    "matched_keywords": []
+  },
+  "threat_score": 12,
+  "verdict": "Safe",
+  "reasoning": "The domain 'cocofreshtea.ca' has a low threat score of 12/100, indicating minimal risk. The domain is registered with a reputable registrar, has a valid SSL certificate issued by Let's Encrypt, and has been observed in passive DNS records since 2019. However, it lacks some security headers and email authentication protocols, which are minor concerns. The overall verdict is Safe.",
+  "risk_factors": {
+    "lexical": {
+      "is_homoglyph": null,
+      "is_idn": false,
+      "punycode_domain": null,
+      "edit_distance_to_target": null,
+      "levenshtein_distance": null,
+      "damerau_levenshtein_distance": null,
+      "jaro_winkler_similarity": null,
+      "ngram_similarity": null,
+      "typosquatting_type": null,
+      "character_substitution_pattern": null,
+      "keyboard_proximity_score": null,
+      "dictionary_similarity_score": null,
+      "length_difference": null,
+      "tld_manipulation": null,
+      "suspicious_tld": false,
+      "tld_risk_score": 0.15,
+      "subdomain_structure_risk": 0.18,
+      "brand_keyword_detected": false,
+      "suspicious_keywords": [],
+      "hyphenation_pattern": null,
+      "tokenization_pattern": "multi_label",
+      "mixed_character_sets": false,
+      "url_shortener_detected": false,
+      "ip_literal_host": false
+    },
+    "infrastructure": {
+      "domain_age_days": 2696,
+      "registrar": "Go Daddy Domains Canada, Inc",
+      "registrant_org": null,
+      "registration_length_years": 9.01,
+      "whois_privacy": null,
+      "hidden_ownership": null,
+      "registrant_country": ", , , , , , ",
+      "ssl_valid": true,
+      "ssl_error": null,
+      "certificate_issuer": "Let's Encrypt",
+      "certificate_reputation": "known_issuer",
+      "certificate_age_days": 20,
+      "certificate_domain_mismatch": false,
+      "creation_date_anomaly": false,
+      "mx_records_present": false,
+      "dns_records": {
+        "a": [
+          "208.109.227.196"
+        ],
+        "mx": [],
+        "txt": [
+          "google-site-verification=oG4rpUE-EsgZccw2J814Gmx-6uMlxfuibsX0JbEMfTc"
+        ],
+        "ns": [
+          "ns60.domaincontrol.com",
+          "ns59.domaincontrol.com"
+        ]
+      },
+      "dns_history_changes": 0,
+      "fast_flux_detected": null,
+      "ip_reputation_score": 0,
+      "hosting_asn": "398101 Godaddy.com, LLC",
+      "hosting_asn_reputation": "unclassified",
+      "shared_hosting_risk": null,
+      "redirect_count": 1,
+      "final_url": "https://www.cocofreshtea.ca/"
+    },
+    "content": {
+      "page_title": "CoCo Bubble Tea Canada | Spark up every moment!",
+      "html_similarity_score": null,
+      "logo_reuse_detected": true,
+      "text_reuse_score": null,
+      "credential_harvesting_detected": false,
+      "forms_detected": 0,
+      "password_fields_detected": 0,
+      "form_submits_to_real_brand": null,
+      "hidden_iframes": false,
+      "obfuscated_javascript": false,
+      "suspicious_script_patterns": [],
+      "missing_security_headers": [
+        "content-security-policy",
+        "x-frame-options",
+        "strict-transport-security"
+      ],
+      "server_header_exposure": "Apache",
+      "redirect_chain": [
+        "https://www.cocofreshtea.ca/"
+      ],
+      "body_keywords": [
+        "secure"
+      ]
+    },
+    "reputational": {
+      "blacklisted_in_phishTank": null,
+      "blacklisted_in_openPhish": false,
+      "google_safe_browsing": false,
+      "virus_total_detections": 0,
+      "abuse_ipdb_reports": 0,
+      "phishing_feed_hits": 0
+    },
+    "behavioral": {
+      "keyboard_event_listeners": false,
+      "http_to_https_mismatch": false,
+      "external_form_action": null,
+      "cross_domain_redirect": false,
+      "client_side_redirect": false
+    },
+    "email_auth": {
+      "spf_present": false,
+      "dkim_present": false,
+      "dmarc_present": false,
+      "spf_dkim_dmarc_missing": true
+    },
+    "passive_history": {
+      "passive_dns_observed": true,
+      "passive_dns_notes": [
+        "Internet Archive first-seen record observed on 2019-11-13."
+      ],
+      "archive_first_seen_days": 2443,
+      "ownership_changes_detected": null
+    },
+    "machine_learning": {
+      "brand_similarity_score": 0,
+      "visual_similarity_score": 0.65,
+      "url_entropy": 3.574,
+      "time_based_risk": "stable_registration"
+    }
+  },
+  "evidence_summary": {
+    "highlights": [
+      "Overall verdict is Safe with a score of 12/100."
+    ],
+    "evidence_items": [
+      {
+        "key": "email_auth",
+        "label": "Email authentication missing",
+        "category": "email_auth",
+        "severity": "medium",
+        "value": true
+      },
+      {
+        "key": "passive_history_notes",
+        "label": "Passive history observations",
+        "category": "passive_history",
+        "severity": "info",
+        "value": 1,
+        "note": "Internet Archive first-seen record observed on 2019-11-13."
+      }
+    ],
+    "signal_diagnostics": [
+      {
+        "signal": "page_fetch",
+        "provider": "page_fetch",
+        "status": "ok"
+      },
+      {
+        "signal": "registrar_metadata",
+        "provider": "rdap",
+        "status": "ok"
+      },
+      {
+        "signal": "virus_total_detections",
+        "provider": "virustotal",
+        "status": "ok"
+      },
+      {
+        "signal": "abuse_ipdb_reports",
+        "provider": "abuseipdb",
+        "status": "ok"
+      },
+      {
+        "signal": "google_safe_browsing",
+        "provider": "google_safe_browsing",
+        "status": "ok"
+      },
+      {
+        "signal": "blacklisted_in_openPhish",
+        "provider": "openphish",
+        "status": "ok"
+      },
+      {
+        "signal": "blacklisted_in_phishTank",
+        "provider": "phishtank",
+        "status": "not_configured",
+        "detail": "PhishTank requires a registered API key (anonymous access is gated); OpenPhish covers this signal."
+      },
+      {
+        "signal": "passive_dns_observed",
+        "provider": "crt.sh",
+        "status": "unsupported",
+        "detail": "Optional source: crt.sh did not respond in time (free service, no SLA). Verdict unaffected."
+      },
+      {
+        "signal": "archive_first_seen_days",
+        "provider": "internet_archive",
+        "status": "ok"
+      },
+      {
+        "signal": "analyst_explanation",
+        "provider": "bedrock",
+        "status": "ok"
+      }
+    ]
+  },
+  "reporting_contacts": {
+    "registrar_information": {
+      "registrar_name": "Go Daddy Domains Canada, Inc",
+      "abuse_contact": null,
+      "abuse_portal": null,
+      "whois_lookup_url": "https://lookup.icann.org/en"
+    },
+    "brand_protection": {
+      "brand_contact": null,
+      "cert_contact": "contact@cyber.gc.ca",
+      "apwg_contact": "phishing@apwg.org",
+      "google_safe_browsing_report": "https://safebrowsing.google.com/safebrowsing/report_phish/",
+      "microsoft_submission": "https://www.microsoft.com/en-us/wdsi/filesubmission"
+    },
+    "local_authorities": {
+      "anti_fraud": "report@antifraudcentre-centreantifraude.gc.ca",
+      "csirt": "contact@cyber.gc.ca",
+      "csirt_name": "Canadian Centre for Cyber Security (CCCS)",
+      "csirt_country": "CA",
+      "csirt_portal": "https://www.cyber.gc.ca/en/incident-management"
+    },
+    "notes": [
+      "If you suspect a phishing attempt, immediately report it to the Canadian Centre for Cyber Security (CCCS) at contact@cyber.gc.ca. Additionally, you can report fraud-related incidents to report@antifraudcentre-centreantifraude.gc.ca."
+    ]
+  },
+  "signal_sources": [
+    {
+      "source": "page_fetch",
+      "status": "ok"
+    },
+    {
+      "source": "rdap",
+      "status": "ok"
+    },
+    {
+      "source": "virustotal",
+      "status": "ok"
+    },
+    {
+      "source": "abuseipdb",
+      "status": "ok"
+    },
+    {
+      "source": "google_safe_browsing",
+      "status": "ok"
+    },
+    {
+      "source": "openphish",
+      "status": "ok"
+    },
+    {
+      "source": "phishtank",
+      "status": "partial",
+      "detail": "PhishTank requires a registered API key (anonymous access is gated); OpenPhish covers this signal."
+    },
+    {
+      "source": "crt.sh",
+      "status": "unavailable",
+      "detail": "Optional source: crt.sh did not respond in time (free service, no SLA). Verdict unaffected."
+    },
+    {
+      "source": "internet_archive",
+      "status": "ok"
+    },
+    {
+      "source": "bedrock",
+      "status": "ok"
+    }
+  ],
+  "timings": {
+    "total_ms": 5943,
+    "fetch_ms": 1622,
+    "enrichment_ms": 3199,
+    "llm_ms": 1122
+  },
+  "export_metadata": {
+    "generated_at": "2026-07-22T20:41:06.621Z",
+    "generated_by": "Capstone Domain Guardian",
+    "schema_version": "analysis-result.v2",
+    "sources": [
+      {
+        "source": "page_fetch",
+        "status": "ok"
+      },
+      {
+        "source": "rdap",
+        "status": "ok"
+      },
+      {
+        "source": "virustotal",
+        "status": "ok"
+      },
+      {
+        "source": "abuseipdb",
+        "status": "ok"
+      },
+      {
+        "source": "google_safe_browsing",
+        "status": "ok"
+      },
+      {
+        "source": "openphish",
+        "status": "ok"
+      },
+      {
+        "source": "phishtank",
+        "status": "partial",
+        "detail": "PhishTank requires a registered API key (anonymous access is gated); OpenPhish covers this signal."
+      },
+      {
+        "source": "crt.sh",
+        "status": "unavailable",
+        "detail": "Optional source: crt.sh did not respond in time (free service, no SLA). Verdict unaffected."
+      },
+      {
+        "source": "internet_archive",
+        "status": "ok"
+      },
+      {
+        "source": "bedrock",
+        "status": "ok"
+      }
+    ]
+  },
+  "partial": false
+}
