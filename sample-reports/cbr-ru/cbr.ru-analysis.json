@@ -1,0 +1,350 @@
+{
+  "schema_version": "analysis-result.v2",
+  "mode": "manual_entry",
+  "analyzed_url": "cbr.ru",
+  "normalized_domain": "cbr.ru",
+  "normalized_url": "https://cbr.ru/",
+  "brand_match": {
+    "brand_name": "Центральный банк Российской Федерации",
+    "canonical_domain": "cbr.ru",
+    "confidence": 0.9,
+    "method": "llm",
+    "matched_keywords": [
+      "Центральный банк",
+      "Российской Федерации"
+    ]
+  },
+  "threat_score": 14,
+  "verdict": "Safe",
+  "reasoning": "The URL https://cbr.ru/ has been assessed as 'Safe' with a threat score of 14. The domain matches the canonical domain of the Central Bank of the Russian Federation with a high confidence score of 0.9. The SSL certificate is valid, and the domain has a low risk profile with no suspicious keywords or typosquatting patterns detected. The content of the page includes the legitimate brand name in the title and form actions, which are directed to the real brand's domain. However, there are missing security headers and a low HTML similarity score, which are minor concerns. The domain's age and reputational indicators are stable, and there are no reports of abuse or phishing activities.",
+  "risk_factors": {
+    "lexical": {
+      "is_homoglyph": null,
+      "is_idn": false,
+      "punycode_domain": null,
+      "edit_distance_to_target": null,
+      "levenshtein_distance": null,
+      "damerau_levenshtein_distance": null,
+      "jaro_winkler_similarity": null,
+      "ngram_similarity": null,
+      "typosquatting_type": null,
+      "character_substitution_pattern": null,
+      "keyboard_proximity_score": null,
+      "dictionary_similarity_score": null,
+      "length_difference": null,
+      "tld_manipulation": null,
+      "suspicious_tld": true,
+      "tld_risk_score": 0.82,
+      "subdomain_structure_risk": 0.18,
+      "brand_keyword_detected": false,
+      "suspicious_keywords": [],
+      "hyphenation_pattern": null,
+      "tokenization_pattern": "multi_label",
+      "mixed_character_sets": false,
+      "url_shortener_detected": false,
+      "ip_literal_host": false
+    },
+    "infrastructure": {
+      "domain_age_days": null,
+      "registrar": null,
+      "registrant_org": null,
+      "registration_length_years": null,
+      "whois_privacy": null,
+      "hidden_ownership": null,
+      "registrant_country": null,
+      "ssl_valid": true,
+      "ssl_error": null,
+      "certificate_issuer": "Hellenic Academic and Research Institutions CA",
+      "certificate_reputation": "unknown_issuer",
+      "certificate_age_days": 5,
+      "certificate_domain_mismatch": false,
+      "creation_date_anomaly": null,
+      "mx_records_present": true,
+      "dns_records": {
+        "a": [
+          "185.178.208.7"
+        ],
+        "mx": [
+          "mx.cbr.ru"
+        ],
+        "txt": [
+          "_globalsign-domain-verification=BsHd-Jq1n5yZKYdl7ohEilGKugv0wgA3wecQtYxJ1R",
+          "46EEBBCA5822E885BD71ACCCFBCECB36",
+          "HARICA-HMMLQkUrLq8Olga0Ofm",
+          "v=spf1 ip4:212.40.192.223 ip4:212.40.192.224 ip4:212.40.192.225 ip4:212.40.192.134 ip4:212.40.192.135 ip4:212.40.193.134 ip4:212.40.193.135 ip4:212.40.192.64 ip4:212.40.192.65 ip4:212.40.192.61 ip4:212.40.192.62 ip4:212.40.192.63 -all",
+          "kgjfklerKJDKLFjk23rj3gkljgkl",
+          "tci-dcv=f72adf7c6295822aefd5cc0b40d1f21988867bb9dcf99afe8b99536ed8dae5c4",
+          "HARICA-kGrV5L5EQCsrV1TtNTe"
+        ],
+        "ns": [
+          "ns6.cbr.ru",
+          "ns4.cbr.ru",
+          "ns5.cbr.ru"
+        ]
+      },
+      "dns_history_changes": null,
+      "fast_flux_detected": null,
+      "ip_reputation_score": 0,
+      "hosting_asn": "57724 Ddos-guard LTD",
+      "hosting_asn_reputation": "unclassified",
+      "shared_hosting_risk": null,
+      "redirect_count": 0,
+      "final_url": "https://cbr.ru/"
+    },
+    "content": {
+      "page_title": "Центральный банк Российской Федерации | Банк России",
+      "html_similarity_score": 0.15,
+      "logo_reuse_detected": true,
+      "text_reuse_score": 0,
+      "credential_harvesting_detected": false,
+      "forms_detected": 1,
+      "password_fields_detected": 0,
+      "form_submits_to_real_brand": true,
+      "hidden_iframes": false,
+      "obfuscated_javascript": false,
+      "suspicious_script_patterns": [
+        "keyboard_capture"
+      ],
+      "missing_security_headers": [
+        "content-security-policy",
+        "strict-transport-security"
+      ],
+      "server_header_exposure": "ddos-guard",
+      "redirect_chain": [],
+      "body_keywords": []
+    },
+    "reputational": {
+      "blacklisted_in_phishTank": null,
+      "blacklisted_in_openPhish": false,
+      "google_safe_browsing": false,
+      "virus_total_detections": 0,
+      "abuse_ipdb_reports": 0,
+      "phishing_feed_hits": 0
+    },
+    "behavioral": {
+      "keyboard_event_listeners": true,
+      "http_to_https_mismatch": false,
+      "external_form_action": false,
+      "cross_domain_redirect": false,
+      "client_side_redirect": false
+    },
+    "email_auth": {
+      "spf_present": true,
+      "dkim_present": false,
+      "dmarc_present": false,
+      "spf_dkim_dmarc_missing": false
+    },
+    "passive_history": {
+      "passive_dns_observed": null,
+      "passive_dns_notes": [],
+      "archive_first_seen_days": null,
+      "ownership_changes_detected": null
+    },
+    "machine_learning": {
+      "brand_similarity_score": 0,
+      "visual_similarity_score": 0.65,
+      "url_entropy": 3.323,
+      "time_based_risk": "stable_registration"
+    }
+  },
+  "evidence_summary": {
+    "highlights": [
+      "Form action references the legitimate brand, a strong phishing signal."
+    ],
+    "evidence_items": [
+      {
+        "key": "form_action",
+        "label": "Form submits to brand domain",
+        "category": "content",
+        "severity": "critical",
+        "value": true
+      }
+    ],
+    "signal_diagnostics": [
+      {
+        "signal": "page_fetch",
+        "provider": "page_fetch",
+        "status": "ok"
+      },
+      {
+        "signal": "registrar_metadata",
+        "provider": "rdap",
+        "status": "query_failed",
+        "detail": "RDAP registrar metadata was unavailable."
+      },
+      {
+        "signal": "virus_total_detections",
+        "provider": "virustotal",
+        "status": "ok"
+      },
+      {
+        "signal": "abuse_ipdb_reports",
+        "provider": "abuseipdb",
+        "status": "ok"
+      },
+      {
+        "signal": "google_safe_browsing",
+        "provider": "google_safe_browsing",
+        "status": "ok"
+      },
+      {
+        "signal": "blacklisted_in_openPhish",
+        "provider": "openphish",
+        "status": "ok"
+      },
+      {
+        "signal": "blacklisted_in_phishTank",
+        "provider": "phishtank",
+        "status": "not_configured",
+        "detail": "PhishTank requires a registered API key (anonymous access is gated); OpenPhish covers this signal."
+      },
+      {
+        "signal": "passive_dns_observed",
+        "provider": "crt.sh",
+        "status": "unsupported",
+        "detail": "Optional source: crt.sh did not respond in time (free service, no SLA). Verdict unaffected."
+      },
+      {
+        "signal": "archive_first_seen_days",
+        "provider": "internet_archive",
+        "status": "unsupported",
+        "detail": "Optional source: Internet Archive did not respond in time (free service, no SLA). Verdict unaffected."
+      },
+      {
+        "signal": "analyst_explanation",
+        "provider": "bedrock",
+        "status": "ok"
+      }
+    ]
+  },
+  "reporting_contacts": {
+    "registrar_information": {
+      "registrar_name": null,
+      "abuse_contact": null,
+      "abuse_portal": null,
+      "whois_lookup_url": "https://lookup.icann.org/en"
+    },
+    "brand_protection": {
+      "brand_contact": null,
+      "cert_contact": "cert@gov-cert.ru",
+      "apwg_contact": "phishing@apwg.org",
+      "google_safe_browsing_report": "https://safebrowsing.google.com/safebrowsing/report_phish/",
+      "microsoft_submission": "https://www.microsoft.com/en-us/wdsi/filesubmission"
+    },
+    "local_authorities": {
+      "anti_fraud": "mvd.ru (Russian Ministry of Internal Affairs)",
+      "csirt": "cert@gov-cert.ru",
+      "csirt_name": "GOV-CERT.RU (Russia)",
+      "csirt_country": "RU",
+      "csirt_portal": null
+    },
+    "notes": [
+      "If you encounter a phishing incident, please report it to GOV-CERT.RU (Russia) at cert@gov-cert.ru for immediate assistance.",
+      "For any fraud-related concerns, contact the Russian Ministry of Internal Affairs at mvd.ru."
+    ]
+  },
+  "signal_sources": [
+    {
+      "source": "page_fetch",
+      "status": "ok"
+    },
+    {
+      "source": "rdap",
+      "status": "partial",
+      "detail": "RDAP registrar metadata was unavailable."
+    },
+    {
+      "source": "virustotal",
+      "status": "ok"
+    },
+    {
+      "source": "abuseipdb",
+      "status": "ok"
+    },
+    {
+      "source": "google_safe_browsing",
+      "status": "ok"
+    },
+    {
+      "source": "openphish",
+      "status": "ok"
+    },
+    {
+      "source": "phishtank",
+      "status": "partial",
+      "detail": "PhishTank requires a registered API key (anonymous access is gated); OpenPhish covers this signal."
+    },
+    {
+      "source": "crt.sh",
+      "status": "unavailable",
+      "detail": "Optional source: crt.sh did not respond in time (free service, no SLA). Verdict unaffected."
+    },
+    {
+      "source": "internet_archive",
+      "status": "unavailable",
+      "detail": "Optional source: Internet Archive did not respond in time (free service, no SLA). Verdict unaffected."
+    },
+    {
+      "source": "bedrock",
+      "status": "ok"
+    }
+  ],
+  "timings": {
+    "total_ms": 12445,
+    "fetch_ms": 951,
+    "enrichment_ms": 9929,
+    "llm_ms": 1565
+  },
+  "export_metadata": {
+    "generated_at": "2026-07-22T20:51:17.679Z",
+    "generated_by": "Capstone Domain Guardian",
+    "schema_version": "analysis-result.v2",
+    "sources": [
+      {
+        "source": "page_fetch",
+        "status": "ok"
+      },
+      {
+        "source": "rdap",
+        "status": "partial",
+        "detail": "RDAP registrar metadata was unavailable."
+      },
+      {
+        "source": "virustotal",
+        "status": "ok"
+      },
+      {
+        "source": "abuseipdb",
+        "status": "ok"
+      },
+      {
+        "source": "google_safe_browsing",
+        "status": "ok"
+      },
+      {
+        "source": "openphish",
+        "status": "ok"
+      },
+      {
+        "source": "phishtank",
+        "status": "partial",
+        "detail": "PhishTank requires a registered API key (anonymous access is gated); OpenPhish covers this signal."
+      },
+      {
+        "source": "crt.sh",
+        "status": "unavailable",
+        "detail": "Optional source: crt.sh did not respond in time (free service, no SLA). Verdict unaffected."
+      },
+      {
+        "source": "internet_archive",
+        "status": "unavailable",
+        "detail": "Optional source: Internet Archive did not respond in time (free service, no SLA). Verdict unaffected."
+      },
+      {
+        "source": "bedrock",
+        "status": "ok"
+      }
+    ]
+  },
+  "partial": false
+}
