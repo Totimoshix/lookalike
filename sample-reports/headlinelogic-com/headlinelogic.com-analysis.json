@@ -1,0 +1,344 @@
+{
+  "schema_version": "analysis-result.v2",
+  "mode": "manual_entry",
+  "analyzed_url": "headlinelogic.com",
+  "normalized_domain": "headlinelogic.com",
+  "normalized_url": "https://headlinelogic.com/",
+  "brand_match": {
+    "brand_name": "Unknown",
+    "canonical_domain": "headlinelogic.com",
+    "confidence": 0,
+    "method": "unknown",
+    "matched_keywords": []
+  },
+  "threat_score": 74,
+  "verdict": "High",
+  "reasoning": "The URL 'https://headlinelogic.com/' has a high threat score of 74, indicating a significant risk of phishing. The primary risk drivers include the presence of credential collection elements such as password fields in forms, which are commonly used in phishing attacks to harvest sensitive information. Additionally, the domain has a visual similarity score of 0.65, suggesting it may resemble a legitimate site. Despite having a valid SSL certificate issued by Let's Encrypt, the absence of email authentication protocols (SPF, DKIM, DMARC) and missing security headers further contribute to the high risk assessment.",
+  "risk_factors": {
+    "lexical": {
+      "is_homoglyph": null,
+      "is_idn": false,
+      "punycode_domain": null,
+      "edit_distance_to_target": null,
+      "levenshtein_distance": null,
+      "damerau_levenshtein_distance": null,
+      "jaro_winkler_similarity": null,
+      "ngram_similarity": null,
+      "typosquatting_type": null,
+      "character_substitution_pattern": null,
+      "keyboard_proximity_score": null,
+      "dictionary_similarity_score": null,
+      "length_difference": null,
+      "tld_manipulation": null,
+      "suspicious_tld": false,
+      "tld_risk_score": 0.15,
+      "subdomain_structure_risk": 0.18,
+      "brand_keyword_detected": false,
+      "suspicious_keywords": [],
+      "hyphenation_pattern": null,
+      "tokenization_pattern": "multi_label",
+      "mixed_character_sets": false,
+      "url_shortener_detected": false,
+      "ip_literal_host": false
+    },
+    "infrastructure": {
+      "domain_age_days": null,
+      "registrar": null,
+      "registrant_org": null,
+      "registration_length_years": null,
+      "whois_privacy": null,
+      "hidden_ownership": null,
+      "registrant_country": null,
+      "ssl_valid": true,
+      "ssl_error": null,
+      "certificate_issuer": "Let's Encrypt",
+      "certificate_reputation": "known_issuer",
+      "certificate_age_days": 9,
+      "certificate_domain_mismatch": false,
+      "creation_date_anomaly": null,
+      "mx_records_present": false,
+      "dns_records": {
+        "a": [
+          "172.236.96.118"
+        ],
+        "mx": [],
+        "txt": [],
+        "ns": [
+          "gloria.ns.cloudflare.com",
+          "cartman.ns.cloudflare.com"
+        ]
+      },
+      "dns_history_changes": null,
+      "fast_flux_detected": null,
+      "ip_reputation_score": 0,
+      "hosting_asn": "63949 Linode",
+      "hosting_asn_reputation": "unclassified",
+      "shared_hosting_risk": null,
+      "redirect_count": 0,
+      "final_url": "https://headlinelogic.com/"
+    },
+    "content": {
+      "page_title": "HeadlineLogic News Portal",
+      "html_similarity_score": null,
+      "logo_reuse_detected": true,
+      "text_reuse_score": null,
+      "credential_harvesting_detected": true,
+      "forms_detected": 3,
+      "password_fields_detected": 3,
+      "form_submits_to_real_brand": null,
+      "hidden_iframes": false,
+      "obfuscated_javascript": false,
+      "suspicious_script_patterns": [],
+      "missing_security_headers": [
+        "content-security-policy",
+        "x-frame-options",
+        "strict-transport-security"
+      ],
+      "server_header_exposure": null,
+      "redirect_chain": [],
+      "body_keywords": [
+        "confirm",
+        "password"
+      ]
+    },
+    "reputational": {
+      "blacklisted_in_phishTank": null,
+      "blacklisted_in_openPhish": false,
+      "google_safe_browsing": false,
+      "virus_total_detections": 15,
+      "abuse_ipdb_reports": 0,
+      "phishing_feed_hits": 0
+    },
+    "behavioral": {
+      "keyboard_event_listeners": false,
+      "http_to_https_mismatch": false,
+      "external_form_action": null,
+      "cross_domain_redirect": false,
+      "client_side_redirect": false
+    },
+    "email_auth": {
+      "spf_present": false,
+      "dkim_present": false,
+      "dmarc_present": false,
+      "spf_dkim_dmarc_missing": true
+    },
+    "passive_history": {
+      "passive_dns_observed": null,
+      "passive_dns_notes": [],
+      "archive_first_seen_days": null,
+      "ownership_changes_detected": null
+    },
+    "machine_learning": {
+      "brand_similarity_score": 0,
+      "visual_similarity_score": 0.65,
+      "url_entropy": 3.979,
+      "time_based_risk": "stable_registration"
+    }
+  },
+  "evidence_summary": {
+    "highlights": [
+      "Page contains credential collection elements such as password fields in forms."
+    ],
+    "evidence_items": [
+      {
+        "key": "credential_form",
+        "label": "Credential harvesting indicators",
+        "category": "content",
+        "severity": "critical",
+        "value": true
+      },
+      {
+        "key": "email_auth",
+        "label": "Email authentication missing",
+        "category": "email_auth",
+        "severity": "medium",
+        "value": true
+      }
+    ],
+    "signal_diagnostics": [
+      {
+        "signal": "page_fetch",
+        "provider": "page_fetch",
+        "status": "ok"
+      },
+      {
+        "signal": "registrar_metadata",
+        "provider": "rdap",
+        "status": "query_failed",
+        "detail": "RDAP registrar metadata was unavailable."
+      },
+      {
+        "signal": "virus_total_detections",
+        "provider": "virustotal",
+        "status": "ok"
+      },
+      {
+        "signal": "abuse_ipdb_reports",
+        "provider": "abuseipdb",
+        "status": "ok"
+      },
+      {
+        "signal": "google_safe_browsing",
+        "provider": "google_safe_browsing",
+        "status": "ok"
+      },
+      {
+        "signal": "blacklisted_in_openPhish",
+        "provider": "openphish",
+        "status": "ok"
+      },
+      {
+        "signal": "blacklisted_in_phishTank",
+        "provider": "phishtank",
+        "status": "not_configured",
+        "detail": "PhishTank requires a registered API key (anonymous access is gated); OpenPhish covers this signal."
+      },
+      {
+        "signal": "passive_dns_observed",
+        "provider": "crt.sh",
+        "status": "unsupported",
+        "detail": "Optional source: crt.sh did not respond in time (free service, no SLA). Verdict unaffected."
+      },
+      {
+        "signal": "archive_first_seen_days",
+        "provider": "internet_archive",
+        "status": "unsupported",
+        "detail": "Optional source: Internet Archive did not respond in time (free service, no SLA). Verdict unaffected."
+      },
+      {
+        "signal": "analyst_explanation",
+        "provider": "bedrock",
+        "status": "ok"
+      }
+    ]
+  },
+  "reporting_contacts": {
+    "registrar_information": {
+      "registrar_name": null,
+      "abuse_contact": null,
+      "abuse_portal": null,
+      "whois_lookup_url": "https://lookup.icann.org/en"
+    },
+    "brand_protection": {
+      "brand_contact": null,
+      "cert_contact": "phishing@apwg.org",
+      "apwg_contact": "phishing@apwg.org",
+      "google_safe_browsing_report": "https://safebrowsing.google.com/safebrowsing/report_phish/",
+      "microsoft_submission": "https://www.microsoft.com/en-us/wdsi/filesubmission"
+    },
+    "local_authorities": {
+      "anti_fraud": "report@antifraudcentre-centreantifraude.gc.ca",
+      "csirt": "phishing@apwg.org",
+      "csirt_name": "APWG (Anti-Phishing Working Group)",
+      "csirt_country": "GLOBAL",
+      "csirt_portal": "https://apwg.org/reportphishing/"
+    },
+    "notes": [
+      "If you encounter a phishing attempt, please report it to the APWG (Anti-Phishing Working Group) at phishing@apwg.org. Additionally, if the phishing attempt involves fraud, consider reporting it to the Anti-Fraud Centre at report@antifraudcentre-centreantifraude.gc.ca."
+    ]
+  },
+  "signal_sources": [
+    {
+      "source": "page_fetch",
+      "status": "ok"
+    },
+    {
+      "source": "rdap",
+      "status": "partial",
+      "detail": "RDAP registrar metadata was unavailable."
+    },
+    {
+      "source": "virustotal",
+      "status": "ok"
+    },
+    {
+      "source": "abuseipdb",
+      "status": "ok"
+    },
+    {
+      "source": "google_safe_browsing",
+      "status": "ok"
+    },
+    {
+      "source": "openphish",
+      "status": "ok"
+    },
+    {
+      "source": "phishtank",
+      "status": "partial",
+      "detail": "PhishTank requires a registered API key (anonymous access is gated); OpenPhish covers this signal."
+    },
+    {
+      "source": "crt.sh",
+      "status": "unavailable",
+      "detail": "Optional source: crt.sh did not respond in time (free service, no SLA). Verdict unaffected."
+    },
+    {
+      "source": "internet_archive",
+      "status": "unavailable",
+      "detail": "Optional source: Internet Archive did not respond in time (free service, no SLA). Verdict unaffected."
+    },
+    {
+      "source": "bedrock",
+      "status": "ok"
+    }
+  ],
+  "timings": {
+    "total_ms": 16948,
+    "fetch_ms": 672,
+    "enrichment_ms": 14874,
+    "llm_ms": 1402
+  },
+  "export_metadata": {
+    "generated_at": "2026-07-22T20:46:52.709Z",
+    "generated_by": "Capstone Domain Guardian",
+    "schema_version": "analysis-result.v2",
+    "sources": [
+      {
+        "source": "page_fetch",
+        "status": "ok"
+      },
+      {
+        "source": "rdap",
+        "status": "partial",
+        "detail": "RDAP registrar metadata was unavailable."
+      },
+      {
+        "source": "virustotal",
+        "status": "ok"
+      },
+      {
+        "source": "abuseipdb",
+        "status": "ok"
+      },
+      {
+        "source": "google_safe_browsing",
+        "status": "ok"
+      },
+      {
+        "source": "openphish",
+        "status": "ok"
+      },
+      {
+        "source": "phishtank",
+        "status": "partial",
+        "detail": "PhishTank requires a registered API key (anonymous access is gated); OpenPhish covers this signal."
+      },
+      {
+        "source": "crt.sh",
+        "status": "unavailable",
+        "detail": "Optional source: crt.sh did not respond in time (free service, no SLA). Verdict unaffected."
+      },
+      {
+        "source": "internet_archive",
+        "status": "unavailable",
+        "detail": "Optional source: Internet Archive did not respond in time (free service, no SLA). Verdict unaffected."
+      },
+      {
+        "source": "bedrock",
+        "status": "ok"
+      }
+    ]
+  },
+  "partial": false
+}
